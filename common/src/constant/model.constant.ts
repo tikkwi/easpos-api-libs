@@ -1,0 +1,14 @@
+export const EXCEED_LIMIT = 'EXCEED_LIMIT';
+export const EXCEED_LIMIT_THRESHOLD = 'EXCEED_LIMIT_THRESHOLD';
+export const MERCHANT = 'MERCHANT';
+export const AUDIT = 'AUDIT';
+export const MAIL = 'MAIL';
+export const AUTH_CREDENTIAL = 'AUTH_CREDENTIAL';
+export const APP_CONFIG = 'APP_CONFIG';
+export const CATEGORY = 'CATEGORY';
+export const USER = 'USER';
+export const ENTITY_METADATA = 'ENTITY_METADATA';
+export const FIELD = 'FIELD';
+export const ADDRESS = 'ADDRESS';
+export const METADATA = 'METADATA';
+export const OPTION = 'OPTION';
