@@ -1,8 +1,8 @@
-import { AppProp } from '@app/decorator';
+import { AppProp } from '@common/decorator';
 import { SchemaFactory } from '@nestjs/mongoose';
-import { BaseSchema } from '@app/schema';
+import { BaseSchema } from '@common/schema';
 import { Matches, ValidateIf } from 'class-validator';
-import { EField, regex } from '@app/helper';
+import { EField, regex } from '@common/helper';
 
 export class Field extends BaseSchema {
   @AppProp({ type: String })

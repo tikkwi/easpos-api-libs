@@ -1,4 +1,4 @@
-import { PAGE_SIZE } from '@app/constant';
+import { PAGE_SIZE } from '@common/constant';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Document, Model } from 'mongoose';
 
@@ -9,10 +9,16 @@ export class Repository<T> {
     const data = await new this.model(dto).save();
     const rollback = async () => await this.model.findByIdAndDelete(data.id);
 
-    return { data: data as T, rollback };
+    return { data: data as Document<unknown, unknown, T> & T, rollback };
   }
 
-  getPaginationOption({ page, startDate, endDate, pageSize, sort }: PaginationType<T>) {
+  getPaginationOption({
+    page,
+    startDate,
+    endDate,
+    pageSize,
+    sort,
+  }: PaginationType<T>) {
     const pag = {};
     const fil = {};
     if (sort) pag['sort'] = sort;
@@ -37,7 +43,11 @@ export class Repository<T> {
     return response;
   }
 
-  async findOne({ filter, projection, options = {} }: Omit<FindType<T>, 'pagination'>) {
+  async findOne({
+    filter,
+    projection,
+    options = {},
+  }: Omit<FindType<T>, 'pagination'>) {
     return {
       data: await this.model.findOne(filter, projection, {
         lean: true,
@@ -60,9 +70,12 @@ export class Repository<T> {
   }
 
   async findAndUpdate({ id, filter, options, update }: UpdateType<T>) {
-    if (!id && !filter) throw new BadRequestException('Require filter to update');
+    if (!id && !filter)
+      throw new BadRequestException('Require filter to update');
 
-    const prev = id ? await this.model.findById(id, null) : await this.model.findOne(filter, null);
+    const prev = id
+      ? await this.model.findById(id, null)
+      : await this.model.findOne(filter, null);
 
     if (!prev) throw new NotFoundException('Not found');
 
@@ -82,11 +95,17 @@ export class Repository<T> {
     return { prev, data, rollback };
   }
 
-  async updateMany({ ids, update }: Omit<UpdateType<T>, 'id' | 'filter'> & { ids: string[] }) {
+  async updateMany({
+    ids,
+    update,
+  }: Omit<UpdateType<T>, 'id' | 'filter'> & { ids: string[] }) {
     const prev = await this.model.find({ _id: { $in: ids } }, null);
     if (!prev || !prev.length) throw new NotFoundException('Not Found');
 
-    await this.model.updateMany({ _id: { $in: ids } }, { ...update, updatedAt: new Date() });
+    await this.model.updateMany(
+      { _id: { $in: ids } },
+      { ...update, updatedAt: new Date() },
+    );
 
     const data = await this.model.find({ _id: { $in: ids } }, null, {
       lean: true,

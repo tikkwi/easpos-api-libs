@@ -1,5 +1,5 @@
-import { FORBIDDEN_USERS, USERS } from '@app/constant';
-import { AllowedUser, Users } from '@app/decorator';
+import { FORBIDDEN_USERS, USERS } from '@common/constant';
+import { AllowedUser, Users } from '@common/decorator';
 import { Controller } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { pull } from 'lodash';
@@ -20,7 +20,10 @@ export function AppController(prefix: string, allowedUsers?: AllowedUser[]) {
           ...(reflector.get(USERS, target.prototype[key]) ?? []),
           ...(allowedUsers ?? []),
         ];
-        const serviceForbidden = reflector.get(FORBIDDEN_USERS, target.prototype[key]);
+        const serviceForbidden = reflector.get(
+          FORBIDDEN_USERS,
+          target.prototype[key],
+        );
         if (serviceForbidden) pull(users, ...serviceForbidden);
         if (users.length) Users(users)(target.prototype[key], key, descriptor);
       }

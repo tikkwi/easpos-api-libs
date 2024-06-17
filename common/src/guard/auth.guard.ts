@@ -1,6 +1,6 @@
-import { USERS } from '@app/constant';
-import { AllowedUser } from '@app/decorator';
-import { EAllowedUser } from '@app/helper';
+import { USERS } from '@common/constant';
+import { AllowedUser } from '@common/decorator';
+import { EAllowedUser } from '@common/utils';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
@@ -13,8 +13,15 @@ export class AuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext) {
     const httpCtx = context.switchToHttp();
     const request: Request = httpCtx.getRequest();
-    const allowedUsers = this.reflector.get<AllowedUser[]>(USERS, context.getHandler());
-    const merchantUsers = [EAllowedUser.Owner, EAllowedUser.Merchant, EAllowedUser.MerchantNoSub];
+    const allowedUsers = this.reflector.get<AllowedUser[]>(
+      USERS,
+      context.getHandler(),
+    );
+    const merchantUsers = [
+      EAllowedUser.Owner,
+      EAllowedUser.Merchant,
+      EAllowedUser.MerchantNoSub,
+    ];
     const userType =
       merchantUsers.includes(request.user.type as any) && !request.isSubActive
         ? EAllowedUser.MerchantNoSub
@@ -26,7 +33,10 @@ export class AuthGuard implements CanActivate {
       allowedUsers.length &&
       (!request.user ||
         !allowedUsers.includes(userType) ||
-        (intersection(allowedUsers, merchantUsers).length && !request.merchant))
+        (intersection(allowedUsers, merchantUsers).length &&
+          (!request.user.merchant ||
+            (!allowedUsers.includes(EAllowedUser.MerchantNoSub) &&
+              !request.user.merchant.isSubActive))))
     )
       return false;
     return true;

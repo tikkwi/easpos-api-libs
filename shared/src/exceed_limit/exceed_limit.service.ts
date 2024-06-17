@@ -1,40 +1,37 @@
-import { EXCEED_LIMIT } from '@app/constant';
-import { Repository } from '@app/core';
-import { AppService } from '@app/decorator/app_service.decorator';
-import { BaseDto } from '@app/dto';
-import { ExceedLimit, ExceedLimitSchema } from '@app/schema';
-import { Inject, Injectable } from '@nestjs/common';
-import { GetLimitDto, UnlimitRequestDto } from './exceed_limit.dto';
-import { EApp } from '@app/helper';
+import { CoreService } from '@common/core/core.service';
+import { AppService } from '@common/decorator/app_service.decorator';
+import {
+  ExceedLimitServiceMethods,
+  GetLimitDto,
+  UnlimitRequestDto,
+} from '@shared/dto';
+import { Request } from 'express';
+import { ExceedLimit, ExceedLimitSchema } from './exceed_limit.schema';
 
-@AppService(
-  EApp.Admin,
-  {
-    getLimit: GetLimitDto,
-    limitRequest: BaseDto,
-    unlimitRequest: UnlimitRequestDto,
-  },
-  { name: ExceedLimit.name, schema: ExceedLimitSchema },
-)
-@Injectable()
-export class ExceedLimitService {
-  private repository: Repository<ExceedLimit>;
-
-  async getLimit({ id, request, lean = true }: GetLimitDto) {
-    return {
-      data: await this.repository.findOne({
-        filter: {
-          _id: id,
-          $or: id ? undefined : [{ user: { user: request.user._id } }, { submittedIP: request.ip }],
-        },
-        request,
-        options: { lean },
-      }),
-    };
+@AppService()
+export class ExceedLimitService
+  extends CoreService<ExceedLimit>
+  implements ExceedLimitServiceMethods
+{
+  constructor() {
+    super(ExceedLimit.name, ExceedLimitSchema);
   }
 
-  async limitRequest({ request }: BaseDto): Promise<any> {
-    const { data: limit } = await this.getLimit({ request });
+  async getLimit(request: Request, dto?: GetLimitDto) {
+    const { id, lean } = dto;
+    return await this.repository.findOne({
+      filter: {
+        _id: id,
+        $or: id
+          ? undefined
+          : [{ user: { user: request.user._id } }, { submittedIP: request.ip }],
+      },
+      options: { lean },
+    });
+  }
+
+  async limitRequest(request: Request) {
+    const { data: limit } = await this.getLimit(request);
     if (limit)
       return {
         data: (
@@ -43,38 +40,31 @@ export class ExceedLimitService {
             update: {
               threshold: limit.threshold.nextLimit,
             },
-            request,
           })
-        ).next,
+        ).data,
       };
     else
-      return {
-        data: await this.repository.create({
-          dto: {
-            user: request.user
-              ? {
-                  user: request.user._id,
-                  type: request.user.type,
-                  name: `${request.user.firstName} ${request.user.lastName}`,
-                }
-              : undefined,
-            submittedIP: request.ip,
-            sessionId: request.sessionID,
-            userAgent: request.headers['user-agent'] as any,
-            threshold: request.appConfig.throttleThresholds.find((e) => e.isInitial),
-          },
-          request,
-        }),
-      };
+      return await this.repository.create({
+        user: request.user
+          ? {
+              user: request.user._id,
+              type: request.user.type,
+              name: `${request.user.firstName} ${request.user.lastName}`,
+            }
+          : undefined,
+        submittedIP: request.ip,
+        sessionId: request.sessionID,
+        userAgent: request.headers['user-agent'] as any,
+        threshold: request.appConfig.throttleThresholds.find(
+          (e) => e.isInitial,
+        ),
+      });
   }
 
-  async unlimitRequest({ request, id }: UnlimitRequestDto) {
-    return {
-      data: await this.repository.findAndUpdate({
-        id,
-        update: { blocked: false, threshold: null },
-        request,
-      }),
-    };
+  async unlimitRequest({ id }: UnlimitRequestDto) {
+    return await this.repository.findAndUpdate({
+      id,
+      update: { blocked: false, threshold: null },
+    });
   }
 }

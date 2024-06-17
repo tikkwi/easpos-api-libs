@@ -1,5 +1,5 @@
-import { USERS } from '@app/constant';
-import { EAllowedUser } from '@app/helper';
+import { USERS } from '@common/constant';
+import { EAllowedUser } from '@common/utils';
 import { SetMetadata } from '@nestjs/common';
 
 export type AllowedUser = keyof typeof EAllowedUser;

@@ -1,21 +1,27 @@
-import { AUTH_CREDENTIAL } from '@app/constant';
-import { getServiceToken, parsePath } from '@app/helper';
+import { AUTH_CREDENTIAL } from '@common/constant';
+import { AuthCredentialSharedServiceMethods } from '@common/dto/auth_credential.dto';
+import { getServiceToken, parsePath } from '@common/utils';
 import { Inject, Injectable, NestMiddleware } from '@nestjs/common';
-import { AuthCredentialService } from 'apps/admin/src/auth_credential/auth_credential.service';
 import { compare } from 'bcryptjs';
 import { Request, Response } from 'express';
 
 @Injectable()
 export class BasicAuthMiddleware implements NestMiddleware {
+  /**
+   * NOTE: provide instead of simply importing as this must communicate via grpc 
+    if request from user app
+  */
   @Inject(getServiceToken(AUTH_CREDENTIAL))
-  private readonly credentialService: AuthCredentialService;
+  private readonly credentialService: AuthCredentialSharedServiceMethods;
 
   async use(request: Request, response: Response, next: () => void) {
     let isValid = true;
     const [app, service] = parsePath(request.path);
     const {
       data: { userName, password },
-    } = await this.credentialService.getAuthCredential({ request, type: service as any });
+    } = await this.credentialService.getAuthCredential({
+      type: service as any,
+    });
     const authHeader = request.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Basic')) isValid = false;
     if (isValid) {

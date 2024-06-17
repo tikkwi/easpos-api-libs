@@ -1,7 +1,13 @@
-import { AppProp } from '@app/decorator';
-import { MetadataValue } from '@app/dto';
-import { EStatus, ESubscription } from '@app/helper';
-import { Address, BaseSchema, Category, MerchantPurchase, User } from '@app/schema';
+import { AppProp } from '@common/decorator';
+import { MetadataValue } from '@common/dto';
+import { EStatus, ESubscription } from '@common/helper';
+import {
+  Address,
+  BaseSchema,
+  Category,
+  MerchantPurchase,
+  User,
+} from '@common/schema';
 import { SchemaFactory } from '@nestjs/mongoose';
 import { Type } from 'class-transformer';
 import { IsEmail, IsPhoneNumber, ValidateIf } from 'class-validator';
@@ -29,7 +35,9 @@ export class Merchant extends BaseSchema {
   subscriptionType: ESubscription;
 
   @ValidateIf((o) =>
-    [ESubscription.Dedicated, ESubscription.DedicatedDB].includes(o.subscriptionType),
+    [ESubscription.Dedicated, ESubscription.DedicatedDB].includes(
+      o.subscriptionType,
+    ),
   )
   @AppProp({ type: String })
   dbUri?: string;

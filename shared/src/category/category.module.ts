@@ -1,14 +1,9 @@
 import { Module } from '@nestjs/common';
-import { CategoryService } from './category.service';
 import { CategoryController } from './category.controller';
-//import { getRepositoryProviders } from '@app/helper';
-import { Category, CategorySchema } from '@app/schema';
+import { CategoryService } from './category.service';
 
 @Module({
   controllers: [CategoryController],
-  providers: [
-    CategoryService,
-    // ...getRepositoryProviders([{ name: Category.name, schema: CategorySchema }]),
-  ],
+  providers: [CategoryService],
 })
 export class CategoryModule {}

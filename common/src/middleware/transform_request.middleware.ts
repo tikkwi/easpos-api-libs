@@ -1,5 +1,9 @@
-import { APP_CONFIG, USER } from '@app/constant';
-import { EApp, decrypt, getServiceToken, parsePath } from '@app/helper';
+import { APP_CONFIG, USER } from '@common/constant';
+import {
+  AppConfigSharedServiceMethods,
+  UserSharedServiceMethods,
+} from '@common/dto';
+import { decrypt, getServiceToken, parsePath } from '@common/utils';
 import {
   BadRequestException,
   ForbiddenException,
@@ -7,15 +11,16 @@ import {
   Injectable,
   NestMiddleware,
 } from '@nestjs/common';
-import { AppConfigService } from 'apps/admin/src/app_config/app_config.service';
-import { UserService } from 'shared/shared/user/user.service';
+import { Request } from 'express';
 
 @Injectable()
 export class TransformRequestMiddleware implements NestMiddleware {
-  @Inject(getServiceToken(APP_CONFIG)) private readonly appConfigService: AppConfigService;
-  @Inject(getServiceToken(USER)) private readonly userService: UserService;
+  @Inject(getServiceToken(APP_CONFIG))
+  private readonly appConfigService: AppConfigSharedServiceMethods;
+  @Inject(getServiceToken(USER))
+  private readonly userService: UserSharedServiceMethods;
 
-  async use(request: AppRequest, _, next: () => void) {
+  async use(request: Request, _, next: () => void) {
     const { data: config } = await this.appConfigService.getConfig({});
     if (!config) throw new ForbiddenException('Config not found');
 
@@ -25,9 +30,7 @@ export class TransformRequestMiddleware implements NestMiddleware {
     if (request.session.user) {
       const { id } = await decrypt(request.session.user);
       if (!id) throw new BadRequestException("Don't found user");
-      request.user = await (
-        await this.userService.userWithAuth({ id }, JSON.stringify(request))
-      ).data.populate(['merchant']);
+      request.user = await this.userService.userWithAuth({ id });
       if (!request.user) throw new BadRequestException('User not found');
     }
 

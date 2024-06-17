@@ -1,10 +1,10 @@
-import { AppController } from '@app/decorator';
+import { AppController } from '@common/decorator';
 import { Body, Post, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { CreateAddressDto } from './address.dto';
 import { AddressService } from './address.service';
+import { CreateAddressDto } from '@shared/dto/address.dto';
 
-@AppController('shared-api/address')
+@AppController('address')
 export class AddressController {
   constructor(private readonly service: AddressService) {}
 
@@ -14,6 +14,6 @@ export class AddressController {
     @Res() _: Response,
     @Body() dto: Omit<CreateAddressDto, 'request'>,
   ) {
-    return this.service.createAddress({ ...dto, request });
+    return this.service.createAddress(dto);
   }
 }

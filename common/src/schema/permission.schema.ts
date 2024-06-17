@@ -1,5 +1,5 @@
-import { AppProp } from '@app/decorator';
-import { BaseSchema } from '@app/schema';
+import { AppProp } from '@common/decorator';
+import { BaseSchema } from '@common/schema';
 import { SchemaFactory } from '@nestjs/mongoose';
 
 export class Permission extends BaseSchema {

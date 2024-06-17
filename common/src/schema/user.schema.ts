@@ -1,7 +1,7 @@
-import { AppProp } from '@app/decorator';
-import { MetadataValue } from '@app/dto';
-import { EStatus, EUser } from '@app/helper';
-import { BaseSchema, Merchant, UserAppPermission } from '@app/schema';
+import { AppProp } from '@common/decorator';
+import { MetadataValue } from '@common/dto';
+import { EStatus, EUser } from '@common/utils';
+import { BaseSchema, Merchant, UserAppPermission } from '@common/schema';
 import { SchemaFactory } from '@nestjs/mongoose';
 import { hash } from 'bcryptjs';
 import { Type } from 'class-transformer';
@@ -15,7 +15,12 @@ export class User extends BaseSchema {
   @AppProp({ type: String, enum: EUser })
   type: EUser;
 
-  @AppProp({ type: String, enum: EStatus, default: EStatus.Pending, immutable: false })
+  @AppProp({
+    type: String,
+    enum: EStatus,
+    default: EStatus.Pending,
+    immutable: false,
+  })
   status: EStatus;
 
   @AppProp({ type: String })

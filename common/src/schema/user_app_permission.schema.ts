@@ -1,8 +1,8 @@
-import { AppProp } from '@app/decorator';
-import { BaseSchema } from '@app/schema';
+import { AppProp } from '@common/decorator';
+import { BaseSchema } from '@common/schema';
 import { SchemaFactory } from '@nestjs/mongoose';
 import { SchemaTypes } from 'mongoose';
-import { UserServicePermission } from '@app/schema';
+import { UserServicePermission } from '@common/schema';
 
 export class UserAppPermission extends BaseSchema {
   @AppProp({ type: String })

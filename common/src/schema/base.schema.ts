@@ -1,4 +1,4 @@
-import { AppProp } from '@app/decorator';
+import { AppProp } from '@common/decorator';
 import { Schema } from '@nestjs/mongoose';
 import { SchemaTypes } from 'mongoose';
 

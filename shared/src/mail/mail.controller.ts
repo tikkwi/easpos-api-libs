@@ -1,8 +1,8 @@
-import { AppController } from '@app/decorator';
+import { AppController } from '@common/decorator';
 import { MailService } from './mail.service';
-import { EAllowedUser } from '@app/helper';
+import { EAllowedUser } from '@common/utils';
 
-@AppController('admin-api/mail', [EAllowedUser.Admin])
+@AppController('mail', [EAllowedUser.Admin])
 export class MailController {
   constructor(private readonly service: MailService) {}
 }

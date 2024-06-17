@@ -1,5 +1,5 @@
-import { EXCEED_LIMIT } from '@app/constant';
-//import { getRepositoryProviders } from '@app/helper';
+import { EXCEED_LIMIT } from '@common/constant';
+//import { getRepositoryProviders } from '@common/helper';
 import { Module } from '@nestjs/common';
 import { ExceedLimitController } from './exceed_limit.controller';
 import { ExceedLimitService } from './exceed_limit.service';

@@ -1,2 +1,2 @@
-export * from '@app/guard/app_throttle.guard';
-export * from '@app/guard/auth.guard';
+export * from './app_throttle.guard';
+export * from './auth.guard';

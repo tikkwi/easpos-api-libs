@@ -1,10 +1,10 @@
 import { SchemaFactory } from '@nestjs/mongoose';
 import { SchemaTypes } from 'mongoose';
 import { Type } from 'class-transformer';
-import { BaseSchema, Merchant, Payment } from '@app/schema';
-import { AppProp } from '@app/decorator';
-import { Period } from '@app/dto';
-import { EMerchantPurchase } from '@app/helper';
+import { BaseSchema, Merchant, Payment } from '@common/schema';
+import { AppProp } from '@common/decorator';
+import { Period } from '@common/dto';
+import { EMerchantPurchase } from '@common/helper';
 
 export class MerchantPurchase extends BaseSchema {
   @AppProp({ type: String })
@@ -24,4 +24,5 @@ export class MerchantPurchase extends BaseSchema {
   payment: Payment;
 }
 
-export const MerchantPurchaseSchema = SchemaFactory.createForClass(MerchantPurchase);
+export const MerchantPurchaseSchema =
+  SchemaFactory.createForClass(MerchantPurchase);

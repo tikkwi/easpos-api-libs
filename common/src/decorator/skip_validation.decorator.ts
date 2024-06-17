@@ -1,4 +1,4 @@
-import { SKIP_VALIDATION } from '@app/constant/decorator.constant';
+import { SKIP_VALIDATION } from '@common/constant/decorator.constant';
 import { SetMetadata } from '@nestjs/common';
 
 export const SkipValidation = () => SetMetadata(SKIP_VALIDATION, 'skip');

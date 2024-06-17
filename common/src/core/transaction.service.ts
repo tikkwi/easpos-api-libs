@@ -1,18 +1,18 @@
-import { AUDIT } from '@app/constant';
-import { MongooseConfigService } from '@app/core';
-import { EApp, getServiceToken } from '@app/helper';
+import { AUDIT } from '@common/constant';
 import { Inject, InternalServerErrorException } from '@nestjs/common';
 import { AuditService } from 'apps/admin/src/audit/audit.service';
 import { Request } from 'express';
+import { ClientSession } from 'mongoose';
 
 export abstract class TransactionService {
-  private readonly mongooseService: MongooseConfigService;
   @Inject(AUDIT) private readonly auditService: AuditService;
   // @Inject(getServiceToken(AUDIT)) private readonly auditService: AuditService;
 
   async startTransaction(request: Request): Promise<ClientSession> {
     const connection = await this.mongooseService.getConnection(
-      request.app === EApp.Admin || !request.merchant.dbUri ? undefined : request.merchant.dbUri,
+      request.app === EApp.Admin || !request.merchant.dbUri
+        ? undefined
+        : request.merchant.dbUri,
     );
     const session = await connection.startSession();
     session.startTransaction();
@@ -41,12 +41,19 @@ export abstract class TransactionService {
   }
 
   //NOTE: only for cross db transaction(admin>other apps)
-  async makeTransaction(request: Request, action: () => MakeTransationActionReturn) {
+  async makeTransaction(
+    request: Request,
+    action: () => MakeTransationActionReturn,
+  ) {
     const session = await this.startTransaction(request);
     request.$crossSession = session;
     try {
       const [res, logTrail] = await action();
-      request.logTrail.push({ ...logTrail, method: request.method, response: res });
+      request.logTrail.push({
+        ...logTrail,
+        method: request.method,
+        response: res,
+      });
       session.commitTransaction();
       session.endSession();
       request.$crossSession = undefined;
@@ -55,7 +62,9 @@ export abstract class TransactionService {
       session.abortTransaction();
       session.endSession();
       request.$crossSession = undefined;
-      throw new InternalServerErrorException(error.message || 'Internal server error');
+      throw new InternalServerErrorException(
+        error.message || 'Internal server error',
+      );
     }
   }
 }

@@ -1,21 +1,23 @@
-import { Repository } from '@app/core';
-import { CoreService } from '@app/core/core.service';
-import { AppService } from '@app/decorator';
-import { EApp } from '@app/helper';
-import { Address, AddressSchema } from '@app/schema';
-import { AddressServiceMethods, CreateAddressDto, FindByIdDto } from '@app/types';
+import { CoreService } from '@common/core/core.service';
+import { AppService } from '@common/decorator';
+import { FindByIdDto } from '@common/dto';
+import { AddressServiceMethods, CreateAddressDto } from '@shared/dto';
+import { Address, AddressSchema } from './address.schema';
 
 @AppService()
-export class AddressService extends CoreService<Address> implements AddressServiceMethods {
+export class AddressService
+  extends CoreService<Address>
+  implements AddressServiceMethods
+{
   constructor() {
-    super(EApp.Shared, Address.name, AddressSchema);
+    super(Address.name, AddressSchema);
   }
 
-  async getAddress({ id, lean = true }: FindByIdDto, _) {
+  async getAddress({ id, lean = true }: FindByIdDto) {
     return await this.repository.findById({ id, options: { lean } });
   }
 
-  async createAddress(dto: CreateAddressDto, _) {
+  async createAddress(dto: CreateAddressDto) {
     return await this.repository.create(dto);
   }
 }
