@@ -4,6 +4,11 @@ export enum EMerchantPurchase {
   FOC = 'FOC',
 }
 
+export enum EApp {
+  Admin = 'Admin',
+  User = 'User',
+}
+
 //service name
 export enum EAuthCredential {
   Swagger = 'Swagger',

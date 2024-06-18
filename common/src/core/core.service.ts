@@ -1,30 +1,30 @@
-import { MONGODB_URI } from '@common/constant';
 import { Repository } from '@common/core';
-import { EApp } from '@common/utils';
-import { createConnection } from 'mongoose';
+import { InjectConnection } from '@nestjs/mongoose';
+import { AuditService } from '@shared/audit/audit.service';
+import { Connection } from 'mongoose';
 
-export class CoreService<T = {}> {
+export abstract class CoreService<T = unknown> {
+  @InjectConnection() private readonly connection: Connection;
+  private readonly auditService: AuditService;
   protected repository: Repository<T>;
-  private name;
-  private schema;
 
   constructor(name?: string, schema?: any) {
-    this.name = name;
-    this.schema = schema;
+    this.repository = new Repository(this.connection.model(name, schema));
   }
 
-  // protected async getRepository({ request, useCustomDB }: Meta) {
-  //   if (!this.repository && this.name && this.schema) {
-  //     const isCusDB =
-  //       request.app === EApp.Admin ||
-  //       !request.user?.merchant?.dbUri ||
-  //       (this.app === EApp.Shared && useCustomDB);
-  //     const connection = await createConnection(
-  //       isCusDB ? process.env[MONGODB_URI] : request.user.merchant.dbUri,
-  //     );
-  //     this.repository = new Repository(
-  //       connection.model(this.name, this.schema),
-  //     );
-  //   }
-  // }
+  async makeTransaction({ request, action, response }: MakeTransactionType) {
+    const session = await this.connection.startSession();
+    try {
+      request.$session = session;
+      const logTrail = [];
+      const res = await action(logTrail);
+      this.auditService.logRequest(request, logTrail);
+      await session.commitTransaction();
+      if (response) response.send(res);
+      session.endSession();
+    } catch (error) {
+      session.abortTransaction();
+      throw new Error(error);
+    }
+  }
 }

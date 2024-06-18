@@ -1,5 +1,5 @@
 import { Type } from '@nestjs/common';
-import { OmitType } from '@nestjs/swagger';
+import { IntersectionType, OmitType } from '@nestjs/swagger';
 import {
   IsBoolean,
   IsDateString,
@@ -9,6 +9,7 @@ import {
   IsString,
   Min,
 } from 'class-validator';
+import { Request } from 'express';
 
 export class UpdateDto {
   @IsBoolean()
@@ -35,17 +36,22 @@ export class PaginationDto<T> {
   sort?: Record<keyof T, any>;
 }
 
+export class BaseDto {
+  @IsNotEmpty()
+  request: AppRequest;
+}
+
 export function CoreDto<T>(
   classRef: Type<T>,
-): Type<Omit<T, '_id' | 'createdAt' | 'updatedAt'>> {
-  class CoreDtoClass extends OmitType(
-    classRef as any,
-    ['_id', 'createdAt', 'updatedAt'] as any,
+): Type<Omit<T, '_id' | 'createdAt' | 'updatedAt'> & BaseDto> {
+  class CoreDtoClass extends IntersectionType(
+    BaseDto,
+    OmitType(classRef as any, ['_id', 'createdAt', 'updatedAt'] as any),
   ) {}
   return CoreDtoClass as any;
 }
 
-export class FindDto {
+export class FindDto extends BaseDto {
   @IsBoolean()
   lean?: boolean;
 }

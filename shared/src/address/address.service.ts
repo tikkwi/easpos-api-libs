@@ -13,11 +13,11 @@ export class AddressService
     super(Address.name, AddressSchema);
   }
 
-  async getAddress({ id, lean = true }: FindByIdDto) {
+  async getAddress({ id, lean = true }: FindByIdDto, _) {
     return await this.repository.findById({ id, options: { lean } });
   }
 
-  async createAddress(dto: CreateAddressDto) {
+  async createAddress(dto: CreateAddressDto, _) {
     return await this.repository.create(dto);
   }
 }

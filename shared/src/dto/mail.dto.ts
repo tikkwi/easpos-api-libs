@@ -1,3 +1,4 @@
+import { BaseDto } from '@common/dto';
 import { EMail } from '@common/utils';
 import { Type } from 'class-transformer';
 import {
@@ -15,7 +16,7 @@ class SubExpireDto {
   expireDate: Date;
 }
 
-export class SendMailDto {
+export class SendMailDto extends BaseDto {
   @IsEmail()
   @IsNotEmpty()
   mail: string;
@@ -36,5 +37,5 @@ export class SendMailDto {
 }
 
 export interface MailServiceMethods {
-  sendMail(dto: SendMailDto): Promise<void>;
+  sendMail(dto: SendMailDto, logTrail?: RequestLog[]): Promise<void>;
 }

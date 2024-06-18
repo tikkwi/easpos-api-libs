@@ -1,11 +1,7 @@
 import { CoreService } from '@common/core/core.service';
 import { AppService } from '@common/decorator/app_service.decorator';
-import {
-  ExceedLimitServiceMethods,
-  GetLimitDto,
-  UnlimitRequestDto,
-} from '@shared/dto';
-import { Request } from 'express';
+import { BaseDto } from '@common/dto';
+import { ExceedLimitServiceMethods, GetLimitDto, UnlimitRequestDto } from '@shared/dto';
 import { ExceedLimit, ExceedLimitSchema } from './exceed_limit.schema';
 
 @AppService()
@@ -17,21 +13,19 @@ export class ExceedLimitService
     super(ExceedLimit.name, ExceedLimitSchema);
   }
 
-  async getLimit(request: Request, dto?: GetLimitDto) {
+  async getLimit({ request, ...dto }: GetLimitDto, _) {
     const { id, lean } = dto;
     return await this.repository.findOne({
       filter: {
         _id: id,
-        $or: id
-          ? undefined
-          : [{ user: { user: request.user._id } }, { submittedIP: request.ip }],
+        $or: id ? undefined : [{ user: { user: request.user._id } }, { submittedIP: request.ip }],
       },
       options: { lean },
     });
   }
 
-  async limitRequest(request: Request) {
-    const { data: limit } = await this.getLimit(request);
+  async limitRequest({ request }: BaseDto, logTrail?: RequestLog[]) {
+    const { data: limit } = await this.getLimit({ request }, logTrail);
     if (limit)
       return {
         data: (
@@ -55,13 +49,11 @@ export class ExceedLimitService
         submittedIP: request.ip,
         sessionId: request.sessionID,
         userAgent: request.headers['user-agent'] as any,
-        threshold: request.appConfig.throttleThresholds.find(
-          (e) => e.isInitial,
-        ),
+        threshold: request.appConfig.throttleThresholds.find((e) => e.isInitial),
       });
   }
 
-  async unlimitRequest({ id }: UnlimitRequestDto) {
+  async unlimitRequest({ id }: UnlimitRequestDto, _) {
     return await this.repository.findAndUpdate({
       id,
       update: { blocked: false, threshold: null },

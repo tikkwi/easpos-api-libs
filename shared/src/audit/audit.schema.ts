@@ -29,13 +29,10 @@ export class RequestLog {
 
 export class Audit extends BaseSchema {
   @AppProp({ type: SchemaTypes.Mixed })
-  @Type(() => RequestLog)
-  log: RequestLog;
-
-  @AppProp({ type: SchemaTypes.Mixed })
+  @IsNotEmpty()
   @ValidateNested({ each: true })
   @Type(() => RequestLog)
-  logTrail?: RequestLog[];
+  logTrail: RequestLog[];
 
   @AppProp({ type: String }, { swagger: { example: '102.205.88.126' } })
   @IsIP()

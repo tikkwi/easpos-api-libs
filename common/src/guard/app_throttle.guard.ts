@@ -5,7 +5,6 @@ import { ExceedLimitService } from '@shared/exceed_limit/exceed_limit.service';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
-import { Request } from 'express';
 
 //NOTE: Provide after AuthGuard
 export class AppThrottleGuard extends ThrottlerGuard {
@@ -18,7 +17,7 @@ export class AppThrottleGuard extends ThrottlerGuard {
   ): Promise<boolean> {
     dayjs.extend(duration);
     dayjs.extend(isSameOrAfter);
-    const request: Request = context.switchToHttp().getRequest();
+    const request: AppRequest = context.switchToHttp().getRequest();
     const tracker = await this.getTracker(request);
     const key = this.generateKey(context, tracker, 'default');
     const { totalHits } = await this.storageService.increment(key, ttl);

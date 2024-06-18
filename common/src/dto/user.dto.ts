@@ -17,7 +17,7 @@ export class GetUserDto extends FindDto {
 
 export class CreateUserDto extends OmitType(CoreDto(User), [
   'merchant',
-  'appPermissions',
+  'servicePermissions',
 ]) {
   @IsNotEmpty()
   @IsMongoId()
@@ -27,9 +27,12 @@ export class CreateUserDto extends OmitType(CoreDto(User), [
 export type UserReturn = { data: User };
 
 export interface UserServiceMethods {
-  getUser(dto: GetUserDto): Promise<UserReturn>;
-  userWithAuth(dto: FindByIdDto): Promise<AuthUser>;
-  createUser(dto: CreateUserDto): Promise<UserReturn>;
+  getUser(dto: GetUserDto, logTrail?: RequestLog[]): Promise<UserReturn>;
+  userWithAuth(
+    dto: FindByIdDto,
+    logTrail?: RequestLog[],
+  ): Promise<{ data: AuthUser }>;
+  createUser(dto: CreateUserDto, logTrail?: RequestLog[]): Promise<UserReturn>;
 }
 
 export interface UserSharedServiceMethods extends UserServiceMethods {}

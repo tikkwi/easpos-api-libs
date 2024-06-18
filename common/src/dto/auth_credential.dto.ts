@@ -1,12 +1,19 @@
 import { AuthCredential } from '@common/schema';
-import { PickType } from '@nestjs/swagger';
+import { IntersectionType, PickType } from '@nestjs/swagger';
+import { BaseDto } from '@common/dto';
 
-export class GetAuthCredentialDto extends PickType(AuthCredential, ['type']) {}
+export class GetAuthCredentialDto extends IntersectionType(
+  BaseDto,
+  PickType(AuthCredential, ['type']),
+) {}
 
 export type AuthCredentialReturn = { data: AuthCredential };
 
 export interface AuthCredentialServiceMethods {
-  getAuthCredential(dto: GetAuthCredentialDto): Promise<AuthCredentialReturn>;
+  getAuthCredential(
+    dto: GetAuthCredentialDto,
+    logTrail?: RequestLog[],
+  ): Promise<AuthCredentialReturn>;
 }
 
 export interface AuthCredentialSharedServiceMethods

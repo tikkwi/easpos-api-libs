@@ -1,7 +1,7 @@
 import { AppProp } from '@common/decorator';
 import { MetadataValue } from '@common/dto';
+import { BaseSchema, Merchant, UserServicePermission } from '@common/schema';
 import { EStatus, EUser } from '@common/utils';
-import { BaseSchema, Merchant, UserAppPermission } from '@common/schema';
 import { SchemaFactory } from '@nestjs/mongoose';
 import { hash } from 'bcryptjs';
 import { Type } from 'class-transformer';
@@ -49,11 +49,11 @@ export class User extends BaseSchema {
   merchant?: Merchant;
 
   @AppProp({
-    type: [{ type: SchemaTypes.ObjectId, ref: 'UserAppPermission' }],
+    type: [{ type: SchemaTypes.ObjectId, ref: 'UserServicePermission' }],
     required: false,
     immutable: false,
   })
-  appPermissions?: UserAppPermission[];
+  servicePermissions?: UserServicePermission[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

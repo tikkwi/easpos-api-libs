@@ -3,7 +3,7 @@ import { AuthCredentialSharedServiceMethods } from '@common/dto/auth_credential.
 import { getServiceToken, parsePath } from '@common/utils';
 import { Inject, Injectable, NestMiddleware } from '@nestjs/common';
 import { compare } from 'bcryptjs';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 
 @Injectable()
 export class BasicAuthMiddleware implements NestMiddleware {
@@ -14,14 +14,18 @@ export class BasicAuthMiddleware implements NestMiddleware {
   @Inject(getServiceToken(AUTH_CREDENTIAL))
   private readonly credentialService: AuthCredentialSharedServiceMethods;
 
-  async use(request: Request, response: Response, next: () => void) {
+  async use(request: AppRequest, response: Response, next: () => void) {
     let isValid = true;
     const [app, service] = parsePath(request.path);
     const {
       data: { userName, password },
-    } = await this.credentialService.getAuthCredential({
-      type: service as any,
-    });
+    } = await this.credentialService.getAuthCredential(
+      {
+        request,
+        type: service as any,
+      },
+      { newTransaction: true },
+    );
     const authHeader = request.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Basic')) isValid = false;
     if (isValid) {

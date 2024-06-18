@@ -14,8 +14,8 @@ export class CreateMerchantDto extends OmitType(CoreDto(Merchant), [
 ]) {
   @IsNotEmpty()
   @ValidateNested()
-  @Type(() => CreateAddressDto)
-  addressDto: CreateAddressDto;
+  @Type(() => OmitType(CreateAddressDto, ['request']))
+  addressDto: Omit<CreateAddressDto, 'request'>;
 
   @IsNotEmpty()
   @ValidateNested()
@@ -24,18 +24,25 @@ export class CreateMerchantDto extends OmitType(CoreDto(Merchant), [
 
   @IsNotEmpty()
   @ValidateNested()
-  @Type(() => OmitType(CreateUserDto, ['merchantId']))
-  userDto: Omit<CreateUserDto, 'request' | 'merchantId'>;
+  @Type(() => OmitType(CreateUserDto, ['merchantId', 'request']))
+  userDto: Omit<CreateUserDto, 'request' | 'merchantId' | 'request'>;
 }
 
 type MerchantReturn = { data: Merchant };
 
 export interface MerchantServiceMethods {
-  getMerchant(dto: FindByIdDto): Promise<MerchantReturn>;
+  getMerchant(
+    dto: FindByIdDto,
+    logTrail?: RequestLog[],
+  ): Promise<MerchantReturn>;
   merchantWithAuth(
     dto: FindByIdDto,
+    logTrail?: RequestLog[],
   ): Promise<{ data: Merchant; isSubActive: boolean }>;
-  createMerchant(dto: CreateMerchantDto): Promise<MerchantReturn>;
+  createMerchant(
+    dto: CreateMerchantDto,
+    logTrail?: RequestLog[],
+  ): Promise<MerchantReturn>;
 }
 
 export interface MerchantSharedServiceMethods extends MerchantServiceMethods {}

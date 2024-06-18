@@ -63,7 +63,7 @@ export function AppProp(
     if (pOpt.required) IsNotEmpty()(target, key);
     if (pOpt.enum) IsEnum(pOpt.enum as any)(target, key);
 
-    switch ((pOpt.type as any).name) {
+    switch (Array.isArray(pOpt.type) ? pOpt.type[0].name : pOpt.type.name) {
       case 'String':
         if (validateString && !pOpt.enum) IsString()(target, key);
         break;

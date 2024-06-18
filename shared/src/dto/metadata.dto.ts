@@ -1,7 +1,8 @@
 import { EEntityMetadata, EField } from '@common/utils';
-import { FindDto, MetadataValue } from '@common/dto';
+import { BaseDto, FindDto, MetadataValue } from '@common/dto';
 import { IsEnum, IsMongoId, IsNotEmpty, ValidateIf } from 'class-validator';
 import { Metadata } from '@shared/metadata/metadata.schema';
+import { IntersectionType } from '@nestjs/swagger';
 
 export class GetMetadataDto extends FindDto {
   @IsMongoId()
@@ -13,7 +14,7 @@ export class GetMetadataDto extends FindDto {
   entity?: EEntityMetadata;
 }
 
-export class IsValidDto {
+export class IsValidDto extends BaseDto {
   value: any;
 
   @IsNotEmpty()
@@ -21,7 +22,10 @@ export class IsValidDto {
   field: EField;
 }
 
-export class ValidateMetaValueDto extends MetadataValue {
+export class ValidateMetaValueDto extends IntersectionType(
+  MetadataValue,
+  BaseDto,
+) {
   @ValidateIf((o) => !!!o.metadata)
   @IsNotEmpty()
   @IsEnum(EEntityMetadata)
@@ -31,7 +35,13 @@ export class ValidateMetaValueDto extends MetadataValue {
 export type MetadataReturn = { data: Metadata };
 
 export interface MetadataServiceMethods {
-  getMetadata(dto: GetMetadataDto): Promise<MetadataReturn>;
-  isValid(dto: IsValidDto): Promise<{ data: boolean }>;
-  validateMetaValue(dto: ValidateMetaValueDto): Promise<void>;
+  getMetadata(
+    dto: GetMetadataDto,
+    logTrail?: RequestLog[],
+  ): Promise<MetadataReturn>;
+  isValid(dto: IsValidDto, logTrail?: RequestLog[]): Promise<{ data: boolean }>;
+  validateMetaValue(
+    dto: ValidateMetaValueDto,
+    logTrail?: RequestLog[],
+  ): Promise<void>;
 }

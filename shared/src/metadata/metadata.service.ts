@@ -3,7 +3,7 @@ import { CoreService } from '@common/core/core.service';
 import { AppService } from '@common/decorator/app_service.decorator';
 import { UserSharedServiceMethods } from '@common/dto';
 import { MerchantSharedServiceMethods } from '@common/dto/merchant.dto';
-import { EField, getServiceToken, regex } from '@common/utils';
+import { EApp, EField, getServiceToken, regex } from '@common/utils';
 import { BadRequestException, Inject } from '@nestjs/common';
 import {
   AddressServiceMethods,
@@ -25,10 +25,7 @@ import { isNumber } from 'lodash';
 import { Metadata, MetadataSchema } from './metadata.schema';
 
 @AppService()
-export class MetadataService
-  extends CoreService<Metadata>
-  implements MetadataServiceMethods
-{
+export class MetadataService extends CoreService<Metadata> implements MetadataServiceMethods {
   @Inject(getServiceToken(USER))
   private readonly userService: UserSharedServiceMethods;
   @Inject(getServiceToken(MERCHANT))
@@ -39,11 +36,11 @@ export class MetadataService
     super(Metadata.name, MetadataSchema);
   }
 
-  async getMetadata({ id, entity }: GetMetadataDto) {
+  async getMetadata({ id, entity }: GetMetadataDto, _) {
     return await this.repository.findOne({ filter: { _id: id, entity } });
   }
 
-  async isValid({ value, field }: IsValidDto) {
+  async isValid({ value, field, request }: IsValidDto, logTrail?: RequestLog[]) {
     let isValid = true;
     switch (field) {
       case EField.String:
@@ -62,16 +59,22 @@ export class MetadataService
         isValid = isURL(value);
         break;
       case EField.User:
-        isValid = !!(await this.userService.getUser({ userName: value }));
+        isValid = !!(await this.userService.getUser(
+          { userName: value, request },
+          request.app === EApp.Admin ? logTrail : undefined,
+        ));
         break;
       case EField.Merchant:
-        isValid = !!(await this.merchantService.getMerchant({ id: value }));
+        isValid = !!(await this.merchantService.getMerchant(
+          { id: value, request },
+          request.app === EApp.Admin ? logTrail : undefined,
+        ));
         break;
       case EField.Datetime:
         isValid = isDateString(value);
         break;
       case EField.Address:
-        isValid = !!(await this.addressService.getAddress({ id: value }));
+        isValid = !!(await this.addressService.getAddress({ id: value, request }, logTrail));
         break;
       case EField.Number:
         isNumber(value);
@@ -86,15 +89,13 @@ export class MetadataService
     return { data: isValid };
   }
 
-  async validateMetaValue({
-    metadata: id,
-    entity,
-    value,
-  }: ValidateMetaValueDto) {
-    const metadata = await this.getMetadata({
-      id,
-      entity,
-    }).then(({ data }) => data.populate(['fields']));
+  async validateMetaValue(
+    { metadata: id, entity, value, request }: ValidateMetaValueDto,
+    logTrail?: RequestLog[],
+  ) {
+    const metadata = await this.getMetadata({ id, entity, request }, logTrail).then(({ data }) =>
+      data.populate(['fields']),
+    );
     if (!metadata) throw new BadRequestException('Metada not found');
     let isValid = true;
     for (const { name, type, isOptional, isArray } of metadata.fields) {
@@ -106,7 +107,7 @@ export class MetadataService
           else
             for (let i = 0; i < value[name].length; i++) {
               if (
-                !(await this.isValid({ value: value[name], field: type })).data
+                !(await this.isValid({ value: value[name], field: type, request }, logTrail)).data
               ) {
                 isValid = false;
                 break;
@@ -115,7 +116,7 @@ export class MetadataService
         } else {
           if (isArray) isValid = false;
           else
-            isValid = (await this.isValid({ value: value[name], field: type }))
+            isValid = (await this.isValid({ value: value[name], field: type, request }, logTrail))
               .data;
         }
       }

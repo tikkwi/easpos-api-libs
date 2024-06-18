@@ -1,13 +1,13 @@
-import { FindDto } from '@common/dto';
+import { BaseDto, FindDto } from '@common/dto';
+import { IntersectionType } from '@nestjs/swagger';
 import { ExceedLimit } from '@shared/exceed_limit/exceed_limit.schema';
 import { IsMongoId } from 'class-validator';
-import { Request } from 'express';
 
-export class GetLimitDto extends FindDto {
+export class GetLimitDto extends IntersectionType(BaseDto, FindDto) {
   id?: string;
 }
 
-export class UnlimitRequestDto {
+export class UnlimitRequestDto extends BaseDto {
   @IsMongoId()
   id?: string;
 }
@@ -15,7 +15,16 @@ export class UnlimitRequestDto {
 export type ExceedLimitReturn = { data: ExceedLimit };
 
 export interface ExceedLimitServiceMethods {
-  getLimit(request: Request, dto?: GetLimitDto): Promise<ExceedLimitReturn>;
-  limitRequest(request: Request): Promise<ExceedLimitReturn>;
-  unlimitRequest(dto: UnlimitRequestDto): Promise<ExceedLimitReturn>;
+  getLimit(
+    dto: GetLimitDto,
+    logTrail?: RequestLog[],
+  ): Promise<ExceedLimitReturn>;
+  limitRequest(
+    dto: BaseDto,
+    logTrail?: RequestLog[],
+  ): Promise<ExceedLimitReturn>;
+  unlimitRequest(
+    dto: UnlimitRequestDto,
+    logTrail?: RequestLog[],
+  ): Promise<ExceedLimitReturn>;
 }
