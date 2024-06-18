@@ -15,16 +15,7 @@ export class UnlimitRequestDto extends BaseDto {
 export type ExceedLimitReturn = { data: ExceedLimit };
 
 export interface ExceedLimitServiceMethods {
-  getLimit(
-    dto: GetLimitDto,
-    logTrail?: RequestLog[],
-  ): Promise<ExceedLimitReturn>;
-  limitRequest(
-    dto: BaseDto,
-    logTrail?: RequestLog[],
-  ): Promise<ExceedLimitReturn>;
-  unlimitRequest(
-    dto: UnlimitRequestDto,
-    logTrail?: RequestLog[],
-  ): Promise<ExceedLimitReturn>;
+  getLimit(dto: GetLimitDto): Promise<ExceedLimitReturn>;
+  limitRequest(dto: BaseDto): Promise<ExceedLimitReturn>;
+  unlimitRequest(dto: UnlimitRequestDto): Promise<ExceedLimitReturn>;
 }

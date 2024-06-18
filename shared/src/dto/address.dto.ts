@@ -6,9 +6,6 @@ export class CreateAddressDto extends CoreDto(Address) {}
 export type AddressReturn = { data: Address };
 
 export interface AddressServiceMethods {
-  getAddress(dto: FindByIdDto, logTrail?: RequestLog[]): Promise<AddressReturn>;
-  createAddress(
-    dto: CreateAddressDto,
-    logTrail?: RequestLog[],
-  ): Promise<AddressReturn>;
+  getAddress(dto: FindByIdDto): Promise<AddressReturn>;
+  createAddress(dto: CreateAddressDto): Promise<AddressReturn>;
 }

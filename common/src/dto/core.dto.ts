@@ -1,3 +1,4 @@
+import { EAllowedUser } from '@common/utils';
 import { Type } from '@nestjs/common';
 import { IntersectionType, OmitType } from '@nestjs/swagger';
 import {
@@ -9,8 +10,11 @@ import {
   IsString,
   Min,
 } from 'class-validator';
-import { Request } from 'express';
 
+//types
+export type AllowedUser = keyof typeof EAllowedUser;
+
+//classes
 export class UpdateDto {
   @IsBoolean()
   isFailed: boolean;
@@ -39,6 +43,9 @@ export class PaginationDto<T> {
 export class BaseDto {
   @IsNotEmpty()
   request: AppRequest;
+
+  @IsBoolean()
+  newTransaction?: boolean;
 }
 
 export function CoreDto<T>(

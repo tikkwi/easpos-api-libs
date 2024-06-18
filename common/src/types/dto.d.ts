@@ -7,6 +7,6 @@ type AuthUser = {
   status: EStatus;
   isOwner: boolean;
   type: EUser;
-  merchant?: { id: string; dbUri?: string; isSubActive: boolean };
+  merchant?: string;
   metadata: any;
 };

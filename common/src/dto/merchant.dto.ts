@@ -31,18 +31,9 @@ export class CreateMerchantDto extends OmitType(CoreDto(Merchant), [
 type MerchantReturn = { data: Merchant };
 
 export interface MerchantServiceMethods {
-  getMerchant(
-    dto: FindByIdDto,
-    logTrail?: RequestLog[],
-  ): Promise<MerchantReturn>;
-  merchantWithAuth(
-    dto: FindByIdDto,
-    logTrail?: RequestLog[],
-  ): Promise<{ data: Merchant; isSubActive: boolean }>;
-  createMerchant(
-    dto: CreateMerchantDto,
-    logTrail?: RequestLog[],
-  ): Promise<MerchantReturn>;
+  getMerchant(dto: FindByIdDto): Promise<MerchantReturn>;
+  merchantWithAuth(dto: FindByIdDto): Promise<{ data: Merchant; isSubActive: boolean }>;
+  createMerchant(dto: CreateMerchantDto): Promise<MerchantReturn>;
 }
 
 export interface MerchantSharedServiceMethods extends MerchantServiceMethods {}

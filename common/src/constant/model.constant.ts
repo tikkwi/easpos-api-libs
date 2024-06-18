@@ -1,3 +1,5 @@
+export const ADMIN_APP = 'ADMIN_APP';
+export const USER_APP = 'USER_APP';
 export const EXCEED_LIMIT = 'EXCEED_LIMIT';
 export const EXCEED_LIMIT_THRESHOLD = 'EXCEED_LIMIT_THRESHOLD';
 export const MERCHANT = 'MERCHANT';

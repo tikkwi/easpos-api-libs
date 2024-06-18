@@ -10,11 +10,7 @@ export class GetAuthCredentialDto extends IntersectionType(
 export type AuthCredentialReturn = { data: AuthCredential };
 
 export interface AuthCredentialServiceMethods {
-  getAuthCredential(
-    dto: GetAuthCredentialDto,
-    logTrail?: RequestLog[],
-  ): Promise<AuthCredentialReturn>;
+  getAuthCredential(dto: GetAuthCredentialDto): Promise<AuthCredentialReturn>;
 }
 
-export interface AuthCredentialSharedServiceMethods
-  extends AuthCredentialServiceMethods {}
+export interface AuthCredentialSharedServiceMethods extends AuthCredentialServiceMethods {}

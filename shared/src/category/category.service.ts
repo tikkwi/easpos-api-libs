@@ -10,11 +10,11 @@ export class CategoryService extends CoreService<Category> implements CategorySe
     super(Category.name, CategorySchema);
   }
 
-  async getCategory(dto: FindByIdDto, _) {
+  async getCategory(dto: FindByIdDto) {
     return await this.repository.findById(dto);
   }
 
-  async createCategory(dto: CreateCategoryDto, _) {
+  async createCategory(dto: CreateCategoryDto) {
     return await this.repository.create(dto);
   }
 }

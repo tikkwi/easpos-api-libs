@@ -10,11 +10,7 @@ import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 export class AppThrottleGuard extends ThrottlerGuard {
   private readonly exceedLimitService: ExceedLimitService;
 
-  async handleRequest(
-    context: ExecutionContext,
-    limit: number,
-    ttl: number,
-  ): Promise<boolean> {
+  async handleRequest(context: ExecutionContext, limit: number, ttl: number): Promise<boolean> {
     dayjs.extend(duration);
     dayjs.extend(isSameOrAfter);
     const request: AppRequest = context.switchToHttp().getRequest();
@@ -25,26 +21,21 @@ export class AppThrottleGuard extends ThrottlerGuard {
     const blockMsg = `${request.user ? `${request.user.firstName} ${request.user.lastName}` : request.ip}`;
 
     const { data: exceedLimit } = isExceed
-      ? await this.exceedLimitService.limitRequest(request)
-      : await this.exceedLimitService.getLimit(request);
+      ? await this.exceedLimitService.limitRequest({ request })
+      : await this.exceedLimitService.getLimit({ request });
 
     if (exceedLimit) {
       if (exceedLimit.blocked && !exceedLimit.threshold.blockedUntil)
-        throw new ThrottlerException(
-          `${blockMsg} is blocked. Please contact support..`,
-        );
+        throw new ThrottlerException(`${blockMsg} is blocked. Please contact support..`);
       const [isBlockActive, until] = exceedLimit
-        ? isPeriodExceed(
-            exceedLimit.threshold.blockedUntil,
-            exceedLimit.createdAt,
-          )
+        ? isPeriodExceed(exceedLimit.threshold.blockedUntil, exceedLimit.createdAt)
         : undefined;
 
       if (isBlockActive)
         throw new ThrottlerException(
           `${blockMsg} is blocked until ${dayjs(until).format('dd MMM yyyy, hh:mm')}. Please requestuest after that unless you'll be blocked more severely.`,
         );
-      else if (!isExceed) await this.exceedLimitService.unlimitRequest({});
+      else if (!isExceed) await this.exceedLimitService.unlimitRequest({ request });
     }
     return true;
   }

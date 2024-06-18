@@ -9,18 +9,13 @@ import * as session from 'express-session';
 import helmet from 'helmet';
 import { join } from 'path';
 
-export async function appBootstrap(
-  module: any,
-  port: number,
-  packages?: string[],
-) {
+export async function appBootstrap(module: any, port: number, packages?: string[]) {
   const app = await NestFactory.create(module);
   const config = app.get<ConfigService>(ConfigService);
-  const documentConfig = new DocumentBuilder()
-    .setTitle(config.get<string>(APP))
-    .setVersion('1.0')
-    .build();
+  const currentApp = config.get<string>(APP);
+  const documentConfig = new DocumentBuilder().setTitle(currentApp).setVersion('1.0').build();
 
+  app.setGlobalPrefix(`${currentApp}_api`);
   const document = SwaggerModule.createDocument(app, documentConfig);
   SwaggerModule.setup('swagger', app, document);
   // const redisClient = await app.get<Redis.RedisClientType>(REDIS_CLIENT);
@@ -63,16 +58,13 @@ export async function appBootstrap(
       },
       [[], []],
     );
-    const grpcApp = await NestFactory.createMicroservice<MicroserviceOptions>(
-      module,
-      {
-        transport: Transport.GRPC,
-        options: {
-          package: pkg,
-          protoPath: name.map((e) => join(__dirname, `../${e}.proto`)),
-        },
+    const grpcApp = await NestFactory.createMicroservice<MicroserviceOptions>(module, {
+      transport: Transport.GRPC,
+      options: {
+        package: pkg,
+        protoPath: name.map((e) => join(__dirname, `../${e}.proto`)),
       },
-    );
+    });
     grpcApp.listen();
   }
 }

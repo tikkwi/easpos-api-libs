@@ -4,7 +4,7 @@ import { MailServiceMethods, SendMailDto } from '@shared/dto';
 
 @AppService()
 export class MailService extends CoreService implements MailServiceMethods {
-  async sendMail({ mail, type }: SendMailDto, _) {
+  async sendMail({ mail, type }: SendMailDto) {
     console.log(`Send ${type} to ${mail}`);
   }
 }

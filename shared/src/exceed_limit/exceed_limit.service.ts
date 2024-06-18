@@ -13,7 +13,7 @@ export class ExceedLimitService
     super(ExceedLimit.name, ExceedLimitSchema);
   }
 
-  async getLimit({ request, ...dto }: GetLimitDto, _) {
+  async getLimit({ request, ...dto }: GetLimitDto) {
     const { id, lean } = dto;
     return await this.repository.findOne({
       filter: {
@@ -24,8 +24,8 @@ export class ExceedLimitService
     });
   }
 
-  async limitRequest({ request }: BaseDto, logTrail?: RequestLog[]) {
-    const { data: limit } = await this.getLimit({ request }, logTrail);
+  async limitRequest({ request }: BaseDto) {
+    const { data: limit } = await this.getLimit({ request });
     if (limit)
       return {
         data: (
@@ -53,7 +53,7 @@ export class ExceedLimitService
       });
   }
 
-  async unlimitRequest({ id }: UnlimitRequestDto, _) {
+  async unlimitRequest({ id }: UnlimitRequestDto) {
     return await this.repository.findAndUpdate({
       id,
       update: { blocked: false, threshold: null },

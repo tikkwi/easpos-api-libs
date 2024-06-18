@@ -22,10 +22,7 @@ export class IsValidDto extends BaseDto {
   field: EField;
 }
 
-export class ValidateMetaValueDto extends IntersectionType(
-  MetadataValue,
-  BaseDto,
-) {
+export class ValidateMetaValueDto extends IntersectionType(MetadataValue, BaseDto) {
   @ValidateIf((o) => !!!o.metadata)
   @IsNotEmpty()
   @IsEnum(EEntityMetadata)
@@ -35,13 +32,7 @@ export class ValidateMetaValueDto extends IntersectionType(
 export type MetadataReturn = { data: Metadata };
 
 export interface MetadataServiceMethods {
-  getMetadata(
-    dto: GetMetadataDto,
-    logTrail?: RequestLog[],
-  ): Promise<MetadataReturn>;
-  isValid(dto: IsValidDto, logTrail?: RequestLog[]): Promise<{ data: boolean }>;
-  validateMetaValue(
-    dto: ValidateMetaValueDto,
-    logTrail?: RequestLog[],
-  ): Promise<void>;
+  getMetadata(dto: GetMetadataDto): Promise<MetadataReturn>;
+  isValid(dto: IsValidDto): Promise<{ data: boolean }>;
+  validateMetaValue(dto: ValidateMetaValueDto): Promise<void>;
 }

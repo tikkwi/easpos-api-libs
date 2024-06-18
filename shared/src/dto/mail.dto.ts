@@ -37,5 +37,5 @@ export class SendMailDto extends BaseDto {
 }
 
 export interface MailServiceMethods {
-  sendMail(dto: SendMailDto, logTrail?: RequestLog[]): Promise<void>;
+  sendMail(dto: SendMailDto): Promise<void>;
 }

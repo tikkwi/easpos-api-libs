@@ -16,12 +16,6 @@ export class CreateCategoryDto extends BaseDto {
 export type CategoryReturn = { data: Category };
 
 export interface CategoryServiceMethods {
-  getCategory(
-    dto: FindByIdDto,
-    logTrail?: RequestLog[],
-  ): Promise<CategoryReturn>;
-  createCategory(
-    dto: CreateCategoryDto,
-    logTrail?: RequestLog[],
-  ): Promise<CategoryReturn>;
+  getCategory(dto: FindByIdDto): Promise<CategoryReturn>;
+  createCategory(dto: CreateCategoryDto): Promise<CategoryReturn>;
 }

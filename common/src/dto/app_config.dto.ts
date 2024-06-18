@@ -1,10 +1,9 @@
-import { FindDto } from './core.dto';
+import { BaseDto, FindDto } from './core.dto';
 
 export type AppConfigReturn = { data: AppConfig };
 
 export interface AppConfigServiceMethods {
-  getConfig(dto: FindDto, logTrail?: RequestLog[]): Promise<AppConfigReturn>;
+  getConfig(dto: BaseDto): Promise<AppConfigReturn>;
 }
 
-export interface AppConfigSharedServiceMethods
-  extends AppConfigServiceMethods {}
+export interface AppConfigSharedServiceMethods extends AppConfigServiceMethods {}

@@ -5,19 +5,16 @@ import { AddressServiceMethods, CreateAddressDto } from '@shared/dto';
 import { Address, AddressSchema } from './address.schema';
 
 @AppService()
-export class AddressService
-  extends CoreService<Address>
-  implements AddressServiceMethods
-{
+export class AddressService extends CoreService<Address> implements AddressServiceMethods {
   constructor() {
     super(Address.name, AddressSchema);
   }
 
-  async getAddress({ id, lean = true }: FindByIdDto, _) {
+  async getAddress({ id, lean = true }: FindByIdDto) {
     return await this.repository.findById({ id, options: { lean } });
   }
 
-  async createAddress(dto: CreateAddressDto, _) {
+  async createAddress(dto: CreateAddressDto) {
     return await this.repository.create(dto);
   }
 }

@@ -10,6 +10,7 @@ declare global {
   type QueryOptions<T> = import('mongoose').QueryOptions<T>;
   type UpdateQuery<T> = import('mongoose').UpdateQuery<T>;
   type User = import('@common/schema').User;
+  type Merchant = import('@common/schema').Merchant;
   type AppConfig = import('@common/schema').AppConfig;
   type RequestLog = import('@common/schema').RequestLog;
   type EApp = import('@common/utils').EApp;
@@ -41,15 +42,10 @@ declare global {
     action: (model: Model<T>) => any;
   };
 
-  type AppRequest = Pick<
-    Request,
-    'path' | 'ip' | 'sessionID' | 'headers' | 'url'
-  > & {
+  type AppRequest = Pick<Request, 'path' | 'ip' | 'sessionID' | 'headers' | 'url' | 'query'> & {
     appConfig: AppConfig;
-    app: EApp;
-    $session: Session; //NOTE: won't include in transporting across services
-    logTrail: RequestLog[];
     user?: AuthUser;
+    merchant?: Merchant;
     isSubActive?: boolean;
     session: {
       user: string;
@@ -58,7 +54,7 @@ declare global {
 
   type MakeTransactionType = {
     request?: AppRequest;
-    action: (logTrail: RequestLog[]) => Promise<any>;
+    action: () => Promise<any>;
     response?: Response;
   };
 }

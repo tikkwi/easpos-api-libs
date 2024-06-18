@@ -11,7 +11,9 @@ export enum EApp {
 
 //service name
 export enum EAuthCredential {
-  Swagger = 'Swagger',
+  Swagger = 'swagger',
+  AdminLogin = 'admin-login',
+  MerchantLogin = 'merchant-login',
 }
 
 export enum ESubscription {

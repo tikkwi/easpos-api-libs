@@ -36,11 +36,11 @@ export class MetadataService extends CoreService<Metadata> implements MetadataSe
     super(Metadata.name, MetadataSchema);
   }
 
-  async getMetadata({ id, entity }: GetMetadataDto, _) {
+  async getMetadata({ id, entity }: GetMetadataDto) {
     return await this.repository.findOne({ filter: { _id: id, entity } });
   }
 
-  async isValid({ value, field, request }: IsValidDto, logTrail?: RequestLog[]) {
+  async isValid({ value, field, request }: IsValidDto) {
     let isValid = true;
     switch (field) {
       case EField.String:
@@ -59,22 +59,24 @@ export class MetadataService extends CoreService<Metadata> implements MetadataSe
         isValid = isURL(value);
         break;
       case EField.User:
-        isValid = !!(await this.userService.getUser(
-          { userName: value, request },
-          request.app === EApp.Admin ? logTrail : undefined,
-        ));
+        isValid = !!(await this.userService.getUser({
+          userName: value,
+          request,
+          newTransaction: request.app !== EApp.Admin,
+        }));
         break;
       case EField.Merchant:
-        isValid = !!(await this.merchantService.getMerchant(
-          { id: value, request },
-          request.app === EApp.Admin ? logTrail : undefined,
-        ));
+        isValid = !!(await this.merchantService.getMerchant({
+          id: value,
+          request,
+          newTransaction: request.app !== EApp.Admin,
+        }));
         break;
       case EField.Datetime:
         isValid = isDateString(value);
         break;
       case EField.Address:
-        isValid = !!(await this.addressService.getAddress({ id: value, request }, logTrail));
+        isValid = !!(await this.addressService.getAddress({ id: value, request }));
         break;
       case EField.Number:
         isNumber(value);
@@ -89,11 +91,8 @@ export class MetadataService extends CoreService<Metadata> implements MetadataSe
     return { data: isValid };
   }
 
-  async validateMetaValue(
-    { metadata: id, entity, value, request }: ValidateMetaValueDto,
-    logTrail?: RequestLog[],
-  ) {
-    const metadata = await this.getMetadata({ id, entity, request }, logTrail).then(({ data }) =>
+  async validateMetaValue({ metadata: id, entity, value, request }: ValidateMetaValueDto) {
+    const metadata = await this.getMetadata({ id, entity, request }).then(({ data }) =>
       data.populate(['fields']),
     );
     if (!metadata) throw new BadRequestException('Metada not found');
@@ -106,18 +105,14 @@ export class MetadataService extends CoreService<Metadata> implements MetadataSe
           if (!isArray) isValid = false;
           else
             for (let i = 0; i < value[name].length; i++) {
-              if (
-                !(await this.isValid({ value: value[name], field: type, request }, logTrail)).data
-              ) {
+              if (!(await this.isValid({ value: value[name], field: type, request })).data) {
                 isValid = false;
                 break;
               }
             }
         } else {
           if (isArray) isValid = false;
-          else
-            isValid = (await this.isValid({ value: value[name], field: type, request }, logTrail))
-              .data;
+          else isValid = (await this.isValid({ value: value[name], field: type, request })).data;
         }
       }
       if (!isValid) {
