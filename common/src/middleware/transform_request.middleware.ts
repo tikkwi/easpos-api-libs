@@ -16,12 +16,13 @@ export class TransformRequestMiddleware implements NestMiddleware {
   private readonly adminAppService: AdminAppSharedServiceMethods;
 
   async use(request: AppRequest, response: Response, next: () => void) {
-    const [app] = parsePath(request.path);
+    const [app]: any = parsePath(request.path);
     const { config, isSubActive, merchant, user, basicAuth } =
       await this.adminAppService.getAuthData({
         request,
         newTransaction: true,
       });
+    request.app = app;
     request.user = user;
     request.merchant = merchant;
     request.appConfig = config;

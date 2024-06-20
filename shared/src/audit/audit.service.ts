@@ -1,13 +1,11 @@
-import { ContextService } from '@common/core';
+import { C_LOG_TRAIL, C_REQ } from '@common/constant';
 import { CoreService } from '@common/core/core.service';
 import { AppService } from '@common/decorator';
 import { AuditServiceMethods } from '@shared/dto';
 import { Audit, AuditSchema } from './audit.schema';
-import { C_LOG_TRAIL, C_REQ } from '@common/constant';
 
 @AppService()
 export class AuditService extends CoreService<Audit> implements AuditServiceMethods {
-  private readonly context: ContextService;
   constructor() {
     super(Audit.name, AuditSchema);
   }

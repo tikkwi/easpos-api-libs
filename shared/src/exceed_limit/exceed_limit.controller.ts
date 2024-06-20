@@ -1,8 +1,11 @@
 import { AppController } from '@common/decorator';
 import { ExceedLimitService } from './exceed_limit.service';
-import { EAllowedUser } from '@common/helper';
+import { CoreController } from '@common/core/core.controller';
+import { EAllowedUser } from '@common/utils';
 
-@AppController('admin-api/exceed-limit', [EAllowedUser.Admin])
-export class ExceedLimitController {
-  constructor(private readonly service: ExceedLimitService) {}
+@AppController('exceed-limit', [EAllowedUser.Admin])
+export class ExceedLimitController extends CoreController {
+  constructor(service: ExceedLimitService) {
+    super(service);
+  }
 }

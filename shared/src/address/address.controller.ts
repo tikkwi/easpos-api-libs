@@ -3,10 +3,13 @@ import { Body, Post, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { AddressService } from './address.service';
 import { CreateAddressDto } from '@shared/dto/address.dto';
+import { CoreController } from '@common/core/core.controller';
 
 @AppController('address')
-export class AddressController {
-  constructor(private readonly service: AddressService) {}
+export class AddressController extends CoreController {
+  constructor(service: AddressService) {
+    super(service);
+  }
 
   @Post('create')
   async createAddress(

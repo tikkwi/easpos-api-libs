@@ -1,7 +1,7 @@
 import { EEntityMetadata, EField } from '@common/utils';
 import { BaseDto, FindDto, MetadataValue } from '@common/dto';
 import { IsEnum, IsMongoId, IsNotEmpty, ValidateIf } from 'class-validator';
-import { Metadata } from '@shared/metadata/metadata.schema';
+import { Metadata } from 'src/metadata/metadata.schema';
 import { IntersectionType } from '@nestjs/swagger';
 
 export class GetMetadataDto extends FindDto {

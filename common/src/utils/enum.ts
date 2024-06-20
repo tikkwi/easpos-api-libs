@@ -5,8 +5,8 @@ export enum EMerchantPurchase {
 }
 
 export enum EApp {
-  Admin = 'Admin',
-  User = 'User',
+  Admin = 'admin',
+  User = 'user',
 }
 
 //service name

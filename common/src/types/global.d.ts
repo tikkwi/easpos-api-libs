@@ -43,6 +43,7 @@ declare global {
   };
 
   type AppRequest = Pick<Request, 'path' | 'ip' | 'sessionID' | 'headers' | 'url' | 'query'> & {
+    app: EApp;
     appConfig: AppConfig;
     user?: AuthUser;
     merchant?: Merchant;

@@ -5,5 +5,6 @@ import { ExceedLimitService } from './exceed_limit.service';
 @Module({
   controllers: [ExceedLimitController],
   providers: [ExceedLimitService],
+  exports: [ExceedLimitService],
 })
 export class ExceedLimitModule {}

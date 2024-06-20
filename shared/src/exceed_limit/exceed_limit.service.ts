@@ -3,14 +3,20 @@ import { AppService } from '@common/decorator/app_service.decorator';
 import { BaseDto } from '@common/dto';
 import { ExceedLimitServiceMethods, GetLimitDto, UnlimitRequestDto } from '@shared/dto';
 import { ExceedLimit, ExceedLimitSchema } from './exceed_limit.schema';
+import { Repository } from '@common/core';
+import { ExceedLimitThreshold, ExceedLimitThresholdSchema } from './exceed_limit_threshold.schema';
 
 @AppService()
 export class ExceedLimitService
   extends CoreService<ExceedLimit>
   implements ExceedLimitServiceMethods
 {
+  private readonly thresholdRepository: Repository<ExceedLimitThreshold>;
   constructor() {
     super(ExceedLimit.name, ExceedLimitSchema);
+    this.thresholdRepository = new Repository(
+      this.connection.model(ExceedLimitThreshold.name, ExceedLimitThresholdSchema),
+    );
   }
 
   async getLimit({ request, ...dto }: GetLimitDto) {

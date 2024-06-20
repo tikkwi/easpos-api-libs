@@ -1,17 +1,15 @@
-import { MERCHANT, USER } from '@common/constant';
 import { CoreService } from '@common/core/core.service';
-import { AppService } from '@common/decorator/app_service.decorator';
-import { UserSharedServiceMethods } from '@common/dto';
-import { MerchantSharedServiceMethods } from '@common/dto/merchant.dto';
-import { EApp, EField, getServiceToken, regex } from '@common/utils';
-import { BadRequestException, Inject } from '@nestjs/common';
 import {
-  AddressServiceMethods,
   GetMetadataDto,
   IsValidDto,
   MetadataServiceMethods,
+  UserSharedServiceMethods,
   ValidateMetaValueDto,
-} from '@shared/dto';
+} from '@common/dto';
+import { MerchantSharedServiceMethods } from '@common/dto/merchant.dto';
+import { EApp, EField, regex } from '@common/utils';
+import { BadRequestException } from '@nestjs/common';
+import { AddressServiceMethods } from '@shared/dto';
 import {
   isBoolean,
   isDateString,
@@ -22,15 +20,15 @@ import {
   matches,
 } from 'class-validator';
 import { isNumber } from 'lodash';
-import { Metadata, MetadataSchema } from './metadata.schema';
+import { Metadata, MetadataSchema } from '../../schema/metadata.schema';
 
-@AppService()
-export class MetadataService extends CoreService<Metadata> implements MetadataServiceMethods {
-  @Inject(getServiceToken(USER))
-  private readonly userService: UserSharedServiceMethods;
-  @Inject(getServiceToken(MERCHANT))
-  private readonly merchantService: MerchantSharedServiceMethods;
-  private readonly addressService: AddressServiceMethods;
+export abstract class MetadataService
+  extends CoreService<Metadata>
+  implements MetadataServiceMethods
+{
+  protected abstract userService: UserSharedServiceMethods;
+  protected abstract merchantService: MerchantSharedServiceMethods;
+  protected readonly addressService: AddressServiceMethods;
 
   constructor() {
     super(Metadata.name, MetadataSchema);

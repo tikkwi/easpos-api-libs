@@ -5,7 +5,7 @@ import { Controller } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { pull } from 'lodash';
 
-export function AppController(prefix: string, allowedUsers?: AllowedUser[]) {
+export function AppController(prefix?: string, allowedUsers?: AllowedUser[]) {
   return function (target: any) {
     const reflector = new Reflector();
 

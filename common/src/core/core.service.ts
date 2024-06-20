@@ -3,7 +3,7 @@ import { InjectConnection } from '@nestjs/mongoose';
 import { Connection } from 'mongoose';
 
 export abstract class CoreService<T = unknown> {
-  @InjectConnection() private readonly connection: Connection;
+  @InjectConnection() protected readonly connection: Connection;
   protected readonly transaction: TransactionService;
   protected readonly context: ContextService;
   protected repository: Repository<T>;
