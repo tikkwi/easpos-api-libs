@@ -24,6 +24,12 @@ export function AppController(prefix: string, allowedUsers?: AllowedUser[]) {
         const serviceForbidden = reflector.get(FORBIDDEN_USERS, target.prototype[key]);
         if (serviceForbidden) pull(users, ...serviceForbidden);
         if (users.length) Users(users)(target.prototype[key], key, descriptor);
+
+        descriptor!.value = async function (...args) {
+          return await this.transaction.makeTransaction(originalMethod(args));
+        };
+
+        Object.defineProperty(target.prototype, key, descriptor);
       }
     }
 

@@ -10,5 +10,5 @@ export class LogRequestDto extends IntersectionType(
 export type AuditReturn = { data: Audit };
 
 export interface AuditServiceMethods {
-  logRequest(request: AppRequest): Promise<AuditReturn>;
+  logRequest(): Promise<AuditReturn>;
 }

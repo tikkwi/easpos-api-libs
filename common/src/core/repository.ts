@@ -1,24 +1,21 @@
-import { PAGE_SIZE } from '@common/constant';
+import { C_SESSION, PAGE_SIZE } from '@common/constant';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { Document, Model } from 'mongoose';
+import { ClientSession, Document, Model } from 'mongoose';
+import { ContextService } from './context/context.service';
 
 export class Repository<T> {
-  constructor(public readonly model: Model<T>) {}
+  private readonly context: ContextService;
+  private readonly session: ClientSession;
 
-  async create(dto: CreateType<T>) {
-    const data = await new this.model(dto).save();
-    const rollback = async () => await this.model.findByIdAndDelete(data.id);
-
-    return { data: data as Document<unknown, unknown, T> & T, rollback };
+  constructor(public readonly model: Model<T>) {
+    this.session = this.context.get(C_SESSION);
   }
 
-  getPaginationOption({
-    page,
-    startDate,
-    endDate,
-    pageSize,
-    sort,
-  }: PaginationType<T>) {
+  async create(dto: CreateType<T>) {
+    return { data: (await new this.model(dto).save()) as Document<unknown, unknown, T> & T };
+  }
+
+  getPaginationOption({ page, startDate, endDate, pageSize, sort }: PaginationType<T>) {
     const pag = {};
     const fil = {};
     if (sort) pag['sort'] = sort;
@@ -43,11 +40,7 @@ export class Repository<T> {
     return response;
   }
 
-  async findOne({
-    filter,
-    projection,
-    options = {},
-  }: Omit<FindType<T>, 'pagination'>) {
+  async findOne({ filter, projection, options = {} }: Omit<FindType<T>, 'pagination'>) {
     return {
       data: await this.model.findOne(filter, projection, {
         lean: true,
@@ -70,62 +63,42 @@ export class Repository<T> {
   }
 
   async findAndUpdate({ id, filter, options, update }: UpdateType<T>) {
-    if (!id && !filter)
-      throw new BadRequestException('Require filter to update');
+    if (!id && !filter) throw new BadRequestException('Require filter to update');
 
-    const prev = id
-      ? await this.model.findById(id, null)
-      : await this.model.findOne(filter, null);
+    const prev = id ? await this.model.findById(id, null) : await this.model.findOne(filter, null);
 
     if (!prev) throw new NotFoundException('Not found');
 
     const updateOptions: [UpdateQuery<T>, QueryOptions<T>] = [
       { ...update, updatedAt: new Date() },
-      { ...options, lean: true, new: true },
+      { ...options, lean: true, new: true, session: this.session },
     ];
     const data = id
       ? await this.model.findByIdAndUpdate(id, ...updateOptions)
       : await this.model.findOneAndUpdate(filter, ...updateOptions);
 
-    const rollback = async () => {
-      prev.isNew = false;
-      await prev.save();
-    };
-
-    return { prev, data, rollback };
+    return { prev, data };
   }
 
-  async updateMany({
-    ids,
-    update,
-  }: Omit<UpdateType<T>, 'id' | 'filter'> & { ids: string[] }) {
+  async updateMany({ ids, update }: Omit<UpdateType<T>, 'id' | 'filter'> & { ids: string[] }) {
     const prev = await this.model.find({ _id: { $in: ids } }, null);
     if (!prev || !prev.length) throw new NotFoundException('Not Found');
 
     await this.model.updateMany(
       { _id: { $in: ids } },
       { ...update, updatedAt: new Date() },
+      { session: this.session },
     );
 
     const data = await this.model.find({ _id: { $in: ids } }, null, {
       lean: true,
     });
 
-    const rollback = async () => {
-      for (const doc of prev) {
-        doc.isNew = false;
-        await doc.save();
-      }
-    };
-
-    return { prev, data, rollback };
+    return { prev, data };
   }
 
   async delete(id: string) {
-    const data = await this.model.findById(id);
-    await this.model.findByIdAndDelete(id);
-    const rollback = async () => await data.save();
-    return { rollback };
+    await this.model.findByIdAndDelete(id, { session: this.session });
   }
 
   async custom(action: (model: Model<T>) => any) {

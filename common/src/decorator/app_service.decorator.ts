@@ -10,10 +10,10 @@ export function AppService() {
       const originalMethod = descriptor?.value;
 
       if (typeof originalMethod === 'function' && key !== 'getRepository') {
-        descriptor!.value = async function (dto, meta) {
-          const request = JSON.parse(meta.req);
-          await target.getRepository(request);
-          originalMethod.apply(this, [dto, { ...meta, request }]);
+        descriptor!.value = async function (...args) {
+          if (args[0].newTransaction)
+            return await this.transaction.makeTransaction(originalMethod(args));
+          return originalMethod(args);
         };
 
         Object.defineProperty(target.prototype, key, descriptor);

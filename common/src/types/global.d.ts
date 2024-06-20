@@ -51,12 +51,6 @@ declare global {
       user: string;
     };
   };
-
-  type MakeTransactionType = {
-    request?: AppRequest;
-    action: () => Promise<any>;
-    response?: Response;
-  };
 }
 
 // declare module 'express' {

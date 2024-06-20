@@ -41,8 +41,7 @@ export class PaginationDto<T> {
 }
 
 export class BaseDto {
-  @IsNotEmpty()
-  request: AppRequest;
+  request?: AppRequest;
 
   @IsBoolean()
   newTransaction?: boolean;
