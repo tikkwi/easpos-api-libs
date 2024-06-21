@@ -1,4 +1,4 @@
-import { EUser } from '@common/utils';
+import { EUser } from '@common/utils/enum';
 import {
   IsEmail,
   IsEnum,

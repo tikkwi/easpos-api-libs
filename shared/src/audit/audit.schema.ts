@@ -1,7 +1,7 @@
-import { AppProp } from '@common/decorator';
-import { User } from '@common/dto';
-import { parseUA } from '@common/utils';
-import { BaseSchema } from '@common/schema';
+import { AppProp } from '@common/decorator/app_prop.decorator';
+import { User } from '@common/dto/entity.dto';
+import { BaseSchema } from '@common/schema/base.schema';
+import { parseUA } from '@common/utils/user_agent';
 import { SchemaFactory } from '@nestjs/mongoose';
 import { Type } from 'class-transformer';
 import { IsIP, IsNotEmpty, IsString, ValidateNested } from 'class-validator';

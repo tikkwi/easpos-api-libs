@@ -1,8 +1,8 @@
-import { CoreDto, FindByIdDto, FindDto } from '@common/dto';
-import { regex } from '@common/utils';
+import { regex } from '@common/utils/regex';
 import { OmitType } from '@nestjs/swagger';
 import { User } from '@common/schema/user.schema';
 import { IsEmail, IsMongoId, IsNotEmpty, Matches } from 'class-validator';
+import { CoreDto, FindByIdDto, FindDto } from './core.dto';
 
 export class GetUserDto extends FindDto {
   @IsMongoId()

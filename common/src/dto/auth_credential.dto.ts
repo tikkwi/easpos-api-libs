@@ -1,6 +1,6 @@
-import { AuthCredential } from '@common/schema';
 import { IntersectionType, PickType } from '@nestjs/swagger';
-import { BaseDto } from '@common/dto';
+import { BaseDto } from './core.dto';
+import { AuthCredential } from '@common/schema/auth_credential.schema';
 
 export class GetAuthCredentialDto extends IntersectionType(
   BaseDto,

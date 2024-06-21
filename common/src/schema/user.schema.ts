@@ -1,12 +1,13 @@
-import { AppProp } from '@common/decorator';
-import { MetadataValue } from '@common/dto';
-import { BaseSchema, Merchant, UserServicePermission } from '@common/schema';
-import { EStatus, EUser } from '@common/utils';
+import { EStatus, EUser } from '@common/utils/enum';
 import { SchemaFactory } from '@nestjs/mongoose';
 import { hash } from 'bcryptjs';
 import { Type } from 'class-transformer';
 import { IsEmail, IsNotEmpty, ValidateIf } from 'class-validator';
 import { SchemaTypes } from 'mongoose';
+import { BaseSchema } from './base.schema';
+import { AppProp } from '@common/decorator/app_prop.decorator';
+import { MetadataValue } from '@common/dto/entity.dto';
+import { UserServicePermission } from './user_service_permission.schema';
 
 export class User extends BaseSchema {
   @AppProp({ type: String, unique: true }, { userName: true })

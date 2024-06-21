@@ -1,7 +1,7 @@
+import { AppProp } from '@common/decorator/app_prop.decorator';
+import { BaseSchema } from '@common/schema/base.schema';
+import { ECategory } from '@common/utils/enum';
 import { SchemaFactory } from '@nestjs/mongoose';
-import { BaseSchema } from '@common/schema';
-import { AppProp } from '@common/decorator';
-import { ECategory } from '@common/helper';
 
 export class Category extends BaseSchema {
   @AppProp({ type: String })

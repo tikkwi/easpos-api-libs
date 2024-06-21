@@ -1,5 +1,5 @@
 import { SchemaFactory } from '@nestjs/mongoose';
-import { BaseSchema } from '@common/schema';
+import { BaseSchema } from './base.schema';
 
 export class Payment extends BaseSchema {}
 

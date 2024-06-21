@@ -1,7 +1,8 @@
-import { AppProp } from '@common/decorator';
-import { BaseSchema, Permission } from '@common/schema';
 import { SchemaFactory } from '@nestjs/mongoose';
 import { SchemaTypes } from 'mongoose';
+import { BaseSchema } from './base.schema';
+import { AppProp } from '@common/decorator/app_prop.decorator';
+import { Permission } from './permission.schema';
 
 export class UserServicePermission extends BaseSchema {
   @AppProp({ type: String })
@@ -17,6 +18,4 @@ export class UserServicePermission extends BaseSchema {
   permissions: Permission[];
 }
 
-export const UserServicePermissionSchema = SchemaFactory.createForClass(
-  UserServicePermission,
-);
+export const UserServicePermissionSchema = SchemaFactory.createForClass(UserServicePermission);

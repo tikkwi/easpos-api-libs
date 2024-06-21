@@ -1,6 +1,5 @@
-import { BaseDto } from '@common/dto';
-import { AuthCredential, Merchant } from '@common/schema';
 import { User } from '@common/schema/user.schema';
+import { BaseDto } from './core.dto';
 
 export type UserReturn = { data: User };
 

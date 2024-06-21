@@ -1,5 +1,6 @@
-import { BaseDto, FindByIdDto } from '@common/dto';
-import { ECategory, regex } from '@common/utils';
+import { BaseDto, FindByIdDto } from '@common/dto/core.dto';
+import { ECategory } from '@common/utils/enum';
+import { regex } from '@common/utils/regex';
 import { Category } from '@shared/category/category.schema';
 import { IsEnum, IsNotEmpty, Matches } from 'class-validator';
 

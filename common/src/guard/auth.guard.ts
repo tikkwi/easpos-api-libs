@@ -1,6 +1,6 @@
 import { USERS } from '@common/constant';
-import { AllowedUser } from '@common/dto';
-import { EAllowedUser } from '@common/utils';
+import { AllowedUser } from '@common/dto/core.dto';
+import { EAllowedUser } from '@common/utils/enum';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { intersection } from 'lodash';

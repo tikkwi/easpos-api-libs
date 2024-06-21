@@ -1,8 +1,8 @@
-import { AppProp } from '@common/decorator';
-import { EAuthCredential } from '@common/utils';
-import { BaseSchema } from '@common/schema';
+import { EAuthCredential } from '@common/utils/enum';
 import { SchemaFactory } from '@nestjs/mongoose';
 import { hash } from 'bcryptjs';
+import { BaseSchema } from './base.schema';
+import { AppProp } from '@common/decorator/app_prop.decorator';
 
 export class AuthCredential extends BaseSchema {
   @AppProp({ type: String, enum: EAuthCredential })
@@ -15,5 +15,4 @@ export class AuthCredential extends BaseSchema {
   password: string;
 }
 
-export const AuthCredentialSchema =
-  SchemaFactory.createForClass(AuthCredential);
+export const AuthCredentialSchema = SchemaFactory.createForClass(AuthCredential);

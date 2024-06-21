@@ -1,9 +1,9 @@
-import { EEntityMetadata, EField } from '@common/utils';
-import { BaseDto, FindDto, MetadataValue } from '@common/dto';
 import { IsEnum, IsMongoId, IsNotEmpty, ValidateIf } from 'class-validator';
-import { Metadata } from 'src/metadata/metadata.schema';
 import { IntersectionType } from '@nestjs/swagger';
-
+import { BaseDto, FindDto } from './core.dto';
+import { Metadata } from '@common/schema/metadata.schema';
+import { MetadataValue } from './entity.dto';
+import { EEntityMetadata, EField } from '@common/utils/enum';
 export class GetMetadataDto extends FindDto {
   @IsMongoId()
   id?: string;

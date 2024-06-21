@@ -1,12 +1,12 @@
-import { isPeriodExceed } from '@common/utils';
-import { ExecutionContext } from '@nestjs/common';
+import { isPeriodExceed } from '@common/utils/datetime';
+import { ExecutionContext, Injectable } from '@nestjs/common';
 import { ThrottlerException, ThrottlerGuard } from '@nestjs/throttler';
 import { ExceedLimitService } from '@shared/exceed_limit/exceed_limit.service';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 
-//NOTE: Provide after AuthGuard
+@Injectable()
 export class AppThrottleGuard extends ThrottlerGuard {
   private readonly exceedLimitService: ExceedLimitService;
 

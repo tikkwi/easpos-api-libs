@@ -1,9 +1,11 @@
-import { CategoryDto, CoreDto, CreateUserDto, FindByIdDto } from '@common/dto';
-import { Merchant } from '@common/schema';
 import { OmitType } from '@nestjs/swagger';
-import { CreateAddressDto } from '@shared/dto';
 import { Type } from 'class-transformer';
 import { IsNotEmpty, ValidateNested } from 'class-validator';
+import { CoreDto, FindByIdDto } from './core.dto';
+import { Merchant } from '@common/schema/merchant.schema';
+import { CreateAddressDto } from '@shared/dto/address.dto';
+import { CategoryDto } from './action.dto';
+import { CreateUserDto } from './user.dto';
 
 export class CreateMerchantDto extends OmitType(CoreDto(Merchant), [
   'activePurchase',

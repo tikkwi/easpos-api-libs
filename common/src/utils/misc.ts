@@ -1,17 +1,16 @@
-import { EAuthCredential, firstUpperCase } from '@common/utils';
+import { REPOSITORY } from '@common/constant';
 import { Provider } from '@nestjs/common';
-import {
-  ClientGrpc,
-  ClientsModuleOptions,
-  Transport,
-} from '@nestjs/microservices';
+import { ClientGrpc, ClientsModuleOptions, Transport } from '@nestjs/microservices';
+import { getModelToken } from '@nestjs/mongoose';
 import { camelCase } from 'lodash';
 import { join } from 'path';
+import { firstUpperCase } from './regex';
+import { EAuthCredential } from './enum';
+import { Repository } from '@common/core/repository';
 
 export const any = (obj: any, key: string) => obj[key];
 
-export const getServiceToken = (model: string) =>
-  `${firstUpperCase(camelCase(model))}Service`;
+export const getServiceToken = (model: string) => `${firstUpperCase(camelCase(model))}Service`;
 
 export const getBasicAuthType = (path: string) => {
   if (/.*\/(swagger$)/.test(path)) return EAuthCredential.Swagger;
@@ -37,9 +36,15 @@ const getGrpcClientOptions = (pkgs: string[]): ClientsModuleOptions =>
     },
   }));
 
-export const getGrpcClient = (
-  models: string[],
-): [ClientsModuleOptions, Provider[]] => [
+export const getGrpcClient = (models: string[]): [ClientsModuleOptions, Provider[]] => [
   getGrpcClientOptions(models),
   getGrpcServiceProviders(models),
 ];
+
+export const getRepositoryProvider = (name: string) => ({
+  provide: REPOSITORY,
+  useFactory: async (model) => {
+    return new Repository(model);
+  },
+  inject: [getModelToken(name)],
+});

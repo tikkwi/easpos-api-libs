@@ -1,5 +1,5 @@
 import { APP, COOKIE_SECRET } from '@common/constant';
-import { AppExceptionFilter } from '@common/core';
+import { AppExceptionFilter } from '@common/core/exception.filter';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
@@ -62,7 +62,7 @@ export async function appBootstrap(module: any, port: number, packages?: string[
       transport: Transport.GRPC,
       options: {
         package: pkg,
-        protoPath: name.map((e) => join(__dirname, `../${e}.proto`)),
+        protoPath: name.map((e) => join(process.cwd(), `libs/common/proto/${e}.proto`)),
       },
     });
     grpcApp.listen();

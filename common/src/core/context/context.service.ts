@@ -4,6 +4,10 @@ import { Injectable, Scope } from '@nestjs/common';
 export class ContextService {
   private readonly data: Record<string, any> = {};
 
+  constructor() {
+    console.log('context');
+  }
+
   set(key: string, value: any) {
     this.data[key] = value;
   }

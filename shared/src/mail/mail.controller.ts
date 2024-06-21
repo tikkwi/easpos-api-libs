@@ -1,11 +1,7 @@
-import { AppController } from '@common/decorator';
+import { AppController } from '@common/decorator/app_controller.decorator';
 import { MailService } from './mail.service';
-import { EAllowedUser } from '@common/utils';
 import { CoreController } from '@common/core/core.controller';
+import { EAllowedUser } from '@common/utils/enum';
 
 @AppController('mail', [EAllowedUser.Admin])
-export class MailController extends CoreController {
-  constructor(service: MailService) {
-    super(service);
-  }
-}
+export class MailController extends CoreController<MailService> {}

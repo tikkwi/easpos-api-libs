@@ -1,4 +1,4 @@
-import { regex } from '@common/utils';
+import { regex } from '@common/utils/regex';
 import { Prop, PropOptions } from '@nestjs/mongoose';
 import { ApiProperty, ApiPropertyOptions } from '@nestjs/swagger';
 import {
@@ -25,12 +25,7 @@ export function AppProp(
   options?: Options | (Options & { nested: any }),
 ) {
   return function (target: any, key: string) {
-    const {
-      validateString = true,
-      prop = true,
-      userName = false,
-      swagger,
-    } = options ?? {};
+    const { validateString = true, prop = true, userName = false, swagger } = options ?? {};
 
     const pOpt: any = {
       immutable: true,
@@ -41,14 +36,8 @@ export function AppProp(
     ApiProperty({
       type: pOpt.type,
       enum: pOpt.enum as any,
-      example: pOpt.enum
-        ? Object.keys(pOpt.enum)[0]
-        : userName
-          ? 'easposUser11'
-          : undefined,
-      description: userName
-        ? 'Unique username with contain letters & numbers only'
-        : undefined,
+      example: pOpt.enum ? Object.keys(pOpt.enum)[0] : userName ? 'easposUser11' : undefined,
+      description: userName ? 'Unique username with contain letters & numbers only' : undefined,
       ...swagger,
     })(target, key);
 
@@ -56,10 +45,7 @@ export function AppProp(
       pOpt.type.name === 'SchemaMixed' ||
       (Array.isArray(pOpt.type) && pOpt.type[0].type.name === 'SchemaMixed')
     )
-      ValidateNested({ each: Array.isArray(pOpt.type) ? true : undefined })(
-        target,
-        key,
-      );
+      ValidateNested({ each: Array.isArray(pOpt.type) ? true : undefined })(target, key);
     if (pOpt.required) IsNotEmpty()(target, key);
     if (pOpt.enum) IsEnum(pOpt.enum as any)(target, key);
 

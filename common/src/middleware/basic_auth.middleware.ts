@@ -1,5 +1,5 @@
 import { C_APP, C_BASIC_AUTH } from '@common/constant';
-import { ContextService } from '@common/core';
+import { ContextService } from '@common/core/context/context.service';
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { compare } from 'bcryptjs';
 import { Request, Response } from 'express';

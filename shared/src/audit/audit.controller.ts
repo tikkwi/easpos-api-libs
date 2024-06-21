@@ -1,8 +1,7 @@
-import { AppController } from '@common/decorator';
+import { AppController } from '@common/decorator/app_controller.decorator';
 import { AuditService } from './audit.service';
-import { EAllowedUser } from '@common/utils';
+import { CoreController } from '@common/core/core.controller';
+import { EAllowedUser } from '@common/utils/enum';
 
-@AppController('admin-api/audit', [EAllowedUser.Admin])
-export class AuditController {
-  constructor(private readonly service: AuditService) {}
-}
+@AppController('audit', [EAllowedUser.Admin])
+export class AuditController extends CoreController<AuditService> {}

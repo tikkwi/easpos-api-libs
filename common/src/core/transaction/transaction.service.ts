@@ -1,8 +1,8 @@
 import { C_LOG_TRAIL, C_SESSION } from '@common/constant';
-import { ContextService } from '@common/core';
 import { InjectConnection } from '@nestjs/mongoose';
 import { AuditService } from '@shared/audit/audit.service';
 import { Connection } from 'mongoose';
+import { ContextService } from '@common/core/context/context.service';
 
 export class TransactionService {
   @InjectConnection() private readonly connection: Connection;

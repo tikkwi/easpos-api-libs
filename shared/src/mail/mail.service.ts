@@ -1,9 +1,8 @@
-import { CoreService } from '@common/core/core.service';
-import { AppService } from '@common/decorator';
-import { MailServiceMethods, SendMailDto } from '@shared/dto';
+import { AppService } from '@common/decorator/app_service.decorator';
+import { MailServiceMethods, SendMailDto } from '@shared/dto/mail.dto';
 
 @AppService()
-export class MailService extends CoreService implements MailServiceMethods {
+export class MailService implements MailServiceMethods {
   async sendMail({ mail, type }: SendMailDto) {
     console.log(`Send ${type} to ${mail}`);
   }

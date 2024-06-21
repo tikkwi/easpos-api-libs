@@ -1,9 +1,10 @@
 import { SchemaFactory } from '@nestjs/mongoose';
 import { SchemaTypes } from 'mongoose';
 import { Type } from 'class-transformer';
-import { AppProp } from '@common/decorator';
-import { MetadataValue } from '@common/dto';
-import { BaseSchema, Category } from '@common/schema';
+import { Category } from '@shared/category/category.schema';
+import { BaseSchema } from './base.schema';
+import { AppProp } from '@common/decorator/app_prop.decorator';
+import { MetadataValue } from '@common/dto/entity.dto';
 
 export class Option extends BaseSchema {
   @AppProp({ type: String })

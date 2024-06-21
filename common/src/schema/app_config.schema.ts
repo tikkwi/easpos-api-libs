@@ -1,9 +1,10 @@
 import { SchemaFactory } from '@nestjs/mongoose';
 import { SchemaTypes } from 'mongoose';
-import { BaseSchema, ExceedLimitThreshold } from '@common/schema';
-import { AppProp } from '@common/decorator';
 import { Type } from 'class-transformer';
-import { Period } from '@common/dto';
+import { ExceedLimitThreshold } from '@shared/exceed_limit/exceed_limit_threshold.schema';
+import { BaseSchema } from './base.schema';
+import { AppProp } from '@common/decorator/app_prop.decorator';
+import { Period } from '@common/dto/entity.dto';
 
 export class AppConfig extends BaseSchema {
   @AppProp({ type: SchemaTypes.Mixed })

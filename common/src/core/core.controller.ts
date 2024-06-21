@@ -1,10 +1,8 @@
-import { ContextService, TransactionService } from '@common/core';
+import { ContextService } from '@common/core/context/context.service';
+import { TransactionService } from '@common/core/transaction/transaction.service';
 
-export abstract class CoreController {
+export abstract class CoreController<T> {
   protected readonly context: ContextService;
   protected readonly transaction: TransactionService;
-  protected service;
-  constructor(service) {
-    this.service = service;
-  }
+  protected readonly service: T;
 }

@@ -1,4 +1,4 @@
-import { BaseDto, CoreDto } from '@common/dto';
+import { BaseDto, CoreDto } from '@common/dto/core.dto';
 import { IntersectionType, OmitType } from '@nestjs/swagger';
 import { Audit } from '@shared/audit/audit.schema';
 

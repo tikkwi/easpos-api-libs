@@ -1,3 +1,4 @@
+export const REPOSITORY = 'REPOSITORY';
 export const ADMIN_APP = 'ADMIN_APP';
 export const USER_APP = 'USER_APP';
 export const EXCEED_LIMIT = 'EXCEED_LIMIT';

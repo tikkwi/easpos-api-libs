@@ -1,4 +1,14 @@
 import {
+  MONGODB_URI,
+  REDIS_CLIENT,
+  REDIS_HOST,
+  REDIS_PASSWORD,
+  REDIS_PORT,
+} from '@common/constant';
+import { AppThrottleGuard } from '@common/guard/app_throttle.guard';
+import { AuthGuard } from '@common/guard/auth.guard';
+import { BasicAuthMiddleware } from '@common/middleware/basic_auth.middleware';
+import {
   InternalServerErrorException,
   MiddlewareConsumer,
   Module,
@@ -6,21 +16,38 @@ import {
 } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
+import { MongooseModule, MongooseModuleOptions } from '@nestjs/mongoose';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { ExceedLimitModule } from '@shared/exceed_limit/exceed_limit.module';
 import * as cookieParser from 'cookie-parser';
-import { join } from 'path';
-import { AppThrottleGuard, AuthGuard } from '@common/guard';
-import { ContextModule } from '@common/core';
-import { REDIS_CLIENT, REDIS_HOST, REDIS_PASSWORD, REDIS_PORT } from '@common/constant';
 import { Redis } from 'ioredis';
-import { BasicAuthMiddleware, TransformRequestMiddleware } from '@common/middleware';
+import { join } from 'path';
+import { ContextModule } from './context/context.module';
+import { TransactionModule } from './transaction/transaction.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: join(__dirname, '../../.env'),
+      envFilePath: join(process.cwd(), '.env'),
       isGlobal: true,
     }),
+
+    MongooseModule.forRootAsync({
+      useFactory: (config: ConfigService): MongooseModuleOptions => {
+        return { uri: config.get(MONGODB_URI) };
+      },
+      inject: [ConfigService],
+    }),
+
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 10,
+      },
+    ]),
     ContextModule,
+    TransactionModule,
+    ExceedLimitModule,
   ],
   providers: [
     {
@@ -37,7 +64,7 @@ import { BasicAuthMiddleware, TransformRequestMiddleware } from '@common/middlew
         });
         return client;
       },
-      // inject: [ConfigModule],
+      inject: [ConfigService],
     },
     {
       provide: APP_GUARD,
@@ -51,9 +78,7 @@ import { BasicAuthMiddleware, TransformRequestMiddleware } from '@common/middlew
 })
 export class CoreModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    console.log('hello...', join(__dirname, '../..'));
     consumer.apply(cookieParser()).forRoutes('*');
-    consumer.apply(TransformRequestMiddleware).forRoutes('*');
     consumer
       .apply(BasicAuthMiddleware)
       .forRoutes('/^/.*/swagger$/', '/^/.*/login$/', '/^/.*/register$/');

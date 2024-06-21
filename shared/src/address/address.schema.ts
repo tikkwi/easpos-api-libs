@@ -1,21 +1,15 @@
+import { AppProp } from '@common/decorator/app_prop.decorator';
+import { BaseSchema } from '@common/schema/base.schema';
 import { SchemaFactory } from '@nestjs/mongoose';
-import { AppProp } from '@common/decorator';
-import { BaseSchema } from '@common/schema';
 
 export class Address extends BaseSchema {
   @AppProp({ type: String }, { swagger: { example: 'Hlaing' } })
   city: string;
 
-  @AppProp(
-    { type: String, required: false },
-    { swagger: { example: 'Bogyoke Road' } },
-  )
+  @AppProp({ type: String, required: false }, { swagger: { example: 'Bogyoke Road' } })
   street?: string;
 
-  @AppProp(
-    { type: String, required: false },
-    { swagger: { example: 'DuuYar' } },
-  )
+  @AppProp({ type: String, required: false }, { swagger: { example: 'DuuYar' } })
   village?: string;
 
   @AppProp({ type: String }, { swagger: { example: 'Yangon' } })

@@ -1,3 +1,3 @@
-import { BaseSchema } from '@common/schema';
+import { BaseSchema } from './base.schema';
 
 export class MerchantConfig extends BaseSchema {}

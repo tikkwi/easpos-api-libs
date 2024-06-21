@@ -1,9 +1,9 @@
 import { FORBIDDEN_USERS, USERS } from '@common/constant';
-import { Users } from '@common/decorator';
-import { AllowedUser } from '@common/dto';
+import { AllowedUser } from '@common/dto/core.dto';
 import { Controller } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { pull } from 'lodash';
+import { Users } from './users.decorator';
 
 export function AppController(prefix?: string, allowedUsers?: AllowedUser[]) {
   return function (target: any) {

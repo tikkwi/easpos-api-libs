@@ -1,5 +1,5 @@
-import { BaseDto } from '@common/dto';
-import { EMail } from '@common/utils';
+import { BaseDto } from '@common/dto/core.dto';
+import { EMail } from '@common/utils/enum';
 import { Type } from 'class-transformer';
 import {
   IsDateString,

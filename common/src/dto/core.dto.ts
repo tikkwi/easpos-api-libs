@@ -1,4 +1,4 @@
-import { EAllowedUser } from '@common/utils';
+import { EAllowedUser } from '@common/utils/enum';
 import { Type } from '@nestjs/common';
 import { IntersectionType, OmitType } from '@nestjs/swagger';
 import {

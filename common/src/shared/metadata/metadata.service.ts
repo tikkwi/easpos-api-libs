@@ -1,15 +1,6 @@
 import { CoreService } from '@common/core/core.service';
-import {
-  GetMetadataDto,
-  IsValidDto,
-  MetadataServiceMethods,
-  UserSharedServiceMethods,
-  ValidateMetaValueDto,
-} from '@common/dto';
 import { MerchantSharedServiceMethods } from '@common/dto/merchant.dto';
-import { EApp, EField, regex } from '@common/utils';
 import { BadRequestException } from '@nestjs/common';
-import { AddressServiceMethods } from '@shared/dto';
 import {
   isBoolean,
   isDateString,
@@ -20,19 +11,25 @@ import {
   matches,
 } from 'class-validator';
 import { isNumber } from 'lodash';
-import { Metadata, MetadataSchema } from '../../schema/metadata.schema';
+import { Metadata } from '../../schema/metadata.schema';
+import {
+  GetMetadataDto,
+  IsValidDto,
+  MetadataServiceMethods,
+  ValidateMetaValueDto,
+} from '@common/dto/metadata.dto';
+import { AddressServiceMethods } from '@shared/dto/address.dto';
+import { UserSharedServiceMethods } from '@common/dto/user.dto';
+import { EApp, EField } from '@common/utils/enum';
+import { regex } from '@common/utils/regex';
 
 export abstract class MetadataService
   extends CoreService<Metadata>
   implements MetadataServiceMethods
 {
+  private readonly addressService: AddressServiceMethods;
   protected abstract userService: UserSharedServiceMethods;
   protected abstract merchantService: MerchantSharedServiceMethods;
-  protected readonly addressService: AddressServiceMethods;
-
-  constructor() {
-    super(Metadata.name, MetadataSchema);
-  }
 
   async getMetadata({ id, entity }: GetMetadataDto) {
     return await this.repository.findOne({ filter: { _id: id, entity } });

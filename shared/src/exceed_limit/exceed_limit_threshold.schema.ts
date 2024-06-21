@@ -1,9 +1,9 @@
 import { SchemaFactory } from '@nestjs/mongoose';
 import { SchemaTypes } from 'mongoose';
 import { Type } from 'class-transformer';
-import { Period } from '@common/dto';
-import { AppProp } from '@common/decorator';
-import { BaseSchema } from '@common/schema';
+import { BaseSchema } from '@common/schema/base.schema';
+import { AppProp } from '@common/decorator/app_prop.decorator';
+import { Period } from '@common/dto/entity.dto';
 
 export class ExceedLimitThreshold extends BaseSchema {
   @AppProp({ type: Boolean, default: false })
@@ -20,5 +20,4 @@ export class ExceedLimitThreshold extends BaseSchema {
   nextLimit?: ExceedLimitThreshold;
 }
 
-export const ExceedLimitThresholdSchema =
-  SchemaFactory.createForClass(ExceedLimitThreshold);
+export const ExceedLimitThresholdSchema = SchemaFactory.createForClass(ExceedLimitThreshold);
