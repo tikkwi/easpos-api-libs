@@ -1,15 +1,16 @@
 import { BaseDto, FindDto } from '@common/dto/core.dto';
 import { IntersectionType } from '@nestjs/swagger';
 import { ExceedLimit } from '@shared/exceed_limit/exceed_limit.schema';
-import { IsMongoId } from 'class-validator';
+import { IsMongoId, IsNotEmpty } from 'class-validator';
 
 export class GetLimitDto extends IntersectionType(BaseDto, FindDto) {
   id?: string;
 }
 
-export class UnlimitRequestDto extends BaseDto {
+export class UnlimitRequestDto {
+  @IsNotEmpty()
   @IsMongoId()
-  id?: string;
+  id: string;
 }
 
 export type ExceedLimitReturn = { data: ExceedLimit };

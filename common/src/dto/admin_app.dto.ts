@@ -12,5 +12,3 @@ export interface AdminAppServiceMethods {
     basicAuth: { userName: string; password: string };
   }>;
 }
-
-export interface AdminAppSharedServiceMethods extends AdminAppServiceMethods {}

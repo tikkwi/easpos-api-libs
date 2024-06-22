@@ -1,8 +1,8 @@
 import { regex } from '@common/utils/regex';
-import { OmitType } from '@nestjs/swagger';
+import { IntersectionType, OmitType } from '@nestjs/swagger';
 import { User } from '@common/schema/user.schema';
 import { IsEmail, IsMongoId, IsNotEmpty, Matches } from 'class-validator';
-import { CoreDto, FindByIdDto, FindDto } from './core.dto';
+import { BaseDto, CoreDto, FindByIdDto, FindDto } from './core.dto';
 
 export class GetUserDto extends FindDto {
   @IsMongoId()
@@ -15,7 +15,10 @@ export class GetUserDto extends FindDto {
   mail?: string;
 }
 
-export class CreateUserDto extends OmitType(CoreDto(User), ['merchant', 'servicePermissions']) {
+export class CreateUserDto extends IntersectionType(
+  BaseDto,
+  OmitType(CoreDto(User), ['merchant', 'servicePermissions']),
+) {
   @IsNotEmpty()
   @IsMongoId()
   merchantId: string;
@@ -28,5 +31,3 @@ export interface UserServiceMethods {
   userWithAuth(dto: FindByIdDto): Promise<{ data: AuthUser }>;
   createUser(dto: CreateUserDto): Promise<UserReturn>;
 }
-
-export interface UserSharedServiceMethods extends UserServiceMethods {}

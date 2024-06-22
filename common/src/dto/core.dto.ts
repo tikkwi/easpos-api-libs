@@ -41,23 +41,18 @@ export class PaginationDto<T> {
 }
 
 export class BaseDto {
-  request?: AppRequest;
-
-  @IsBoolean()
-  newTransaction?: boolean;
+  @IsNotEmpty()
+  request: AppRequest;
 }
 
-export function CoreDto<T>(
-  classRef: Type<T>,
-): Type<Omit<T, '_id' | 'createdAt' | 'updatedAt'> & BaseDto> {
-  class CoreDtoClass extends IntersectionType(
-    BaseDto,
-    OmitType(classRef as any, ['_id', 'createdAt', 'updatedAt'] as any),
-  ) {}
+export function CoreDto<T>(classRef: Type<T>): Type<Omit<T, '_id' | 'createdAt' | 'updatedAt'>> {
+  class CoreDtoClass extends OmitType(classRef as any, ['_id', 'createdAt', 'updatedAt'] as any) {}
   return CoreDtoClass as any;
 }
 
-export class FindDto extends BaseDto {
+export class FindDto {
+  request?: AppRequest;
+
   @IsBoolean()
   lean?: boolean;
 }

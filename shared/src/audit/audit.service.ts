@@ -1,11 +1,17 @@
-import { C_LOG_TRAIL, C_REQ } from '@common/constant';
-import { CoreService } from '@common/core/core.service';
-import { AppService } from '@common/decorator/app_service.decorator';
+import { C_LOG_TRAIL, C_REQ, REPOSITORY } from '@common/constant';
+import { ContextService } from '@common/core/context/context.service';
+import { Repository } from '@common/core/repository';
+import { Inject, Injectable } from '@nestjs/common';
 import { AuditServiceMethods } from '@shared/audit/audit.dto';
 import { Audit } from './audit.schema';
 
-@AppService()
-export class AuditService extends CoreService<Audit> implements AuditServiceMethods {
+@Injectable()
+export class AuditService implements AuditServiceMethods {
+  constructor(
+    @Inject(REPOSITORY) private readonly repository: Repository<Audit>,
+    private readonly context: ContextService,
+  ) {}
+
   async logRequest() {
     const request: AppRequest = this.context.get(C_REQ);
     return await this.repository.create({

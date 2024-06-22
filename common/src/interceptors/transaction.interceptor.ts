@@ -1,14 +1,5 @@
-import { ContextService } from '@common/core/context/context.service';
 import { TransactionService } from '@common/core/transaction/transaction.service';
-import {
-  CallHandler,
-  ExecutionContext,
-  Inject,
-  Injectable,
-  NestInterceptor,
-  OnModuleDestroy,
-  OnModuleInit,
-} from '@nestjs/common';
+import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
 import { Observable, from, lastValueFrom } from 'rxjs';
 
 @Injectable()

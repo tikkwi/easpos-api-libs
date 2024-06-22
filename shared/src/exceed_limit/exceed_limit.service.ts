@@ -1,18 +1,18 @@
-import { AppService } from '@common/decorator/app_service.decorator';
 import { ExceedLimit } from './exceed_limit.schema';
-import { CoreService } from '@common/core/core.service';
 import {
   ExceedLimitServiceMethods,
   GetLimitDto,
   UnlimitRequestDto,
 } from '@shared/exceed_limit/exceed_limit.dto';
 import { BaseDto } from '@common/dto/core.dto';
+import { Inject, Injectable } from '@nestjs/common';
+import { REPOSITORY } from '@common/constant';
+import { Repository } from '@common/core/repository';
 
-@AppService()
-export class ExceedLimitService
-  extends CoreService<ExceedLimit>
-  implements ExceedLimitServiceMethods
-{
+@Injectable()
+export class ExceedLimitService implements ExceedLimitServiceMethods {
+  @Inject(REPOSITORY) private readonly repository: Repository<ExceedLimit>;
+
   async getLimit({ request, ...dto }: GetLimitDto) {
     const { id, lean } = dto;
     return await this.repository.findOne({

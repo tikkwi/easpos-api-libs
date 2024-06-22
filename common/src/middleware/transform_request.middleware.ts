@@ -1,9 +1,7 @@
-import { ADMIN_APP, C_APP, C_BASIC_AUTH, C_REQ, C_RES } from '@common/constant';
+import { C_REQ, C_RES } from '@common/constant';
 import { ContextService } from '@common/core/context/context.service';
-import { AdminAppSharedServiceMethods } from '@common/dto/admin_app.dto';
-import { getServiceToken } from '@common/utils/misc';
 import { parsePath } from '@common/utils/regex';
-import { Inject, Injectable, NestMiddleware, OnModuleInit } from '@nestjs/common';
+import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Response } from 'express';
 
 @Injectable()

@@ -4,7 +4,7 @@ import { regex } from '@common/utils/regex';
 import { Category } from '@shared/category/category.schema';
 import { IsEnum, IsNotEmpty, Matches } from 'class-validator';
 
-export class CreateCategoryDto extends BaseDto {
+export class CreateCategoryDto {
   @IsNotEmpty()
   @Matches(regex.enum)
   name: string;

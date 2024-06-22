@@ -1,4 +1,3 @@
-import { BaseDto } from '@common/dto/core.dto';
 import { EMail } from '@common/utils/enum';
 import { Type } from 'class-transformer';
 import {
@@ -16,7 +15,7 @@ class SubExpireDto {
   expireDate: Date;
 }
 
-export class SendMailDto extends BaseDto {
+export class SendMailDto {
   @IsEmail()
   @IsNotEmpty()
   mail: string;

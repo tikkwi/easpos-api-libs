@@ -1,5 +1,7 @@
+import { EXCEED_LIMIT } from '@common/constant';
 import { isPeriodExceed } from '@common/utils/datetime';
-import { ExecutionContext, Injectable } from '@nestjs/common';
+import { getServiceToken } from '@common/utils/misc';
+import { ExecutionContext, Inject, Injectable } from '@nestjs/common';
 import { ThrottlerException, ThrottlerGuard } from '@nestjs/throttler';
 import { ExceedLimitService } from '@shared/exceed_limit/exceed_limit.service';
 import dayjs from 'dayjs';
@@ -8,7 +10,7 @@ import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 
 @Injectable()
 export class AppThrottleGuard extends ThrottlerGuard {
-  private readonly exceedLimitService: ExceedLimitService;
+  @Inject(getServiceToken(EXCEED_LIMIT)) private readonly exceedLimitService: ExceedLimitService;
 
   async handleRequest(context: ExecutionContext, limit: number, ttl: number): Promise<boolean> {
     dayjs.extend(duration);
@@ -35,7 +37,7 @@ export class AppThrottleGuard extends ThrottlerGuard {
         throw new ThrottlerException(
           `${blockMsg} is blocked until ${dayjs(until).format('dd MMM yyyy, hh:mm')}. Please requestuest after that unless you'll be blocked more severely.`,
         );
-      else if (!isExceed) await this.exceedLimitService.unlimitRequest({ request });
+      else if (!isExceed) await this.exceedLimitService.unlimitRequest({ id: exceedLimit.id });
     }
     return true;
   }

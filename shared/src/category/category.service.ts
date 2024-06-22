@@ -1,11 +1,14 @@
-import { CoreService } from '@common/core/core.service';
 import { Category } from './category.schema';
-import { AppService } from '@common/decorator/app_service.decorator';
 import { CategoryServiceMethods, CreateCategoryDto } from '@shared/category/category.dto';
 import { FindByIdDto } from '@common/dto/core.dto';
+import { Inject, Injectable } from '@nestjs/common';
+import { Repository } from '@common/core/repository';
+import { REPOSITORY } from '@common/constant';
 
-@AppService()
-export class CategoryService extends CoreService<Category> implements CategoryServiceMethods {
+@Injectable()
+export class CategoryService implements CategoryServiceMethods {
+  constructor(@Inject(REPOSITORY) private readonly repository: Repository<Category>) {}
+
   async getCategory(dto: FindByIdDto) {
     return await this.repository.findById(dto);
   }

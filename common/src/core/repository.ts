@@ -4,9 +4,10 @@ import { ClientSession, Document, Model } from 'mongoose';
 import { ContextService } from './context/context.service';
 
 export class Repository<T> {
-  private readonly context: ContextService;
-
-  constructor(public readonly model: Model<T>) {}
+  constructor(
+    public readonly model: Model<T>,
+    private readonly context?: ContextService,
+  ) {}
 
   async create(dto: CreateType<T>) {
     return { data: (await new this.model(dto).save()) as Document<unknown, unknown, T> & T };

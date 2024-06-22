@@ -1,8 +1,11 @@
-import { CoreService } from '@common/core/core.service';
-import { AppService } from '@common/decorator/app_service.decorator';
+import { REPOSITORY } from '@common/constant';
+import { Repository } from '@common/core/repository';
+import { Inject, Injectable } from '@nestjs/common';
 
-@AppService()
-export class TmpService extends CoreService<any> {
+@Injectable()
+export class TmpService {
+  constructor(@Inject(REPOSITORY) private readonly repository: Repository<any>) {}
+
   async create(dto) {
     console.log('hello', dto);
     return await this.repository.create(dto);

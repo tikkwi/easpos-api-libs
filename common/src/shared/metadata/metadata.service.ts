@@ -1,9 +1,15 @@
-import { CoreService } from '@common/core/core.service';
-import { MerchantSharedServiceMethods } from '@common/dto/merchant.dto';
-import { UserSharedServiceMethods } from '@common/dto/user.dto';
-import { EApp, EField } from '@common/utils/enum';
+import { REPOSITORY } from '@common/constant';
+import { Repository } from '@common/core/repository';
+import {
+  GetMetadataDto,
+  IsValidDto,
+  MetadataServiceMethods,
+  ValidateMetaValueDto,
+} from '@common/dto/metadata.dto';
+import { Metadata } from '@common/schema/metadata.schema';
+import { EField } from '@common/utils/enum';
 import { regex } from '@common/utils/regex';
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, Inject } from '@nestjs/common';
 import { AddressServiceMethods } from '@shared/address/address.dto';
 import {
   isBoolean,
@@ -15,21 +21,14 @@ import {
   matches,
 } from 'class-validator';
 import { isNumber } from 'lodash';
-import {
-  GetMetadataDto,
-  IsValidDto,
-  MetadataServiceMethods,
-  ValidateMetaValueDto,
-} from '../../dto/metadata.dto';
-import { Metadata } from '../../schema/metadata.schema';
+import { MerchantService } from 'src/merchant/merchant.service';
+import { UserService } from 'src/user/user.service';
 
-export abstract class MetadataService
-  extends CoreService<Metadata>
-  implements MetadataServiceMethods
-{
-  private readonly addressService: AddressServiceMethods;
-  protected abstract userService: UserSharedServiceMethods;
-  protected abstract merchantService: MerchantSharedServiceMethods;
+export abstract class MetadataService implements MetadataServiceMethods {
+  @Inject(REPOSITORY) private readonly repository: Repository<Metadata>;
+  protected abstract addressService: AddressServiceMethods;
+  protected abstract userService: UserService;
+  protected abstract merchantService: MerchantService;
 
   async getMetadata({ id, entity }: GetMetadataDto) {
     return await this.repository.findOne({ filter: { _id: id, entity } });
@@ -57,14 +56,12 @@ export abstract class MetadataService
         isValid = !!(await this.userService.getUser({
           userName: value,
           request,
-          newTransaction: request.app !== EApp.Admin,
         }));
         break;
       case EField.Merchant:
         isValid = !!(await this.merchantService.getMerchant({
           id: value,
           request,
-          newTransaction: request.app !== EApp.Admin,
         }));
         break;
       case EField.Datetime:
@@ -87,7 +84,7 @@ export abstract class MetadataService
   }
 
   async validateMetaValue({ metadata: id, entity, value, request }: ValidateMetaValueDto) {
-    const metadata = await this.getMetadata({ id, entity, request }).then(({ data }) =>
+    const metadata = await this.getMetadata({ id, entity }).then(({ data }) =>
       data.populate(['fields']),
     );
     if (!metadata) throw new BadRequestException('Metada not found');
