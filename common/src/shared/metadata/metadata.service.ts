@@ -1,6 +1,10 @@
 import { CoreService } from '@common/core/core.service';
 import { MerchantSharedServiceMethods } from '@common/dto/merchant.dto';
+import { UserSharedServiceMethods } from '@common/dto/user.dto';
+import { EApp, EField } from '@common/utils/enum';
+import { regex } from '@common/utils/regex';
 import { BadRequestException } from '@nestjs/common';
+import { AddressServiceMethods } from '@shared/address/address.dto';
 import {
   isBoolean,
   isDateString,
@@ -11,17 +15,13 @@ import {
   matches,
 } from 'class-validator';
 import { isNumber } from 'lodash';
-import { Metadata } from '../../schema/metadata.schema';
 import {
   GetMetadataDto,
   IsValidDto,
   MetadataServiceMethods,
   ValidateMetaValueDto,
-} from '@common/dto/metadata.dto';
-import { AddressServiceMethods } from '@shared/dto/address.dto';
-import { UserSharedServiceMethods } from '@common/dto/user.dto';
-import { EApp, EField } from '@common/utils/enum';
-import { regex } from '@common/utils/regex';
+} from '../../dto/metadata.dto';
+import { Metadata } from '../../schema/metadata.schema';
 
 export abstract class MetadataService
   extends CoreService<Metadata>

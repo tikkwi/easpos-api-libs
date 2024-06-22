@@ -1,13 +1,15 @@
-import { APP, COOKIE_SECRET } from '@common/constant';
+import { APP, COOKIE_SECRET, REDIS_CLIENT } from '@common/constant';
 import { AppExceptionFilter } from '@common/core/exception.filter';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import RedisStore from 'connect-redis';
 import * as session from 'express-session';
 import helmet from 'helmet';
 import { join } from 'path';
+import { RedisClientType } from 'redis';
 
 export async function appBootstrap(module: any, port: number, packages?: string[]) {
   const app = await NestFactory.create(module);
@@ -18,15 +20,15 @@ export async function appBootstrap(module: any, port: number, packages?: string[
   app.setGlobalPrefix(`${currentApp}_api`);
   const document = SwaggerModule.createDocument(app, documentConfig);
   SwaggerModule.setup('swagger', app, document);
-  // const redisClient = await app.get<Redis.RedisClientType>(REDIS_CLIENT);
-  // const store = new RedisStore({
-  //   client: redisClient,
-  //   prefix: 'session-store:',
-  // });
-  // if (process.env.NODE_ENV === 'prod') app.use('trust proxy', 1);
+  const redisClient = await app.get<RedisClientType>(REDIS_CLIENT);
+  const store = new RedisStore({
+    client: redisClient,
+    prefix: 'session-store:',
+  });
+  if (process.env.NODE_ENV === 'prod') app.use('trust proxy', 1);
   app.use(
     session({
-      // store,
+      store,
       secret: COOKIE_SECRET,
       resave: false,
       saveUninitialized: true,
@@ -37,7 +39,7 @@ export async function appBootstrap(module: any, port: number, packages?: string[
       },
     }),
   );
-  app.use(helmet);
+  app.use(helmet());
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
@@ -48,7 +50,6 @@ export async function appBootstrap(module: any, port: number, packages?: string[
 
   await app.listen(port);
 
-  //microservice
   if (packages) {
     const [pkg, name] = packages.reduce(
       (acc, cur) => {

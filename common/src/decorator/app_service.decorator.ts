@@ -12,8 +12,8 @@ export function AppService() {
       if (typeof originalMethod === 'function' && key !== 'getRepository') {
         descriptor!.value = async function (...args) {
           if (args[0].newTransaction)
-            return await this.transaction.makeTransaction(originalMethod(args));
-          return originalMethod(args);
+            // return await this.transaction.makeTransaction(originalMethod(args));
+            return originalMethod(args);
         };
 
         Object.defineProperty(target.prototype, key, descriptor);

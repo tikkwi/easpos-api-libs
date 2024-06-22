@@ -1,5 +1,5 @@
 import { REPOSITORY } from '@common/constant';
-import { Provider } from '@nestjs/common';
+import { HttpException, HttpStatus, Provider } from '@nestjs/common';
 import { ClientGrpc, ClientsModuleOptions, Transport } from '@nestjs/microservices';
 import { getModelToken } from '@nestjs/mongoose';
 import { camelCase } from 'lodash';
@@ -7,6 +7,7 @@ import { join } from 'path';
 import { firstUpperCase } from './regex';
 import { EAuthCredential } from './enum';
 import { Repository } from '@common/core/repository';
+import { Request, Response } from 'express';
 
 export const any = (obj: any, key: string) => obj[key];
 
@@ -48,3 +49,14 @@ export const getRepositoryProvider = (name: string) => ({
   },
   inject: [getModelToken(name)],
 });
+
+export const responseError = (req: Request, res: Response, err: any) => {
+  const status = err instanceof HttpException ? err.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
+
+  res.status(status).json({
+    statusCode: status,
+    timestamp: new Date().toISOString(),
+    path: req.originalUrl,
+    message: err.message || 'Internal server erroreee',
+  });
+};

@@ -5,7 +5,7 @@ import {
   ExceedLimitServiceMethods,
   GetLimitDto,
   UnlimitRequestDto,
-} from '@shared/dto/exceed_limit.dto';
+} from '@shared/exceed_limit/exceed_limit.dto';
 import { BaseDto } from '@common/dto/core.dto';
 
 @AppService()

@@ -42,7 +42,10 @@ declare global {
     action: (model: Model<T>) => any;
   };
 
-  type AppRequest = Pick<Request, 'path' | 'ip' | 'sessionID' | 'headers' | 'url' | 'query'> & {
+  type AppRequest = Pick<
+    Request,
+    'originalUrl' | 'ip' | 'sessionID' | 'headers' | 'url' | 'query'
+  > & {
     app: EApp;
     appConfig: AppConfig;
     user?: AuthUser;

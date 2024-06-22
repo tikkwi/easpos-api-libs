@@ -3,7 +3,7 @@ import { Type } from 'class-transformer';
 import { IsNotEmpty, ValidateNested } from 'class-validator';
 import { CoreDto, FindByIdDto } from './core.dto';
 import { Merchant } from '@common/schema/merchant.schema';
-import { CreateAddressDto } from '@shared/dto/address.dto';
+import { CreateAddressDto } from '@shared/address/address.dto';
 import { CategoryDto } from './action.dto';
 import { CreateUserDto } from './user.dto';
 

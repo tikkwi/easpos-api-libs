@@ -1,5 +1,5 @@
 import { AppService } from '@common/decorator/app_service.decorator';
-import { MailServiceMethods, SendMailDto } from '@shared/dto/mail.dto';
+import { MailServiceMethods, SendMailDto } from '@shared/mail/mail.dto';
 
 @AppService()
 export class MailService implements MailServiceMethods {

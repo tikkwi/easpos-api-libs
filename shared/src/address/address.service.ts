@@ -1,7 +1,7 @@
 import { CoreService } from '@common/core/core.service';
 import { Address } from './address.schema';
 import { AppService } from '@common/decorator/app_service.decorator';
-import { AddressServiceMethods, CreateAddressDto } from '@shared/dto/address.dto';
+import { AddressServiceMethods, CreateAddressDto } from '@shared/address/address.dto';
 import { FindByIdDto } from '@common/dto/core.dto';
 
 @AppService()

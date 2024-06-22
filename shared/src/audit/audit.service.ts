@@ -1,7 +1,7 @@
 import { C_LOG_TRAIL, C_REQ } from '@common/constant';
 import { CoreService } from '@common/core/core.service';
 import { AppService } from '@common/decorator/app_service.decorator';
-import { AuditServiceMethods } from '@shared/dto/audit.dto';
+import { AuditServiceMethods } from '@shared/audit/audit.dto';
 import { Audit } from './audit.schema';
 
 @AppService()

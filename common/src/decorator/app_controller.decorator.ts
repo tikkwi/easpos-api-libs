@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { FORBIDDEN_USERS, USERS } from '@common/constant';
 import { AllowedUser } from '@common/dto/core.dto';
 import { Controller } from '@nestjs/common';
@@ -7,8 +8,6 @@ import { Users } from './users.decorator';
 
 export function AppController(prefix?: string, allowedUsers?: AllowedUser[]) {
   return function (target: any) {
-    const reflector = new Reflector();
-
     Controller(prefix)(target);
     const originalMethodKeys = Object.getOwnPropertyNames(target.prototype);
 
@@ -16,20 +15,14 @@ export function AppController(prefix?: string, allowedUsers?: AllowedUser[]) {
       const descriptor = Object.getOwnPropertyDescriptor(target.prototype, key);
       const originalMethod = descriptor?.value;
 
-      if (typeof originalMethod === 'function') {
-        const users = [
-          ...(reflector.get(USERS, target.prototype[key]) ?? []),
-          ...(allowedUsers ?? []),
-        ];
-        const serviceForbidden = reflector.get(FORBIDDEN_USERS, target.prototype[key]);
-        if (serviceForbidden) pull(users, ...serviceForbidden);
-        if (users.length) Users(users)(target.prototype[key], key, descriptor);
-
-        descriptor!.value = async function (...args) {
-          return await this.transaction.makeTransaction(originalMethod(args));
-        };
-
-        Object.defineProperty(target.prototype, key, descriptor);
+      if (typeof originalMethod === 'function' && !['constructor', 'action'].includes(key)) {
+        // const users = [
+        //   ...(reflector.get(USERS, target.prototype[key]) ?? []),
+        //   ...(allowedUsers ?? []),
+        // ];
+        // const serviceForbidden = reflector.get(FORBIDDEN_USERS, target.prototype[key]);
+        // if (serviceForbidden) pull(users, ...serviceForbidden);
+        // if (users.length) Users(users)(target.prototype[key], key, descriptor);
       }
     }
 

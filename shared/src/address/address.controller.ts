@@ -1,7 +1,7 @@
 import { Body, Post, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { AddressService } from './address.service';
-import { CreateAddressDto } from '@shared/dto/address.dto';
+import { CreateAddressDto } from '@shared/address/address.dto';
 import { CoreController } from '@common/core/core.controller';
 import { AppController } from '@common/decorator/app_controller.decorator';
 
