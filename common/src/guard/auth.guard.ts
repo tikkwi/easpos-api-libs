@@ -7,7 +7,7 @@ import { intersection } from 'lodash';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  private readonly reflector: Reflector;
+  constructor(private readonly reflector: Reflector) {}
 
   async canActivate(context: ExecutionContext) {
     const httpCtx = context.switchToHttp();
@@ -16,14 +16,14 @@ export class AuthGuard implements CanActivate {
     const merchantUsers = [EAllowedUser.Owner, EAllowedUser.Merchant, EAllowedUser.MerchantNoSub];
 
     const userType =
-      merchantUsers.includes(request.user.type as any) && !request.isSubActive
+      merchantUsers.includes(request.user?.type as any) && !request.isSubActive
         ? EAllowedUser.MerchantNoSub
-        : request.user.isOwner
+        : request.user?.isOwner
           ? EAllowedUser.Owner
-          : request.user.type;
+          : request.user?.type;
 
     if (
-      allowedUsers.length &&
+      allowedUsers?.length &&
       (!request.user ||
         !allowedUsers.includes(userType) ||
         (intersection(allowedUsers, merchantUsers).length &&

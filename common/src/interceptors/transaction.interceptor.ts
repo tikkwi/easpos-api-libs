@@ -1,16 +1,17 @@
+import { ContextService } from '@common/core/context/context.service';
 import { TransactionService } from '@common/core/transaction/transaction.service';
-import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
-import { Observable, from, lastValueFrom } from 'rxjs';
+import { CallHandler, Injectable, NestInterceptor } from '@nestjs/common';
+import { Observable, from, lastValueFrom, tap } from 'rxjs';
 
 @Injectable()
 export class TransactionInterceptor implements NestInterceptor {
-  constructor(private readonly transaction: TransactionService) {}
+  constructor(
+    private readonly transaction: TransactionService,
+    private readonly context: ContextService,
+  ) {}
 
-  intercept(
-    context: ExecutionContext,
-    next: CallHandler<any>,
-  ): Observable<any> | Promise<Observable<any>> {
+  intercept(_, next: CallHandler<any>): Observable<any> | Promise<Observable<any>> {
     const action = async () => lastValueFrom(next.handle());
-    return from(this.transaction.makeTransaction(action));
+    return from(this.transaction.makeTransaction(action)).pipe(tap(() => this.context.reset()));
   }
 }

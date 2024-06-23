@@ -1,15 +1,16 @@
 import { C_SESSION, PAGE_SIZE } from '@common/constant';
 import { BadRequestException, NotFoundException, OnModuleInit } from '@nestjs/common';
-import { ClientSession, Document, Model } from 'mongoose';
+import { Document, Model } from 'mongoose';
 import { ContextService } from './context/context.service';
 
 export class Repository<T> {
   constructor(
-    public readonly model: Model<T>,
-    private readonly context?: ContextService,
+    private readonly model: Model<T>,
+    private readonly context: ContextService,
   ) {}
 
   async create(dto: CreateType<T>) {
+    console.log('got', this.context);
     return { data: (await new this.model(dto).save()) as Document<unknown, unknown, T> & T };
   }
 

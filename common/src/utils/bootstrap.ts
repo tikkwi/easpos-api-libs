@@ -1,9 +1,9 @@
 import { APP, COOKIE_SECRET, REDIS_CLIENT } from '@common/constant';
-import { AppExceptionFilter } from '@common/core/exception.filter';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import RedisStore from 'connect-redis';
 import * as session from 'express-session';
@@ -12,7 +12,7 @@ import { join } from 'path';
 import { RedisClientType } from 'redis';
 
 export async function appBootstrap(module: any, port: number, packages?: string[]) {
-  const app = await NestFactory.create(module);
+  const app = await NestFactory.create<NestExpressApplication>(module);
   const config = app.get<ConfigService>(ConfigService);
   const currentApp = config.get<string>(APP);
   const documentConfig = new DocumentBuilder().setTitle(currentApp).setVersion('1.0').build();
@@ -25,9 +25,10 @@ export async function appBootstrap(module: any, port: number, packages?: string[
     client: redisClient,
     prefix: 'session-store:',
   });
-  if (process.env.NODE_ENV === 'prod') app.use('trust proxy', 1);
+  app.set('trust proxy', 1);
+  // if (process.env.NODE_ENV === 'prod') app.set('trust proxy', 1);
   app.use(
-    session({
+    session.default({
       store,
       secret: COOKIE_SECRET,
       resave: false,
@@ -46,7 +47,6 @@ export async function appBootstrap(module: any, port: number, packages?: string[
       forbidNonWhitelisted: true,
     }),
   );
-  app.useGlobalFilters(new AppExceptionFilter());
 
   await app.listen(port);
 

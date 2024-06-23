@@ -8,13 +8,14 @@ import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 
+dayjs.extend(duration);
+dayjs.extend(isSameOrAfter);
+
 @Injectable()
 export class AppThrottleGuard extends ThrottlerGuard {
   @Inject(getServiceToken(EXCEED_LIMIT)) private readonly exceedLimitService: ExceedLimitService;
 
   async handleRequest(context: ExecutionContext, limit: number, ttl: number): Promise<boolean> {
-    dayjs.extend(duration);
-    dayjs.extend(isSameOrAfter);
     const request: AppRequest = context.switchToHttp().getRequest();
     const tracker = await this.getTracker(request);
     const key = this.generateKey(context, tracker, 'default');

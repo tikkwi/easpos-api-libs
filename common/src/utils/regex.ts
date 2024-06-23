@@ -8,4 +8,9 @@ export const regex = {
 export const firstUpperCase = (str: string) =>
   str.replace(regex.firstUpperCase, (_, letter) => letter.toUpperCase());
 
-export const parsePath = (path: string) => regex.parsePath.exec(path).slice(1, 3);
+export const parsePath = (path: string) => {
+  // console.log('gg', path, regex.parsePath.exec(path));
+  const pth = /^\/([^/]+)\/([^/]+)(\/.*)?/g.exec(path);
+  // console.log('hr', pth);
+  return pth.slice(1, 3);
+};

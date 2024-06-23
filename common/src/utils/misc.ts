@@ -8,6 +8,7 @@ import { firstUpperCase } from './regex';
 import { EAuthCredential } from './enum';
 import { Repository } from '@common/core/repository';
 import { Request, Response } from 'express';
+import { ContextService } from '@common/core/context/context.service';
 
 export const any = (obj: any, key: string) => obj[key];
 
@@ -44,10 +45,10 @@ export const getGrpcClient = (models: string[]): [ClientsModuleOptions, Provider
 
 export const getRepositoryProvider = (name: string) => ({
   provide: REPOSITORY,
-  useFactory: async (model) => {
-    return new Repository(model);
+  useFactory: async (model, context) => {
+    return new Repository(model, context);
   },
-  inject: [getModelToken(name)],
+  inject: [getModelToken(name), ContextService],
 });
 
 export const responseError = (req: Request, res: Response, err: any) => {

@@ -1,12 +1,8 @@
 import { Injectable, Scope } from '@nestjs/common';
 
-@Injectable({ scope: Scope.REQUEST })
+@Injectable()
 export class ContextService {
-  private readonly data: Record<string, any> = {};
-
-  constructor() {
-    console.log('context');
-  }
+  private data: Record<string, any> = {};
 
   set(key: string, value: any) {
     this.data[key] = value;
@@ -19,5 +15,9 @@ export class ContextService {
   update(key: string, updFun: (val) => any) {
     if (!this.data[key]) throw new Error('No data..');
     this.data[key] = updFun(this.data[key]);
+  }
+
+  reset() {
+    this.data = {};
   }
 }
