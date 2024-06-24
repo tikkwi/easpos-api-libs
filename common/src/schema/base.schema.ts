@@ -8,6 +8,6 @@ export class BaseSchema {
   @AppProp({ type: Date, default: Date.now })
   createdAt: Date;
 
-  @AppProp({ type: Date })
+  @AppProp({ type: Date, required: false })
   updatedAt: Date;
 }

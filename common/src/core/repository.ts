@@ -10,7 +10,6 @@ export class Repository<T> {
   ) {}
 
   async create(dto: CreateType<T>) {
-    console.log('got', this.context);
     return { data: (await new this.model(dto).save()) as Document<unknown, unknown, T> & T };
   }
 

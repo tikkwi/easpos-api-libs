@@ -1,12 +1,10 @@
 import { AppProp } from '@common/decorator/app_prop.decorator';
 import { User } from '@common/dto/entity.dto';
 import { BaseSchema } from '@common/schema/base.schema';
-import { parseUA } from '@common/utils/user_agent';
-import { SchemaFactory } from '@nestjs/mongoose';
+import { Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Type } from 'class-transformer';
 import { IsIP, IsNotEmpty, IsString, ValidateNested } from 'class-validator';
 import { SchemaTypes } from 'mongoose';
-import { IResult } from 'ua-parser-js';
 
 export class RequestLog {
   @IsNotEmpty()
@@ -27,6 +25,7 @@ export class RequestLog {
   response?: any;
 }
 
+@Schema()
 export class Audit extends BaseSchema {
   @AppProp({ type: SchemaTypes.Mixed })
   @IsNotEmpty()
@@ -41,8 +40,8 @@ export class Audit extends BaseSchema {
   @AppProp({ type: String })
   sessionId: string;
 
-  @AppProp({ type: SchemaTypes.Mixed, set: (ua: string) => parseUA(ua) })
-  userAgent: IResult;
+  @AppProp({ type: SchemaTypes.String })
+  userAgent: string;
 
   @AppProp({ type: SchemaTypes.Mixed, required: false })
   @Type(() => User)

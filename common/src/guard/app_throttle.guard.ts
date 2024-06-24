@@ -1,4 +1,4 @@
-import { C_USER, EXCEED_LIMIT } from '@common/constant';
+import { APP_CONTEXT, C_USER, EXCEED_LIMIT } from '@common/constant';
 import { ContextService } from '@common/core/context/context.service';
 import { AuthUser } from '@common/dto/core.dto';
 import { isPeriodExceed } from '@common/utils/datetime';
@@ -16,15 +16,8 @@ dayjs.extend(isSameOrAfter);
 
 @Injectable()
 export class AppThrottleGuard extends ThrottlerGuard {
-  constructor(
-    private readonly exceedLimitService: ExceedLimitService,
-    private readonly context: ContextService,
-    options,
-    storageService,
-    reflector,
-  ) {
-    super(options, storageService, reflector);
-  }
+  @Inject(getServiceToken(EXCEED_LIMIT)) private readonly exceedLimitService: ExceedLimitService;
+  @Inject(APP_CONTEXT) private readonly context: ContextService;
 
   async handleRequest(context: ExecutionContext, limit: number, ttl: number): Promise<boolean> {
     const request: Request = context.switchToHttp().getRequest();

@@ -1,5 +1,5 @@
 import { CoreDto } from '@common/dto/core.dto';
-import { IntersectionType, OmitType } from '@nestjs/swagger';
+import { OmitType } from '@nestjs/swagger';
 import { Audit } from '@shared/audit/audit.schema';
 
 export class LogRequestDto extends OmitType(CoreDto(Audit), [

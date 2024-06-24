@@ -7,7 +7,6 @@ export class TmpService {
   constructor(@Inject(REPOSITORY) private readonly repository: Repository<any>) {}
 
   async create(dto) {
-    console.log('hello', dto);
-    // return await this.repository.create(dto);
+    return await this.repository.create(dto);
   }
 }

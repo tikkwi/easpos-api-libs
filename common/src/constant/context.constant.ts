@@ -1,3 +1,4 @@
+export const APP_CONTEXT = 'APP_CONTEXT';
 export const C_LOG_TRAIL = 'C_LOG_TRAIL';
 export const C_SESSION = 'C_SESSION';
 export const C_END_TRANSACTION = 'C_END_TRANSACTION';

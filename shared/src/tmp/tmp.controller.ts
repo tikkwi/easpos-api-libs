@@ -8,8 +8,6 @@ export class TmpController {
 
   @Post('create')
   async create(@Body() dto) {
-    console.log('hehehe', dto);
-    return dto;
-    // return await this.service.create(dto);
+    return await this.service.create(dto);
   }
 }
