@@ -1,5 +1,6 @@
-import { USERS } from '@common/constant';
-import { AllowedUser } from '@common/dto/core.dto';
+import { C_IS_SUB_ACTIVE, C_USER, USERS } from '@common/constant';
+import { ContextService } from '@common/core/context/context.service';
+import { AllowedUser, AuthUser } from '@common/dto/core.dto';
 import { EAllowedUser } from '@common/utils/enum';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
@@ -7,28 +8,30 @@ import { intersection } from 'lodash';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private readonly reflector: Reflector) {}
+  constructor(
+    private readonly reflector: Reflector,
+    private readonly context: ContextService,
+  ) {}
 
   async canActivate(context: ExecutionContext) {
-    const httpCtx = context.switchToHttp();
-    const request: AppRequest = httpCtx.getRequest();
     const allowedUsers = this.reflector.get<AllowedUser[]>(USERS, context.getHandler());
     const merchantUsers = [EAllowedUser.Owner, EAllowedUser.Merchant, EAllowedUser.MerchantNoSub];
+    const user = this.context.get<AuthUser>(C_USER);
+    const isSubActive = this.context.get<boolean>(C_IS_SUB_ACTIVE);
 
     const userType =
-      merchantUsers.includes(request.user?.type as any) && !request.isSubActive
+      merchantUsers.includes(user?.type as any) && !isSubActive
         ? EAllowedUser.MerchantNoSub
-        : request.user?.isOwner
+        : user?.isOwner
           ? EAllowedUser.Owner
-          : request.user?.type;
+          : user?.type;
 
     if (
       allowedUsers?.length &&
-      (!request.user ||
+      (!user ||
         !allowedUsers.includes(userType) ||
         (intersection(allowedUsers, merchantUsers).length &&
-          (!request.user.merchant ||
-            (!allowedUsers.includes(EAllowedUser.MerchantNoSub) && !request.isSubActive))))
+          (!user.merchant || (!allowedUsers.includes(EAllowedUser.MerchantNoSub) && !isSubActive))))
     )
       return false;
     return true;

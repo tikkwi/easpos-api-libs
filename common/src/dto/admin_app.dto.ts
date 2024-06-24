@@ -1,10 +1,17 @@
-import { User } from '@common/schema/user.schema';
-import { BaseDto } from './core.dto';
+import { IsMongoId, IsNotEmpty, IsUrl } from 'class-validator';
+import { AuthUser } from './core.dto';
 
-export type UserReturn = { data: User };
+export class GetAuthDataDto {
+  @IsNotEmpty()
+  @IsUrl()
+  url: string;
+
+  @IsMongoId()
+  id?: string;
+}
 
 export interface AdminAppServiceMethods {
-  getAuthData(dto: BaseDto): Promise<{
+  getAuthData(dto: GetAuthDataDto): Promise<{
     config: AppConfig;
     user: AuthUser;
     merchant: Merchant;

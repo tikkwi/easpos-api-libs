@@ -1,4 +1,4 @@
-import { SchemaFactory } from '@nestjs/mongoose';
+import { Schema, SchemaFactory } from '@nestjs/mongoose';
 import { SchemaTypes } from 'mongoose';
 import { EEntityMetadata } from '@common/utils/enum';
 import { AppProp } from '@common/decorator/app_prop.decorator';
@@ -6,6 +6,7 @@ import { BaseSchema } from '@common/schema/base.schema';
 import { Field } from '@common/schema/field.schema';
 import { Permission } from '@common/schema/permission.schema';
 
+@Schema()
 export class Metadata extends BaseSchema {
   @AppProp({ type: String, immutable: false })
   name: string;

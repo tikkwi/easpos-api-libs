@@ -34,7 +34,7 @@ export abstract class MetadataService implements MetadataServiceMethods {
     return await this.repository.findOne({ filter: { _id: id, entity } });
   }
 
-  async isValid({ value, field, request }: IsValidDto) {
+  async isValid({ value, field }: IsValidDto) {
     let isValid = true;
     switch (field) {
       case EField.String:
@@ -55,20 +55,18 @@ export abstract class MetadataService implements MetadataServiceMethods {
       case EField.User:
         isValid = !!(await this.userService.getUser({
           userName: value,
-          request,
         }));
         break;
       case EField.Merchant:
         isValid = !!(await this.merchantService.getMerchant({
           id: value,
-          request,
         }));
         break;
       case EField.Datetime:
         isValid = isDateString(value);
         break;
       case EField.Address:
-        isValid = !!(await this.addressService.getAddress({ id: value, request }));
+        isValid = !!(await this.addressService.getAddress({ id: value }));
         break;
       case EField.Number:
         isNumber(value);
@@ -83,7 +81,7 @@ export abstract class MetadataService implements MetadataServiceMethods {
     return { data: isValid };
   }
 
-  async validateMetaValue({ metadata: id, entity, value, request }: ValidateMetaValueDto) {
+  async validateMetaValue({ metadata: id, entity, value }: ValidateMetaValueDto) {
     const metadata = await this.getMetadata({ id, entity }).then(({ data }) =>
       data.populate(['fields']),
     );
@@ -97,14 +95,14 @@ export abstract class MetadataService implements MetadataServiceMethods {
           if (!isArray) isValid = false;
           else
             for (let i = 0; i < value[name].length; i++) {
-              if (!(await this.isValid({ value: value[name], field: type, request })).data) {
+              if (!(await this.isValid({ value: value[name], field: type })).data) {
                 isValid = false;
                 break;
               }
             }
         } else {
           if (isArray) isValid = false;
-          else isValid = (await this.isValid({ value: value[name], field: type, request })).data;
+          else isValid = (await this.isValid({ value: value[name], field: type })).data;
         }
       }
       if (!isValid) {

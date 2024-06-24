@@ -1,7 +1,8 @@
 import { AppProp } from '@common/decorator/app_prop.decorator';
 import { BaseSchema } from '@common/schema/base.schema';
-import { SchemaFactory } from '@nestjs/mongoose';
+import { Schema, SchemaFactory } from '@nestjs/mongoose';
 
+@Schema()
 export class Address extends BaseSchema {
   @AppProp({ type: String }, { swagger: { example: 'Hlaing' } })
   city: string;

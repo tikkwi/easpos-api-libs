@@ -15,8 +15,8 @@ export class TransactionService {
   async makeTransaction(action: () => Promise<any>) {
     const session = await this.connection.startSession();
     try {
-      this.context.set(C_SESSION, session);
-      this.context.set(C_LOG_TRAIL, []);
+      this.context.set({ [C_SESSION]: session });
+      this.context.set({ [C_LOG_TRAIL]: [] });
       const res = await action();
       this.auditService.logRequest();
       await session.commitTransaction();

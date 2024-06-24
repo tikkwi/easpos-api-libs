@@ -1,9 +1,11 @@
-import { EAllowedUser } from '@common/utils/enum';
+import { EAllowedUser, EStatus, EUser } from '@common/utils/enum';
 import { Type } from '@nestjs/common';
 import { IntersectionType, OmitType } from '@nestjs/swagger';
 import {
   IsBoolean,
   IsDateString,
+  IsEnum,
+  IsMongoId,
   IsNotEmpty,
   IsNumber,
   IsObject,
@@ -40,9 +42,48 @@ export class PaginationDto<T> {
   sort?: Record<keyof T, any>;
 }
 
-export class BaseDto {
+// export class BaseDto {
+//   @IsNotEmpty()
+//   request: AppRequest;
+// }
+
+export class AuthUser {
   @IsNotEmpty()
-  request: AppRequest;
+  @IsMongoId()
+  _id: string;
+
+  @IsNotEmpty()
+  @IsMongoId()
+  userName: string;
+
+  @IsNotEmpty()
+  @IsMongoId()
+  firstName: string;
+
+  @IsNotEmpty()
+  @IsMongoId()
+  lastName: string;
+
+  @IsNotEmpty()
+  @IsMongoId()
+  mail: string;
+
+  @IsNotEmpty()
+  @IsEnum(EStatus)
+  status: EStatus;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  isOwner: boolean;
+
+  @IsNotEmpty()
+  @IsEnum(EUser)
+  type: EUser;
+
+  @IsMongoId()
+  merchant?: string;
+
+  metadata: any;
 }
 
 export function CoreDto<T>(classRef: Type<T>): Type<Omit<T, '_id' | 'createdAt' | 'updatedAt'>> {
@@ -51,8 +92,6 @@ export function CoreDto<T>(classRef: Type<T>): Type<Omit<T, '_id' | 'createdAt' 
 }
 
 export class FindDto {
-  request?: AppRequest;
-
   @IsBoolean()
   lean?: boolean;
 }

@@ -1,5 +1,5 @@
 import { EStatus, ESubscription } from '@common/utils/enum';
-import { SchemaFactory } from '@nestjs/mongoose';
+import { Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Type } from 'class-transformer';
 import { IsEmail, IsPhoneNumber, ValidateIf } from 'class-validator';
 import { SchemaTypes } from 'mongoose';
@@ -10,6 +10,7 @@ import { AppProp } from '@common/decorator/app_prop.decorator';
 import { MerchantPurchase } from './merchant_purchase.schema';
 import { MetadataValue } from '@common/dto/entity.dto';
 
+@Schema()
 export class Merchant extends BaseSchema {
   @AppProp({ type: String })
   name: string;

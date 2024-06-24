@@ -1,7 +1,8 @@
-import { SchemaFactory } from '@nestjs/mongoose';
+import { Schema, SchemaFactory } from '@nestjs/mongoose';
 import { BaseSchema } from './base.schema';
 import { AppProp } from '@common/decorator/app_prop.decorator';
 
+@Schema()
 export class Permission extends BaseSchema {
   @AppProp({ type: String }, { swagger: { example: 'ParcelStatus' } })
   name: string;

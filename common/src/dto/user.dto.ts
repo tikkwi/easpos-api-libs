@@ -1,8 +1,17 @@
-import { regex } from '@common/utils/regex';
-import { IntersectionType, OmitType } from '@nestjs/swagger';
 import { User } from '@common/schema/user.schema';
-import { IsEmail, IsMongoId, IsNotEmpty, Matches } from 'class-validator';
-import { BaseDto, CoreDto, FindByIdDto, FindDto } from './core.dto';
+import { regex } from '@common/utils/regex';
+import { OmitType } from '@nestjs/swagger';
+import {
+  IsEmail,
+  IsMongoId,
+  IsNotEmpty,
+  IsString,
+  IsUrl,
+  Matches,
+  ValidateNested,
+} from 'class-validator';
+import { AuthUser, CoreDto, FindByIdDto, FindDto } from './core.dto';
+import { Type } from 'class-transformer';
 
 export class GetUserDto extends FindDto {
   @IsMongoId()
@@ -15,13 +24,18 @@ export class GetUserDto extends FindDto {
   mail?: string;
 }
 
-export class CreateUserDto extends IntersectionType(
-  BaseDto,
-  OmitType(CoreDto(User), ['merchant', 'servicePermissions']),
-) {
-  @IsNotEmpty()
+export class CreateUserDto extends OmitType(CoreDto(User), ['merchant', 'servicePermissions']) {
+  @ValidateNested()
+  @Type(() => AuthUser)
+  authUser?: AuthUser;
+
   @IsMongoId()
-  merchantId: string;
+  merchantId?: string;
+}
+
+export class UserWihAuthDto extends FindByIdDto {
+  @IsUrl()
+  url: string;
 }
 
 export type UserReturn = { data: User };

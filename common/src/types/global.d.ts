@@ -41,37 +41,10 @@ declare global {
   type CustomActionType<T> = {
     action: (model: Model<T>) => any;
   };
-
-  type AppRequest = Pick<
-    Request,
-    'originalUrl' | 'ip' | 'sessionID' | 'headers' | 'url' | 'query'
-  > & {
-    app: EApp;
-    appConfig: AppConfig;
-    user?: AuthUser;
-    merchant?: Merchant;
-    isSubActive?: boolean;
-    session: {
-      user: string;
-    };
-  };
 }
 
-// declare module 'express' {
-//   type ClientSession = import('mongoose').ClientSession;
-//   type AppConfig = import('@common/schema').AppConfig;
-
-//   interface Request {
-//     app: EApp;
-//     logTrail: RequestLog[];
-//     appConfig: AppConfig;
-//     user?: AuthUser;
-//     isSubActive?: boolean;
-//   }
-// }
-
-// declare module 'express-session' {
-//   interface SessionData {
-//     user: string;
-//   }
-// }
+declare module 'express-session' {
+  interface SessionData {
+    user: string;
+  }
+}

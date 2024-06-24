@@ -4,12 +4,12 @@ import { Injectable, Scope } from '@nestjs/common';
 export class ContextService {
   private data: Record<string, any> = {};
 
-  set(key: string, value: any) {
-    this.data[key] = value;
+  set(data: Record<string, any>) {
+    Object.entries(data).forEach(([k, v]) => (this.data[k] = v));
   }
 
-  get(key: string) {
-    return this.data[key];
+  get<T = any>(key: string) {
+    return this.data[key] as T;
   }
 
   update(key: string, updFun: (val) => any) {

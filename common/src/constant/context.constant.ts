@@ -6,3 +6,7 @@ export const C_APP = 'C_APP';
 export const C_BASIC_AUTH = 'C_BASIC_AUTH';
 export const C_REQ = 'C_REQ';
 export const C_RES = 'C_RES';
+export const C_USER = 'C_USER';
+export const C_MERCHANT = 'C_MERCHANT';
+export const C_APP_CONFIG = 'C_APP_CONFIG';
+export const C_IS_SUB_ACTIVE = 'C_IS_SUB_ACTIVE';

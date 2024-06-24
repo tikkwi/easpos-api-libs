@@ -1,4 +1,6 @@
-import { EXCEED_LIMIT } from '@common/constant';
+import { C_USER, EXCEED_LIMIT } from '@common/constant';
+import { ContextService } from '@common/core/context/context.service';
+import { AuthUser } from '@common/dto/core.dto';
 import { isPeriodExceed } from '@common/utils/datetime';
 import { getServiceToken } from '@common/utils/misc';
 import { ExecutionContext, Inject, Injectable } from '@nestjs/common';
@@ -7,25 +9,35 @@ import { ExceedLimitService } from '@shared/exceed_limit/exceed_limit.service';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import { Request } from 'express';
 
 dayjs.extend(duration);
 dayjs.extend(isSameOrAfter);
 
 @Injectable()
 export class AppThrottleGuard extends ThrottlerGuard {
-  @Inject(getServiceToken(EXCEED_LIMIT)) private readonly exceedLimitService: ExceedLimitService;
+  constructor(
+    private readonly exceedLimitService: ExceedLimitService,
+    private readonly context: ContextService,
+    options,
+    storageService,
+    reflector,
+  ) {
+    super(options, storageService, reflector);
+  }
 
   async handleRequest(context: ExecutionContext, limit: number, ttl: number): Promise<boolean> {
-    const request: AppRequest = context.switchToHttp().getRequest();
+    const request: Request = context.switchToHttp().getRequest();
     const tracker = await this.getTracker(request);
     const key = this.generateKey(context, tracker, 'default');
     const { totalHits } = await this.storageService.increment(key, ttl);
     const isExceed = totalHits > limit;
-    const blockMsg = `${request.user ? `${request.user.firstName} ${request.user.lastName}` : request.ip}`;
+    const user = this.context.get<AuthUser>(C_USER);
+    const blockMsg = `${user ? `${user.firstName} ${user.lastName}` : request.ip}`;
 
     const { data: exceedLimit } = isExceed
-      ? await this.exceedLimitService.limitRequest({ request })
-      : await this.exceedLimitService.getLimit({ request });
+      ? await this.exceedLimitService.limitRequest()
+      : await this.exceedLimitService.getLimit({});
 
     if (exceedLimit) {
       if (exceedLimit.blocked && !exceedLimit.threshold.blockedUntil)

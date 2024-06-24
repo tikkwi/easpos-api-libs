@@ -1,4 +1,4 @@
-import { SchemaFactory } from '@nestjs/mongoose';
+import { Schema, SchemaFactory } from '@nestjs/mongoose';
 import { SchemaTypes } from 'mongoose';
 import { Type } from 'class-transformer';
 import { EMerchantPurchase } from '@common/utils/enum';
@@ -7,6 +7,7 @@ import { AppProp } from '@common/decorator/app_prop.decorator';
 import { Period } from '@common/dto/entity.dto';
 import { Payment } from './payment.schema';
 
+@Schema()
 export class MerchantPurchase extends BaseSchema {
   @AppProp({ type: String })
   vouncherId: string;

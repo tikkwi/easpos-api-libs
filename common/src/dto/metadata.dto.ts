@@ -1,8 +1,7 @@
-import { IsEnum, IsMongoId, IsNotEmpty, ValidateIf } from 'class-validator';
-import { IntersectionType } from '@nestjs/swagger';
-import { BaseDto, FindDto } from '@common/dto/core.dto';
+import { FindDto } from '@common/dto/core.dto';
 import { MetadataValue } from '@common/dto/entity.dto';
 import { EEntityMetadata, EField } from '@common/utils/enum';
+import { IsEnum, IsMongoId, IsNotEmpty, ValidateIf } from 'class-validator';
 import { Metadata } from '../schema/metadata.schema';
 export class GetMetadataDto extends FindDto {
   @IsMongoId()
@@ -14,7 +13,7 @@ export class GetMetadataDto extends FindDto {
   entity?: EEntityMetadata;
 }
 
-export class IsValidDto extends BaseDto {
+export class IsValidDto {
   value: any;
 
   @IsNotEmpty()
@@ -22,7 +21,7 @@ export class IsValidDto extends BaseDto {
   field: EField;
 }
 
-export class ValidateMetaValueDto extends IntersectionType(MetadataValue, BaseDto) {
+export class ValidateMetaValueDto extends MetadataValue {
   @ValidateIf((o) => !!!o.metadata)
   @IsNotEmpty()
   @IsEnum(EEntityMetadata)
