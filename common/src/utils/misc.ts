@@ -18,7 +18,7 @@ export const getBasicAuthType = (path: string) => {
   if (/.*\/(swagger$)/.test(path)) return EAuthCredential.Swagger;
 };
 
-const getGrpcServiceProviders = (models: string[]) => {
+const getGrpcServiceProviders = (models: string[]): Provider[] => {
   return models.map((model) => {
     const service = getServiceToken(model);
     return {

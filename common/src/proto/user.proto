@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package USER;
+package USER_PACKAGE;
 
 import "shared/enum.proto";
 import "shared/core.proto";

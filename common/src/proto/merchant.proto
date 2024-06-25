@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package MERCHANT;
+package MERCHANT_PACKAGE;
 
 import "address.proto";
 import "user.proto";
@@ -24,7 +24,7 @@ message GetMerchantDto {
     string mail = 2;
     string mobileNo = 3;
     shared.ESubscription subscriptionType = 4;
-    ADDRESS.GetMerchantDto addressDto = 5;
+    ADDRESS_PACKAGE.GetMerchantDto addressDto = 5;
     shared.CategoryDto category = 6;
-    USER.CreateUserDto userDto = 7;
+    USER_PACKAGE.CreateUserDto userDto = 7;
 }

@@ -54,7 +54,7 @@ export async function appBootstrap(module: any, port: number, packages?: string[
     const [pkg, name] = packages.reduce(
       (acc, cur) => {
         acc[0].push(cur);
-        acc[1].push(cur.toLowerCase().replace(/(_package)$/, ''));
+        acc[1].push(cur.toLowerCase());
         return acc;
       },
       [[], []],
