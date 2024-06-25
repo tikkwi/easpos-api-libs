@@ -1,7 +1,11 @@
 import { AuthCredential } from '@common/schema/auth_credential.schema';
-import { PickType } from '@nestjs/swagger';
+import { IsNotEmpty, IsUrl } from 'class-validator';
 
-export class GetAuthCredentialDto extends PickType(AuthCredential, ['type']) {}
+export class GetAuthCredentialDto {
+  @IsNotEmpty()
+  @IsUrl()
+  url: string;
+}
 
 export type AuthCredentialReturn = { data: AuthCredential };
 

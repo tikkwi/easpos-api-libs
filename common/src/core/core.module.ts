@@ -16,7 +16,7 @@ import {
   NestModule,
 } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { MongooseModule, MongooseModuleOptions } from '@nestjs/mongoose';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { AddressModule } from '@shared/address/address.module';
@@ -33,6 +33,8 @@ import { AppThrottleGuard } from '@common/guard/app_throttle.guard';
 import { getServiceToken } from '@common/utils/misc';
 import { ExceedLimitService } from '@shared/exceed_limit/exceed_limit.service';
 import { ContextService } from './context/context.service';
+import { AppExceptionFilter } from './exception.filter';
+import { BasicAuthMiddleware } from '@common/middleware/basic_auth.middleware';
 
 @Module({
   imports: [
@@ -92,15 +94,15 @@ import { ContextService } from './context/context.service';
     { provide: getServiceToken(EXCEED_LIMIT), useExisting: ExceedLimitService },
     { provide: APP_CONTEXT, useExisting: ContextService },
     { provide: APP_INTERCEPTOR, useClass: TransactionInterceptor },
-    // { provide: APP_FILTER, useClass: AppExceptionFilter },
+    { provide: APP_FILTER, useClass: AppExceptionFilter },
   ],
 })
 export class CoreModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(cookieParser.default()).forRoutes('*');
 
-    // consumer
-    //   .apply(BasicAuthMiddleware)
-    //   .forRoutes('/^.*/swagger$/', '/^.*/login$/', '/^.*/register$/');
+    consumer
+      .apply(BasicAuthMiddleware)
+      .forRoutes('/^.*/swagger$/', '/^.*/login$/', '/^.*/register$/');
   }
 }

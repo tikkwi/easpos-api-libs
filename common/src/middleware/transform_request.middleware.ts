@@ -13,13 +13,7 @@ import { ContextService } from '@common/core/context/context.service';
 import { decrypt } from '@common/utils/encrypt';
 import { getServiceToken } from '@common/utils/misc';
 import { parsePath } from '@common/utils/regex';
-import {
-  ForbiddenException,
-  Inject,
-  Injectable,
-  NestMiddleware,
-  OnModuleInit,
-} from '@nestjs/common';
+import { ForbiddenException, Inject, Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { AdminAppService } from 'src/admin_app/admin_app.service';
 
