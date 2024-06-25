@@ -4,16 +4,13 @@ import { Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema()
 export class Address extends BaseSchema {
-  @AppProp({ type: String }, { swagger: { example: 'Hlaing' } })
-  city: string;
+  @AppProp({ type: String }, { swagger: { example: 'Zalun' } })
+  locality: string;
 
-  @AppProp({ type: String, required: false }, { swagger: { example: 'Bogyoke Road' } })
-  street?: string;
+  @AppProp({ type: String, required: false }, { swagger: { example: 'Hinthada' } })
+  administrative_area: string;
 
-  @AppProp({ type: String, required: false }, { swagger: { example: 'DuuYar' } })
-  village?: string;
-
-  @AppProp({ type: String }, { swagger: { example: 'Yangon' } })
+  @AppProp({ type: String }, { swagger: { example: 'Ayeyarwady' } })
   stateProvince: string;
 
   @AppProp({ type: String }, { swagger: { example: 'Myanmar' } })

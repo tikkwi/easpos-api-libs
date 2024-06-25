@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package shared;
+
+import "enum.proto";
+
+message AuthUser {
+    string _id = 1;
+    string userName = 2; 
+    string firstName = 3;
+    string lastName = 4;
+    string mail = 5;
+    EStatus status = 6;
+    bool isOwner = 7;
+    EUser type = 8;
+    optional string merchant = 9;
+}
+
+message Category {
+    optional string name = 1;
+    optional ECategory type = 2; 
+}
+
+message CategoryDto {
+    string id = 1; 
+    optional string name = 2;
+    optional ECategory type = 3; 
+}

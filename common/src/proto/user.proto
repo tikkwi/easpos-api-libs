@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package USER;
+
+import "shared/enum.proto";
+import "shared/core.proto";
+
+service UserService {
+    rpc GetUser (GetUserDto) return (UserReturn) {}
+    rpc UserWithAuth (UserWithAuthDto) return (UserReturn) {}
+    rpc CreateUser (CreateUserDto) return (UserReturn) {}
+}
+
+message User {
+    string _id = 1;
+    shared.EUser type = 2;
+    shared.EStatus status = 3;
+    string firstName = 4;
+    string lastName = 5;
+    string mail = 6;
+}
+
+message UserReturn {
+    User data = 1;
+}
+
+message GetUserDto {
+    optional string id = 1;
+    optional string userName = 2;
+    optional string mail = 3;
+}
+
+message UserWihAuthDto {
+    string id = 1;
+    string url = 2;
+}
+
+message CreateUserDto {
+    shared.EUser type = 2;
+    shared.EStatus status = 3;
+    string firstName = 4;
+    string lastName = 5;
+    string mail = 6;
+    optional shared.AuthUser authUser = 7;
+    optional string merchantId = 7;
+}

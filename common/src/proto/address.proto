@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package ADDRESS;
+
+service AddressService {
+    rpc CreateAddress(dto: CreateAddressDto) return (CreateAddressReturn) {}
+}
+
+message Address {
+    string _id = 1;
+    string createdAt = 2;
+    optional string updatedAt = 3;
+    string locality = 4;
+    string administrative_area = 5;
+    string stateProvince = 6;
+    string country = 7;
+    float latitude = 8;
+    float longitude = 9;
+    string addressDetail = 10;
+}
+
+message CreateAddressDto {
+    string locality = 1;
+    string administrative_area = 2;
+    string stateProvince = 3;
+    string country = 4;
+    float latitude = 5;
+    float longitude = 6;
+    string addressDetail = 7;
+}
+
+message CreateAddressReturn {
+    Address data = 1;
+}

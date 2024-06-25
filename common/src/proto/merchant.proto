@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package MERCHANT;
+
+import "address.proto";
+import "user.proto";
+import "shared/enum.proto";
+import "shared/core.proto";
+
+service MerchantService {
+    rpc GetMerchant(GetMerchantDto) return (MerchantReturn){}
+}
+
+message MerchantReturn {
+    string name = 1;
+    string mail = 2;
+    string mobileNo = 3;
+    shared.ESubscription subscriptionType = 4;
+    shared.EStatus status = 5;
+}
+
+message GetMerchantDto {
+    string name = 1;
+    string mail = 2;
+    string mobileNo = 3;
+    shared.ESubscription subscriptionType = 4;
+    ADDRESS.GetMerchantDto addressDto = 5;
+    shared.CategoryDto category = 6;
+    USER.CreateUserDto userDto = 7;
+}

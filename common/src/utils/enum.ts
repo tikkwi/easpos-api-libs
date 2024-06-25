@@ -19,8 +19,7 @@ export enum EAuthCredential {
 export enum ESubscription {
   Offline = 'Offline',
   DedicatedServer = 'DedicatedServer',
-  DedicatedDB = 'DedicatedDB',
-  Dedicated = 'Dedicated',
+  Dedicated = 'Dedicated', //NOTE: dedicated both server & db
   SharedSubscription = 'SharedSubscription',
 }
 
@@ -83,14 +82,7 @@ export enum EStaff {
 export enum ECategory {
   Option = 'Option',
   Merchant = 'Merchant',
-  SuperAdmin = 'SuperAdmin',
   Admin = 'Admin',
-  Trainer = 'Trainer',
-  GeneralStaff = 'GeneralStaff',
-  Nutritionist = 'Nutritionist',
-  Doctor = 'Doctor',
-  Member = 'Member',
-  ExceedLimit = 'ExceedLimit',
 }
 
 export enum EEntityMetadata {

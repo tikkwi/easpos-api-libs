@@ -32,18 +32,12 @@ export class Merchant extends BaseSchema {
   @AppProp({ type: String, enum: ESubscription })
   subscriptionType: ESubscription;
 
-  @ValidateIf((o) =>
-    [ESubscription.Dedicated, ESubscription.DedicatedDB].includes(o.subscriptionType),
-  )
-  @AppProp({ type: String })
-  dbUri?: string;
-
   @AppProp({ type: String, enum: EStatus, immutable: false })
   status: EStatus;
 
-  @AppProp({ type: SchemaTypes.Mixed })
+  @AppProp({ type: SchemaTypes.Mixed, required: false })
   @Type(() => MetadataValue)
-  metadata: MetadataValue;
+  metadata?: MetadataValue;
 
   @AppProp({
     type: SchemaTypes.ObjectId,

@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package shared;
+
+enum EUser {
+    Admin = Admin;
+    Merchant = Merchant;
+    Customer = Customer;
+}
+
+enum EStatus {
+    Pending = Pending;
+    Active = Active;
+    Approved = Approved;
+    Expired = Expired;
+    Blocked = Blocked;
+    Rejected = Rejected;
+    Suspended = Suspended;
+}
+
+enum ECategory {
+    Option = Option;
+    Merchant = Merchant;
+    Admin = Admin;
+}
+
+enum ESubscription {
+    Offline = Offline;
+    DedicatedServer = DedicatedServer;
+    Dedicated = Dedicated; 
+    SharedSubscription = SharedSubscription;
+  }
