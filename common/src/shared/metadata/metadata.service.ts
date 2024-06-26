@@ -1,11 +1,13 @@
 import { REPOSITORY } from '@common/constant';
 import { Repository } from '@common/core/repository';
+import { MerchantSharedServiceMethods } from '@common/dto/merchant.dto';
 import {
   GetMetadataDto,
   IsValidDto,
   MetadataServiceMethods,
   ValidateMetaValueDto,
 } from '@common/dto/metadata.dto';
+import { UserSharedServiceMethods } from '@common/dto/user.dto';
 import { Metadata } from '@common/schema/metadata.schema';
 import { EField } from '@common/utils/enum';
 import { regex } from '@common/utils/regex';
@@ -21,14 +23,12 @@ import {
   matches,
 } from 'class-validator';
 import { isNumber } from 'lodash';
-import { MerchantService } from 'src/merchant/merchant.service';
-import { UserService } from 'src/user/user.service';
 
 export abstract class MetadataService implements MetadataServiceMethods {
   @Inject(REPOSITORY) private readonly repository: Repository<Metadata>;
   protected abstract addressService: AddressServiceMethods;
-  protected abstract userService: UserService;
-  protected abstract merchantService: MerchantService;
+  protected abstract userService: UserSharedServiceMethods;
+  protected abstract merchantService: MerchantSharedServiceMethods;
 
   async getMetadata({ id, entity }: GetMetadataDto) {
     return await this.repository.findOne({ filter: { _id: id, entity } });
@@ -97,14 +97,18 @@ export abstract class MetadataService implements MetadataServiceMethods {
           if (!isArray) isValid = false;
           else
             for (let i = 0; i < value[name].length; i++) {
-              if (!(await this.isValid({ value: value[name], field: type })).data) {
+              if (
+                !(await this.isValid({ value: value[name], field: type })).data
+              ) {
                 isValid = false;
                 break;
               }
             }
         } else {
           if (isArray) isValid = false;
-          else isValid = (await this.isValid({ value: value[name], field: type })).data;
+          else
+            isValid = (await this.isValid({ value: value[name], field: type }))
+              .data;
         }
       }
       if (!isValid) {

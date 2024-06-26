@@ -43,3 +43,5 @@ export interface MetadataServiceMethods {
   isValid(dto: IsValidDto): Promise<{ data: boolean }>;
   validateMetaValue(dto: ValidateMetaValueDto): Promise<void>;
 }
+
+export interface MetadataSharedServiceMethods extends MetadataServiceMethods {}

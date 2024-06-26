@@ -27,7 +27,8 @@ export class BasicAuthMiddleware implements NestMiddleware {
     const [usr, pass] = Buffer.from(authHeader.split(' ')[1], 'base64')
       .toString('ascii')
       .split(':');
-    if (basicAuth.userName === usr && (await compare(pass, basicAuth.password))) next();
+    if (basicAuth.userName === usr && (await compare(pass, basicAuth.password)))
+      next();
     else throw new ForbiddenException('Incorrect username or password');
   }
 }

@@ -14,8 +14,15 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext) {
-    const allowedUsers = this.reflector.get<AllowedUser[]>(USERS, context.getHandler());
-    const merchantUsers = [EAllowedUser.Owner, EAllowedUser.Merchant, EAllowedUser.MerchantNoSub];
+    const allowedUsers = this.reflector.get<AllowedUser[]>(
+      USERS,
+      context.getHandler(),
+    );
+    const merchantUsers = [
+      EAllowedUser.Owner,
+      EAllowedUser.Merchant,
+      EAllowedUser.MerchantNoSub,
+    ];
     const user = this.context.get<AuthUser>(C_USER);
     const isSubActive = this.context.get<boolean>(C_IS_SUB_ACTIVE);
 
@@ -31,7 +38,9 @@ export class AuthGuard implements CanActivate {
       (!user ||
         !allowedUsers.includes(userType) ||
         (intersection(allowedUsers, merchantUsers).length &&
-          (!user.merchant || (!allowedUsers.includes(EAllowedUser.MerchantNoSub) && !isSubActive))))
+          (!user.merchant ||
+            (!allowedUsers.includes(EAllowedUser.MerchantNoSub) &&
+              !isSubActive))))
     )
       return false;
     return true;

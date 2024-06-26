@@ -56,3 +56,5 @@ export interface UserServiceMethods {
   userWithAuth(dto: FindByIdDto): Promise<{ data: AuthUser }>;
   createUser(dto: CreateUserDto): Promise<UserReturn>;
 }
+
+export interface UserSharedServiceMethods extends UserServiceMethods {}

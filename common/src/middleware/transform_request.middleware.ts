@@ -10,17 +10,23 @@ import {
   C_USER,
 } from '@common/constant';
 import { ContextService } from '@common/core/context/context.service';
+import { AdminAppSharedServiceMethods } from '@common/dto/admin_app.dto';
 import { decrypt } from '@common/utils/encrypt';
 import { getServiceToken } from '@common/utils/misc';
 import { parsePath } from '@common/utils/regex';
-import { ForbiddenException, Inject, Injectable, NestMiddleware } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Inject,
+  Injectable,
+  NestMiddleware,
+} from '@nestjs/common';
 import { Request, Response } from 'express';
-import { AdminAppService } from 'src/admin_app/admin_app.service';
 
 @Injectable()
 export class TransformRequestMiddleware implements NestMiddleware {
   constructor(
-    @Inject(getServiceToken(ADMIN_APP)) private readonly adminAppService: AdminAppService,
+    @Inject(getServiceToken(ADMIN_APP))
+    private readonly adminAppService: AdminAppSharedServiceMethods,
     private readonly context: ContextService,
   ) {}
 
