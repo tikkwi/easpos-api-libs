@@ -10,18 +10,11 @@ import * as session from 'express-session';
 import helmet from 'helmet';
 import { RedisClientType } from 'redis';
 
-export async function appBootstrap(
-  module: any,
-  port: number,
-  packages?: string[],
-) {
+export async function appBootstrap(module: any, port: number, packages?: string[]) {
   const app = await NestFactory.create<NestExpressApplication>(module);
   const config = app.get<ConfigService>(ConfigService);
   const currentApp = config.get<string>(APP);
-  const documentConfig = new DocumentBuilder()
-    .setTitle(currentApp)
-    .setVersion('1.0')
-    .build();
+  const documentConfig = new DocumentBuilder().setTitle(currentApp).setVersion('1.0').build();
 
   app.setGlobalPrefix(`${currentApp}_api`);
   const document = SwaggerModule.createDocument(app, documentConfig);
@@ -54,8 +47,6 @@ export async function appBootstrap(
     }),
   );
 
-  await app.listen(port);
-
   if (packages) {
     const [pkg, pth] = packages.reduce(
       (acc, cur) => {
@@ -66,16 +57,16 @@ export async function appBootstrap(
       },
       [[], []],
     );
-    const grpcApp = await NestFactory.createMicroservice<MicroserviceOptions>(
-      module,
-      {
-        transport: Transport.GRPC,
-        options: {
-          package: pkg,
-          protoPath: pth,
-        },
+    app.connectMicroservice({
+      transport: Transport.GRPC,
+      options: {
+        package: pkg,
+        protoPath: pth,
       },
-    );
-    grpcApp.listen();
+    });
+
+    await app.startAllMicroservices();
   }
+
+  await app.listen(port);
 }
