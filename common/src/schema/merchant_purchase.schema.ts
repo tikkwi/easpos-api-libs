@@ -6,6 +6,7 @@ import { BaseSchema } from './base.schema';
 import { AppProp } from '@common/decorator/app_prop.decorator';
 import { Period } from '@common/dto/entity.dto';
 import { Payment } from './payment.schema';
+import { Merchant } from './merchant.schema';
 
 @Schema()
 export class MerchantPurchase extends BaseSchema {

@@ -8,12 +8,14 @@ import {
   IsMongoId,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
   Matches,
   ValidateNested,
 } from 'class-validator';
 
 type Options = {
+  allowEmpty?: boolean;
   userName?: boolean;
   validateString?: boolean;
   prop?: boolean;
@@ -25,13 +27,23 @@ export function AppProp(
   options?: Options | (Options & { nested: any }),
 ) {
   return function (target: any, key: string) {
-    const { validateString = true, prop = true, userName = false, swagger } = options ?? {};
+    const {
+      allowEmpty = false,
+      validateString = true,
+      prop = true,
+      userName = false,
+      swagger,
+    } = options ?? {};
 
     const pOpt: any = {
       immutable: true,
+      unique: userName,
       ...((propOptions as any) ?? {}),
       required: (propOptions as any)?.required ?? true,
     };
+
+    const isArray = Array.isArray(pOpt.type);
+
     if (prop) Prop(pOpt)(target, key);
     ApiProperty({
       type: pOpt.type,
@@ -46,28 +58,30 @@ export function AppProp(
       (Array.isArray(pOpt.type) && pOpt.type[0].type.name === 'SchemaMixed')
     )
       ValidateNested({ each: Array.isArray(pOpt.type) ? true : undefined })(target, key);
-    if (pOpt.required) IsNotEmpty()(target, key);
+    if (!allowEmpty) IsNotEmpty()(target, key);
+    if (!pOpt.required) IsOptional()(target, key);
     if (pOpt.enum) IsEnum(pOpt.enum as any)(target, key);
 
-    switch (Array.isArray(pOpt.type) ? pOpt.type[0].name : pOpt.type.name) {
+    const valOpt = { each: isArray ? true : undefined };
+    switch (isArray ? pOpt.type[0].name : pOpt.type.name) {
       case 'String':
-        if (validateString && !pOpt.enum) IsString()(target, key);
+        if (validateString && !pOpt.enum) IsString(valOpt)(target, key);
         break;
 
       case 'Number':
-        IsNumber()(target, key);
+        IsNumber(undefined, valOpt)(target, key);
         break;
 
       case 'Boolean':
-        IsBoolean()(target, key);
+        IsBoolean(valOpt)(target, key);
         break;
 
       case 'Date':
-        IsDateString()(target, key);
+        IsDateString(undefined, valOpt)(target, key);
         break;
 
       case 'SchemaObjectId':
-        IsMongoId()(target, key);
+        IsMongoId(valOpt)(target, key);
         break;
 
       default:

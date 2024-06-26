@@ -23,8 +23,8 @@ message GetMerchantDto {
     string name = 1;
     string mail = 2;
     string mobileNo = 3;
-    shared.ESubscription subscriptionType = 4;
-    ADDRESS_PACKAGE.GetMerchantDto addressDto = 5;
+    optional shared.ESubscription subscriptionType = 4;
+    ADDRESS_PACKAGE.GetMerchantDto address = 5;
     shared.CategoryDto category = 6;
-    USER_PACKAGE.CreateUserDto userDto = 7;
+    USER_PACKAGE.CreateUserDto user = 7;
 }

@@ -1,5 +1,5 @@
 import { REPOSITORY } from '@common/constant';
-import { HttpException, HttpStatus, Provider } from '@nestjs/common';
+import { HttpException, HttpStatus, InternalServerErrorException, Provider } from '@nestjs/common';
 import { ClientGrpc, ClientsModuleOptions, Transport } from '@nestjs/microservices';
 import { getModelToken } from '@nestjs/mongoose';
 import { camelCase } from 'lodash';
@@ -9,6 +9,8 @@ import { EAuthCredential } from './enum';
 import { Repository } from '@common/core/repository';
 import { Request, Response } from 'express';
 import { ContextService } from '@common/core/context/context.service';
+
+type RepositoryProviderType = { name: string; provide?: string };
 
 export const any = (obj: any, key: string) => obj[key];
 
@@ -38,18 +40,40 @@ const getGrpcClientOptions = (pkgs: string[]): ClientsModuleOptions =>
     },
   }));
 
+const repositoryProvider = ({ provide, name }: RepositoryProviderType) => ({
+  provide: provide ?? REPOSITORY,
+  useFactory: (model, context) => {
+    return new Repository(model, context);
+  },
+  inject: [getModelToken(name), ContextService],
+});
+
 export const getGrpcClient = (models: string[]): [ClientsModuleOptions, Provider[]] => [
   getGrpcClientOptions(models),
   getGrpcServiceProviders(models),
 ];
 
-export const getRepositoryProvider = (name: string) => ({
-  provide: REPOSITORY,
-  useFactory: async (model, context) => {
-    return new Repository(model, context);
-  },
-  inject: [getModelToken(name), ContextService],
-});
+export function getRepositoryProvider(args: RepositoryProviderType): Provider;
+export function getRepositoryProvider(args: RepositoryProviderType[]): Provider[];
+export function getRepositoryProvider(
+  args: RepositoryProviderType | RepositoryProviderType[],
+): Provider | Provider[] {
+  if (Array.isArray(args)) {
+    const pvdr = [];
+    let defInc = false;
+    args.reduce((acc, { name, provide }) => {
+      if (!provide || provide === REPOSITORY) {
+        if (!defInc) defInc = true;
+        else throw new InternalServerErrorException();
+      }
+      if (acc.includes(provide)) throw new InternalServerErrorException();
+      acc.push(provide);
+      pvdr.push(repositoryProvider({ name, provide }));
+      return acc;
+    }, []);
+    return pvdr;
+  } else return repositoryProvider(args);
+}
 
 export const responseError = (req: Request, res: Response, err: any) => {
   const status = err instanceof HttpException ? err.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;

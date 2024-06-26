@@ -1,10 +1,11 @@
-import { SchemaFactory } from '@nestjs/mongoose';
+import { Schema, SchemaFactory } from '@nestjs/mongoose';
 import { SchemaTypes } from 'mongoose';
 import { Type } from 'class-transformer';
 import { BaseSchema } from '@common/schema/base.schema';
 import { AppProp } from '@common/decorator/app_prop.decorator';
 import { Period } from '@common/dto/entity.dto';
 
+@Schema()
 export class ExceedLimitThreshold extends BaseSchema {
   @AppProp({ type: Boolean, default: false })
   isInitial?: boolean;

@@ -11,7 +11,8 @@ export class TransactionInterceptor implements NestInterceptor {
   ) {}
 
   intercept(_, next: CallHandler<any>): Observable<any> | Promise<Observable<any>> {
-    const action = async () => lastValueFrom(next.handle());
-    return from(this.transaction.makeTransaction(action)).pipe(tap(() => this.context.reset()));
+    return from(this.transaction.makeTransaction(() => lastValueFrom(next.handle()))).pipe(
+      tap(() => this.context.reset()),
+    );
   }
 }

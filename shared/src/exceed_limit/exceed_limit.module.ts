@@ -8,7 +8,7 @@ import { getRepositoryProvider } from '@common/utils/misc';
 @Module({
   imports: [MongooseModule.forFeature([{ name: ExceedLimit.name, schema: ExceedLimitSchema }])],
   controllers: [ExceedLimitController],
-  providers: [ExceedLimitService, getRepositoryProvider(ExceedLimit.name)],
+  providers: [ExceedLimitService, getRepositoryProvider({ name: ExceedLimit.name })],
   exports: [ExceedLimitService],
 })
 export class ExceedLimitModule {}

@@ -1,15 +1,13 @@
-import { Module } from '@nestjs/common';
-import { TmpController } from './tmp.controller';
-import { MongooseModule } from '@nestjs/mongoose';
-import { AuthCredential, AuthCredentialSchema } from '@common/schema/auth_credential.schema';
+import { AppConfig, AppConfigSchema } from '@common/schema/app_config.schema';
 import { getRepositoryProvider } from '@common/utils/misc';
+import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
+import { TmpController } from './tmp.controller';
 import { TmpService } from './tmp.service';
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([{ name: AuthCredential.name, schema: AuthCredentialSchema }]),
-  ],
+  imports: [MongooseModule.forFeature([{ name: AppConfig.name, schema: AppConfigSchema }])],
   controllers: [TmpController],
-  providers: [getRepositoryProvider(AuthCredential.name), TmpService],
+  providers: [getRepositoryProvider({ name: AppConfig.name }), TmpService],
 })
 export class TmpModule {}

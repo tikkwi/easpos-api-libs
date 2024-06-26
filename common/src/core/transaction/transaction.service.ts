@@ -1,9 +1,8 @@
-import { C_LOG_TRAIL, C_REQ, C_RES, C_SESSION } from '@common/constant';
+import { C_LOG_TRAIL, C_SESSION } from '@common/constant';
+import { ContextService } from '@common/core/context/context.service';
 import { InjectConnection } from '@nestjs/mongoose';
 import { AuditService } from '@shared/audit/audit.service';
 import { Connection } from 'mongoose';
-import { ContextService } from '@common/core/context/context.service';
-import { responseError } from '@common/utils/misc';
 
 export class TransactionService {
   constructor(
@@ -25,7 +24,8 @@ export class TransactionService {
       return res;
     } catch (error) {
       session.abortTransaction();
-      responseError(this.context.get(C_REQ), this.context.get(C_RES), error);
+      session.endSession();
+      throw new Error(error);
     }
   }
 }

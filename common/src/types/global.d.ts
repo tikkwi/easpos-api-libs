@@ -10,7 +10,6 @@ declare global {
   type QueryOptions<T> = import('mongoose').QueryOptions<T>;
   type UpdateQuery<T> = import('mongoose').UpdateQuery<T>;
   type User = import('@common/schema').User;
-  type Merchant = import('@common/schema').Merchant;
   type AppConfig = import('@common/schema').AppConfig;
   type RequestLog = import('@common/schema').RequestLog;
   type EApp = import('@common/utils').EApp;

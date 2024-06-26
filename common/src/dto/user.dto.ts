@@ -2,7 +2,15 @@ import { User } from '@common/schema/user.schema';
 import { regex } from '@common/utils/regex';
 import { OmitType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsEmail, IsMongoId, IsUrl, Matches, ValidateNested } from 'class-validator';
+import {
+  IsArray,
+  IsEmail,
+  IsMongoId,
+  IsOptional,
+  IsUrl,
+  Matches,
+  ValidateNested,
+} from 'class-validator';
 import { AuthUser, CoreDto, FindByIdDto, FindDto } from './core.dto';
 
 export class GetUserDto extends FindDto {
@@ -16,11 +24,22 @@ export class GetUserDto extends FindDto {
   mail?: string;
 }
 
-export class CreateUserDto extends OmitType(CoreDto(User), ['merchant']) {
+export class CreateUserDto extends OmitType(CoreDto(User), [
+  'merchant',
+  'servicePermissions',
+  'status',
+]) {
+  @IsOptional()
   @ValidateNested()
   @Type(() => AuthUser)
   authUser?: AuthUser;
 
+  @IsOptional()
+  @IsArray()
+  @IsMongoId({ each: true })
+  permissions?: string[];
+
+  @IsOptional()
   @IsMongoId()
   merchantId?: string;
 }

@@ -17,7 +17,7 @@ export class CreateMerchantDto extends OmitType(CoreDto(Merchant), [
   @IsNotEmpty()
   @ValidateNested()
   @Type(() => CreateAddressDto)
-  addressDto: CreateAddressDto;
+  address: CreateAddressDto;
 
   @IsNotEmpty()
   @ValidateNested()
@@ -27,7 +27,7 @@ export class CreateMerchantDto extends OmitType(CoreDto(Merchant), [
   @IsNotEmpty()
   @ValidateNested()
   @Type(() => CreateUserDto)
-  userDto: CreateUserDto;
+  user: CreateUserDto;
 }
 
 type MerchantReturn = { data: Merchant };

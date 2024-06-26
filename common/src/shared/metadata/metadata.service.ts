@@ -81,11 +81,13 @@ export abstract class MetadataService implements MetadataServiceMethods {
     return { data: isValid };
   }
 
-  async validateMetaValue({ metadata: id, entity, value }: ValidateMetaValueDto) {
-    const metadata = await this.getMetadata({ id, entity }).then(({ data }) =>
-      data.populate(['fields']),
-    );
-    if (!metadata) throw new BadRequestException('Metada not found');
+  async validateMetaValue({ value, entity }: ValidateMetaValueDto) {
+    const metadata = await this.getMetadata({ entity }).then(({ data }) => {
+      if (data) data.populate(['fields']);
+      return data;
+    });
+    if (metadata && !value) throw new BadRequestException('Metada not found');
+    if (!metadata) return;
     let isValid = true;
     for (const { name, type, isOptional, isArray } of metadata.fields) {
       if (!isOptional && !value[name]) isValid = false;

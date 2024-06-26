@@ -19,15 +19,6 @@ export class FieldValue {
   value: any;
 }
 
-export class MetadataValue {
-  @IsMongoId()
-  metadata?: string;
-
-  @IsNotEmpty()
-  //NOTE: require manual validation here
-  value: any;
-}
-
 export class Period {
   @IsNumber()
   @Min(1)

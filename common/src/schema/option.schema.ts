@@ -1,10 +1,8 @@
-import { Schema, SchemaFactory } from '@nestjs/mongoose';
-import { SchemaTypes } from 'mongoose';
-import { Type } from 'class-transformer';
-import { Category } from '@shared/category/category.schema';
-import { BaseSchema } from './base.schema';
 import { AppProp } from '@common/decorator/app_prop.decorator';
-import { MetadataValue } from '@common/dto/entity.dto';
+import { Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Category } from '@shared/category/category.schema';
+import { SchemaTypes } from 'mongoose';
+import { BaseSchema } from './base.schema';
 
 @Schema()
 export class Option extends BaseSchema {
@@ -14,9 +12,8 @@ export class Option extends BaseSchema {
   @AppProp({ type: SchemaTypes.ObjectId, ref: 'Category' })
   category: Category;
 
-  @AppProp({ type: SchemaTypes.Mixed })
-  @Type(() => MetadataValue)
-  metadata: MetadataValue;
+  @AppProp({ type: SchemaTypes.Mixed, required: false })
+  metadata?: any;
 }
 
 export const OptionSchema = SchemaFactory.createForClass(Option);

@@ -1,7 +1,13 @@
 import { FindDto } from '@common/dto/core.dto';
-import { MetadataValue } from '@common/dto/entity.dto';
 import { EEntityMetadata, EField } from '@common/utils/enum';
-import { IsEnum, IsMongoId, IsNotEmpty, ValidateIf } from 'class-validator';
+import {
+  IsEnum,
+  IsMongoId,
+  IsNotEmpty,
+  IsOptional,
+  ValidateIf,
+  ValidateNested,
+} from 'class-validator';
 import { Metadata } from '../schema/metadata.schema';
 export class GetMetadataDto extends FindDto {
   @IsMongoId()
@@ -21,11 +27,13 @@ export class IsValidDto {
   field: EField;
 }
 
-export class ValidateMetaValueDto extends MetadataValue {
-  @ValidateIf((o) => !!!o.metadata)
-  @IsNotEmpty()
+export class ValidateMetaValueDto {
+  @IsOptional()
+  @ValidateNested()
+  value?: any;
+
   @IsEnum(EEntityMetadata)
-  entity?: EEntityMetadata;
+  entity: EEntityMetadata;
 }
 
 export type MetadataReturn = { data: Metadata };

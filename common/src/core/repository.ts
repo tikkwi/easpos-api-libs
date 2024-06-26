@@ -10,7 +10,14 @@ export class Repository<T> {
   ) {}
 
   async create(dto: CreateType<T>) {
-    return { data: (await new this.model(dto).save()) as Document<unknown, unknown, T> & T };
+    return {
+      data: (await new this.model(dto).save({ session: this.context.get(C_SESSION) })) as Document<
+        unknown,
+        unknown,
+        T
+      > &
+        T,
+    };
   }
 
   getPaginationOption({ page, startDate, endDate, pageSize, sort }: PaginationType<T>) {
@@ -26,7 +33,9 @@ export class Repository<T> {
   }
 
   async find({ filter, projection, options, pagination }: FindType<T>) {
-    const { pag, fil } = this.getPaginationOption(pagination);
+    let pag = {},
+      fil = {};
+    if (pagination) ({ pag, fil } = this.getPaginationOption(pagination));
     const docs = await this.model.find({ ...filter, ...fil }, projection, {
       lean: true,
       ...options,
@@ -65,7 +74,7 @@ export class Repository<T> {
 
     const prev = id ? await this.model.findById(id, null) : await this.model.findOne(filter, null);
 
-    if (!prev) throw new NotFoundException('Not found');
+    if (!prev) throw new NotFoundException();
 
     const updateOptions: [UpdateQuery<T>, QueryOptions<T>] = [
       { ...update, updatedAt: new Date() },
@@ -96,7 +105,9 @@ export class Repository<T> {
   }
 
   async delete(id: string) {
-    await this.model.findByIdAndDelete(id, { session: this.context.get(C_SESSION) });
+    return {
+      data: await this.model.findByIdAndDelete(id, { session: this.context.get(C_SESSION) }),
+    };
   }
 
   async custom(action: (model: Model<T>) => any) {

@@ -1,14 +1,12 @@
+import { AppProp } from '@common/decorator/app_prop.decorator';
 import { EStatus, ESubscription } from '@common/utils/enum';
 import { Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Type } from 'class-transformer';
-import { IsEmail, IsPhoneNumber, ValidateIf } from 'class-validator';
-import { SchemaTypes } from 'mongoose';
-import { Category } from '@shared/category/category.schema';
 import { Address } from '@shared/address/address.schema';
+import { Category } from '@shared/category/category.schema';
+import { IsEmail, IsPhoneNumber } from 'class-validator';
+import { SchemaTypes } from 'mongoose';
 import { BaseSchema } from './base.schema';
-import { AppProp } from '@common/decorator/app_prop.decorator';
 import { MerchantPurchase } from './merchant_purchase.schema';
-import { MetadataValue } from '@common/dto/entity.dto';
 
 @Schema()
 export class Merchant extends BaseSchema {
@@ -29,24 +27,35 @@ export class Merchant extends BaseSchema {
   @AppProp({ type: SchemaTypes.ObjectId, ref: 'Address' })
   address: Address;
 
-  @AppProp({ type: String, enum: ESubscription })
-  subscriptionType: ESubscription;
+  @AppProp({
+    type: String,
+    enum: ESubscription,
+    default: ESubscription.SharedSubscription,
+    required: false,
+  })
+  subscriptionType?: ESubscription;
 
-  @AppProp({ type: String, enum: EStatus, immutable: false })
+  @AppProp({
+    type: String,
+    enum: EStatus,
+    default: EStatus.Pending,
+    required: false,
+    immutable: false,
+  })
   status: EStatus;
 
   @AppProp({ type: SchemaTypes.Mixed, required: false })
-  @Type(() => MetadataValue)
-  metadata?: MetadataValue;
+  metadata?: any;
 
   @AppProp({
     type: SchemaTypes.ObjectId,
     ref: 'MerchantPurchase',
     immutable: false,
+    required: false,
   })
   activePurchase?: MerchantPurchase;
 
-  @AppProp({ type: SchemaTypes.ObjectId, ref: 'User' })
+  @AppProp({ type: SchemaTypes.ObjectId, ref: 'User', required: false })
   owner?: User;
 }
 

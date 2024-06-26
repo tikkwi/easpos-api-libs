@@ -37,7 +37,6 @@ message UserWihAuthDto {
 
 message CreateUserDto {
     shared.EUser type = 2;
-    shared.EStatus status = 3;
     string firstName = 4;
     string lastName = 5;
     string mail = 6;

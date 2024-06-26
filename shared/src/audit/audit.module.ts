@@ -9,7 +9,7 @@ import { getRepositoryProvider } from '@common/utils/misc';
 @Module({
   imports: [MongooseModule.forFeature([{ name: Audit.name, schema: AuditSchema }])],
   controllers: [AuditController],
-  providers: [AuditService, getRepositoryProvider(Audit.name)],
+  providers: [AuditService, getRepositoryProvider({ name: Audit.name })],
   exports: [AuditService],
 })
 export class AuditModule {}

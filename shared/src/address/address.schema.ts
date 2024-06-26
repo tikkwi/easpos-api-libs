@@ -8,7 +8,7 @@ export class Address extends BaseSchema {
   locality: string;
 
   @AppProp({ type: String, required: false }, { swagger: { example: 'Hinthada' } })
-  administrative_area: string;
+  administrativeArea?: string;
 
   @AppProp({ type: String }, { swagger: { example: 'Ayeyarwady' } })
   stateProvince: string;
@@ -26,7 +26,7 @@ export class Address extends BaseSchema {
     { type: String, required: false },
     { swagger: { example: 'No.123. Building A, Floor 3, Unit 5' } },
   )
-  addressDetail: number;
+  addressDetail?: string;
 }
 
 export const AddressSchema = SchemaFactory.createForClass(Address);

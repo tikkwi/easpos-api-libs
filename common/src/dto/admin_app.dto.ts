@@ -1,5 +1,6 @@
 import { IsMongoId, IsNotEmpty, IsUrl } from 'class-validator';
 import { AuthUser } from './core.dto';
+import { Merchant } from '@common/schema/merchant.schema';
 
 export class GetAuthDataDto {
   @IsNotEmpty()

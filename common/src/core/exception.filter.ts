@@ -1,14 +1,7 @@
 import { APP } from '@common/constant';
 import { responseError } from '@common/utils/misc';
 import { firstUpperCase } from '@common/utils/regex';
-import {
-  ArgumentsHost,
-  Catch,
-  ExceptionFilter,
-  HttpException,
-  HttpStatus,
-  Logger,
-} from '@nestjs/common';
+import { ArgumentsHost, Catch, ExceptionFilter, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Request, Response } from 'express';
 
