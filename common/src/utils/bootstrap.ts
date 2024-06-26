@@ -52,7 +52,6 @@ export async function appBootstrap(module: any, port: number, packages?: string[
       (acc, cur) => {
         acc[0].push(`${cur}_PACKAGE`);
         acc[1].push(`dist/common/src/proto/${cur.toLowerCase()}.proto`);
-        // acc[1].push(cur.toLowerCase());
         return acc;
       },
       [[], []],
@@ -62,6 +61,7 @@ export async function appBootstrap(module: any, port: number, packages?: string[
       options: {
         package: pkg,
         protoPath: pth,
+        url: 'localhost:4000',
       },
     });
 

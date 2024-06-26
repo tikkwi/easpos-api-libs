@@ -9,6 +9,13 @@ import "shared/core.proto";
 
 service MerchantService {
     rpc CreateMerchant(CreateMerchantDto) returns (MerchantReturn){}
+    rpc TmpTst(Empty) returns (TmpReturn) {}
+}
+
+message Empty {}
+
+message TmpReturn {
+    string data = 1;
 }
 
 message MerchantReturn {
