@@ -1,6 +1,15 @@
 import { REPOSITORY } from '@common/constant';
-import { HttpException, HttpStatus, InternalServerErrorException, Provider } from '@nestjs/common';
-import { ClientGrpc, ClientsModuleOptions, Transport } from '@nestjs/microservices';
+import {
+  HttpException,
+  HttpStatus,
+  InternalServerErrorException,
+  Provider,
+} from '@nestjs/common';
+import {
+  ClientGrpc,
+  ClientsModuleOptions,
+  Transport,
+} from '@nestjs/microservices';
 import { getModelToken } from '@nestjs/mongoose';
 import { camelCase } from 'lodash';
 import { join } from 'path';
@@ -14,7 +23,8 @@ type RepositoryProviderType = { name: string; provide?: string };
 
 export const any = (obj: any, key: string) => obj[key];
 
-export const getServiceToken = (model: string) => `${firstUpperCase(camelCase(model))}Service`;
+export const getServiceToken = (model: string) =>
+  `${firstUpperCase(camelCase(model))}Service`;
 
 export const getBasicAuthType = (path: string) => {
   if (/.*\/(swagger$)/.test(path)) return EAuthCredential.Swagger;
@@ -26,6 +36,7 @@ const getGrpcServiceProviders = (models: string[]): Provider[] => {
     return {
       provide: service,
       useFactory: async (client: ClientGrpc) => client.getService(service),
+      inject: [`${model}_PACKAGE`],
     };
   });
 };
@@ -36,7 +47,10 @@ const getGrpcClientOptions = (pkgs: string[]): ClientsModuleOptions =>
     transport: Transport.GRPC,
     options: {
       package: `${pkg}_PACKAGE`,
-      protoPath: join(__dirname, `../${pkg.toLowerCase()}.proto`),
+      protoPath: join(
+        process.cwd(),
+        `dist/common/src/proto/${pkg.toLowerCase()}.proto`,
+      ),
     },
   }));
 
@@ -48,13 +62,17 @@ const repositoryProvider = ({ provide, name }: RepositoryProviderType) => ({
   inject: [getModelToken(name), ContextService],
 });
 
-export const getGrpcClient = (models: string[]): [ClientsModuleOptions, Provider[]] => [
+export const getGrpcClient = (
+  models: string[],
+): [ClientsModuleOptions, Provider[]] => [
   getGrpcClientOptions(models),
   getGrpcServiceProviders(models),
 ];
 
 export function getRepositoryProvider(args: RepositoryProviderType): Provider;
-export function getRepositoryProvider(args: RepositoryProviderType[]): Provider[];
+export function getRepositoryProvider(
+  args: RepositoryProviderType[],
+): Provider[];
 export function getRepositoryProvider(
   args: RepositoryProviderType | RepositoryProviderType[],
 ): Provider | Provider[] {
@@ -76,7 +94,10 @@ export function getRepositoryProvider(
 }
 
 export const responseError = (req: Request, res: Response, err: any) => {
-  const status = err instanceof HttpException ? err.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
+  const status =
+    err instanceof HttpException
+      ? err.getStatus()
+      : HttpStatus.INTERNAL_SERVER_ERROR;
 
   res.status(status).json({
     statusCode: status,

@@ -3,30 +3,30 @@ syntax = "proto3";
 package shared;
 
 enum EUser {
-    Admin = Admin;
-    Merchant = Merchant;
-    Customer = Customer;
+    Admin = 0;
+    Merchant = 1;
+    Customer = 2;
 }
 
 enum EStatus {
-    Pending = Pending;
-    Active = Active;
-    Approved = Approved;
-    Expired = Expired;
-    Blocked = Blocked;
-    Rejected = Rejected;
-    Suspended = Suspended;
+    Pending = 0;
+    Active = 1;
+    Approved = 2;
+    Expired = 3;
+    Blocked = 4;
+    Rejected = 5;
+    Suspended = 6;
 }
 
 enum ECategory {
-    Option = Option;
-    Merchant = Merchant;
-    Admin = Admin;
+    Option = 0;
+    Merchant = 1;
+    Admin = 2;
 }
 
 enum ESubscription {
-    Offline = Offline;
-    DedicatedServer = DedicatedServer;
-    Dedicated = Dedicated; 
-    SharedSubscription = SharedSubscription;
+    Offline = 0;
+    DedicatedServer = 1;
+    Dedicated = 2; 
+    SharedSubscription = 3;
   }

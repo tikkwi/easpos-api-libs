@@ -8,7 +8,6 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import RedisStore from 'connect-redis';
 import * as session from 'express-session';
 import helmet from 'helmet';
-import { join } from 'path';
 import { RedisClientType } from 'redis';
 
 export async function appBootstrap(
@@ -58,10 +57,11 @@ export async function appBootstrap(
   await app.listen(port);
 
   if (packages) {
-    const [pkg, name] = packages.reduce(
+    const [pkg, pth] = packages.reduce(
       (acc, cur) => {
-        acc[0].push(cur);
-        acc[1].push(cur.toLowerCase());
+        acc[0].push(`${cur}_PACKAGE`);
+        acc[1].push(`dist/common/src/proto/${cur.toLowerCase()}.proto`);
+        // acc[1].push(cur.toLowerCase());
         return acc;
       },
       [[], []],
@@ -72,9 +72,7 @@ export async function appBootstrap(
         transport: Transport.GRPC,
         options: {
           package: pkg,
-          protoPath: name.map((e) =>
-            join(process.cwd(), `libs/common/proto/${e}.proto`),
-          ),
+          protoPath: pth,
         },
       },
     );

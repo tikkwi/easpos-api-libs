@@ -3,7 +3,7 @@ syntax = "proto3";
 package ADDRESS_PACKAGE;
 
 service AddressService {
-    rpc CreateAddress(dto: CreateAddressDto) return (CreateAddressReturn) {}
+    rpc CreateAddress(CreateAddressDto) returns (CreateAddressReturn) {}
 }
 
 message Address {

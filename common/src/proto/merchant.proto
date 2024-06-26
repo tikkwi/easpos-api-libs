@@ -8,7 +8,7 @@ import "shared/enum.proto";
 import "shared/core.proto";
 
 service MerchantService {
-    rpc GetMerchant(GetMerchantDto) return (MerchantReturn){}
+    rpc GetMerchant(GetMerchantDto) returns (MerchantReturn){}
 }
 
 message MerchantReturn {
@@ -24,7 +24,7 @@ message GetMerchantDto {
     string mail = 2;
     string mobileNo = 3;
     optional shared.ESubscription subscriptionType = 4;
-    ADDRESS_PACKAGE.GetMerchantDto address = 5;
+    ADDRESS_PACKAGE.CreateAddressDto address = 5;
     shared.CategoryDto category = 6;
     USER_PACKAGE.CreateUserDto user = 7;
 }

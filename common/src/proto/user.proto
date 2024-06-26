@@ -6,9 +6,9 @@ import "shared/enum.proto";
 import "shared/core.proto";
 
 service UserService {
-    rpc GetUser (GetUserDto) return (UserReturn) {}
-    rpc UserWithAuth (UserWithAuthDto) return (UserReturn) {}
-    rpc CreateUser (CreateUserDto) return (UserReturn) {}
+    rpc GetUser (GetUserDto) returns (UserReturn) {}
+    rpc UserWithAuth (UserWihAuthDto) returns (UserReturn) {}
+    rpc CreateUser (CreateUserDto) returns (UserReturn) {}
 }
 
 message User {
@@ -36,10 +36,10 @@ message UserWihAuthDto {
 }
 
 message CreateUserDto {
-    shared.EUser type = 2;
-    string firstName = 4;
-    string lastName = 5;
-    string mail = 6;
-    optional shared.AuthUser authUser = 7;
-    optional string merchantId = 7;
+    shared.EUser type = 1;
+    string firstName = 2;
+    string lastName = 3;
+    string mail = 4;
+    optional shared.AuthUser authUser = 5;
+    optional string merchantId = 6;
 }
