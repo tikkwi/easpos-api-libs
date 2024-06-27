@@ -1,40 +1,14 @@
-import {
-  APP_CONTEXT,
-  EXCEED_LIMIT,
-  MONGO_URI,
-  REDIS_CLIENT,
-  REDIS_HOST,
-  REDIS_PASSWORD,
-  REDIS_PORT,
-} from '@common/constant';
-import { AuthGuard } from '@common/guard/auth.guard';
+import { MONGO_URI } from '@common/constant';
 import { TransactionInterceptor } from '@common/interceptors/transaction.interceptor';
-import {
-  InternalServerErrorException,
-  MiddlewareConsumer,
-  Module,
-  NestModule,
-} from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { MongooseModule, MongooseModuleOptions } from '@nestjs/mongoose';
-import { ThrottlerModule } from '@nestjs/throttler';
-import { AddressModule } from '@shared/address/address.module';
-import { AuditModule } from '@shared/audit/audit.module';
-import { CategoryModule } from '@shared/category/category.module';
-import { ExceedLimitModule } from '@shared/exceed_limit/exceed_limit.module';
-import { MailModule } from '@shared/mail/mail.module';
-import * as cookieParser from 'cookie-parser';
-import { Redis } from 'ioredis';
 import { join } from 'path';
 import { ContextModule } from './context/context.module';
-import { TransactionModule } from './transaction/transaction.module';
-import { AppThrottleGuard } from '@common/guard/app_throttle.guard';
-import { getServiceToken } from '@common/utils/misc';
-import { ExceedLimitService } from '@shared/exceed_limit/exceed_limit.service';
-import { ContextService } from './context/context.service';
 import { AppExceptionFilter } from './exception.filter';
-import { BasicAuthMiddleware } from '@common/middleware/basic_auth.middleware';
+import { TransactionModule } from './transaction/transaction.module';
+import { AuditModule } from '@shared/audit/audit.module';
 
 @Module({
   imports: [
@@ -52,57 +26,13 @@ import { BasicAuthMiddleware } from '@common/middleware/basic_auth.middleware';
       inject: [ConfigService],
     }),
 
-    ThrottlerModule.forRoot([
-      {
-        ttl: 60000,
-        limit: 10,
-      },
-    ]),
     ContextModule,
     TransactionModule,
-    AddressModule,
     AuditModule,
-    CategoryModule,
-    ExceedLimitModule,
-    MailModule,
   ],
   providers: [
-    {
-      provide: REDIS_CLIENT,
-      useFactory: async (config: ConfigService) => {
-        const client = await new Redis({
-          host: config.get<string>(REDIS_HOST),
-          port: config.get<number>(REDIS_PORT),
-          password: config.get<string>(REDIS_PASSWORD),
-        });
-        client.on('error', (err) => {
-          console.error('Redis Client Error');
-          throw new InternalServerErrorException(err);
-        });
-        return client;
-      },
-      inject: [ConfigService],
-    },
-    {
-      provide: APP_GUARD,
-      useClass: AuthGuard,
-    },
-    {
-      provide: APP_GUARD,
-      useClass: AppThrottleGuard,
-    },
-    { provide: getServiceToken(EXCEED_LIMIT), useExisting: ExceedLimitService },
-    { provide: APP_CONTEXT, useExisting: ContextService },
     { provide: APP_INTERCEPTOR, useClass: TransactionInterceptor },
     { provide: APP_FILTER, useClass: AppExceptionFilter },
   ],
 })
-export class CoreModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(cookieParser.default()).forRoutes('*');
-
-    consumer
-      .apply(BasicAuthMiddleware)
-      .forRoutes('/^.*/swagger$/', '/^.*/login$/', '/^.*/register$/');
-  }
-}
+export class CoreModule {}

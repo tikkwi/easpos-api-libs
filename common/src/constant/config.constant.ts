@@ -1,5 +1,5 @@
 export const PAGE_SIZE = 20;
-export const ADMIN_URL = 'localhost:4000';
+export const ADMIN_URL = 'localhost:4001';
 
 //Env
 export const NODE_ENV = 'NODE_ENV';

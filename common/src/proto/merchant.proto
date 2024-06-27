@@ -9,21 +9,18 @@ import "shared/core.proto";
 
 service MerchantService {
     rpc CreateMerchant(CreateMerchantDto) returns (MerchantReturn){}
-    rpc TmpTst(Empty) returns (TmpReturn) {}
+    rpc TmpTst(Empty) returns (TstReturn){}
 }
 
-message Empty {}
-
-message TmpReturn {
-    string data = 1;
-}
-
-message MerchantReturn {
+message Merchant {
     string name = 1;
     string mail = 2;
     string mobileNo = 3;
     shared.ESubscription subscriptionType = 4;
     shared.EStatus status = 5;
+    ADDRESS_PACKAGE.Address address = 6;
+    shared.Category category = 7;
+    USER_PACKAGE.User user = 8;
 }
 
 message CreateMerchantDto {
@@ -34,5 +31,15 @@ message CreateMerchantDto {
     ADDRESS_PACKAGE.CreateAddressDto address = 5;
     shared.CategoryDto category = 6;
     USER_PACKAGE.CreateUserDto user = 7;
+}
+
+message Empty {}
+
+message TstReturn {
+    string data = 1;
+}
+
+message MerchantReturn {
+    Merchant data = 1;
 }
 

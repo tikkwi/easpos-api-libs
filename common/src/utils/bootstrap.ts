@@ -2,7 +2,7 @@ import { APP, COOKIE_SECRET, REDIS_CLIENT } from '@common/constant';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { Transport } from '@nestjs/microservices';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import RedisStore from 'connect-redis';
@@ -10,7 +10,11 @@ import * as session from 'express-session';
 import helmet from 'helmet';
 import { RedisClientType } from 'redis';
 
-export async function appBootstrap(module: any, port: number, packages?: string[]) {
+export async function appBootstrap(
+  module: any,
+  port: number,
+  ms?: { packages: string[]; module: any },
+) {
   const app = await NestFactory.create<NestExpressApplication>(module);
   const config = app.get<ConfigService>(ConfigService);
   const currentApp = config.get<string>(APP);
@@ -47,8 +51,10 @@ export async function appBootstrap(module: any, port: number, packages?: string[
     }),
   );
 
-  if (packages) {
-    const [pkg, pth] = packages.reduce(
+  await app.listen(port);
+
+  if (ms) {
+    const [pkg, pth] = ms.packages.reduce(
       (acc, cur) => {
         acc[0].push(`${cur}_PACKAGE`);
         acc[1].push(`dist/common/src/proto/${cur.toLowerCase()}.proto`);
@@ -56,17 +62,14 @@ export async function appBootstrap(module: any, port: number, packages?: string[
       },
       [[], []],
     );
-    app.connectMicroservice({
+    const grpcApp = await NestFactory.createMicroservice(ms.module, {
       transport: Transport.GRPC,
       options: {
         package: pkg,
         protoPath: pth,
-        url: 'localhost:4000',
+        url: `localhost:${port + 1}`,
       },
     });
-
-    await app.startAllMicroservices();
+    await grpcApp.listen();
   }
-
-  await app.listen(port);
 }

@@ -24,4 +24,5 @@ message Category {
 message CategoryDto {
     string id = 1; 
     optional string name = 2;
+    optional ECategory type = 3;
 }

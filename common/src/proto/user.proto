@@ -36,10 +36,13 @@ message UserWihAuthDto {
 }
 
 message CreateUserDto {
-    shared.EUser type = 1;
-    string firstName = 2;
-    string lastName = 3;
-    string mail = 4;
-    optional shared.AuthUser authUser = 5;
-    optional string merchantId = 6;
+    string userName = 1;
+    optional shared.EUser type = 2;
+    string firstName = 3;
+    string lastName = 4;
+    string mail = 5;
+    string password = 6;
+    optional shared.AuthUser authUser = 7;
+    repeated string permissions = 8;
+    optional string merchantId = 9;
 }
