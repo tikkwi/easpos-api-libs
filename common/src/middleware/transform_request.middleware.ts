@@ -1,5 +1,7 @@
 import {
-  ADMIN_APP,
+  ADM_MRO_PWD,
+  ADM_MRO_USR,
+  APP,
   C_APP,
   C_APP_CONFIG,
   C_BASIC_AUTH,
@@ -12,22 +14,19 @@ import {
 import { ContextService } from '@common/core/context/context.service';
 import { AdminAppSharedServiceMethods } from '@common/dto/admin_app.dto';
 import { decrypt } from '@common/utils/encrypt';
-import { getServiceToken } from '@common/utils/misc';
+import { base64 } from '@common/utils/misc';
 import { parsePath } from '@common/utils/regex';
-import {
-  ForbiddenException,
-  Inject,
-  Injectable,
-  NestMiddleware,
-} from '@nestjs/common';
+import { Metadata } from '@grpc/grpc-js';
+import { ForbiddenException, Injectable, NestMiddleware } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Request, Response } from 'express';
 
 @Injectable()
 export class TransformRequestMiddleware implements NestMiddleware {
   constructor(
-    @Inject(getServiceToken(ADMIN_APP))
     private readonly adminAppService: AdminAppSharedServiceMethods,
     private readonly context: ContextService,
+    private readonly config: ConfigService,
   ) {}
 
   async use(request: Request, response: Response, next: () => void) {
@@ -38,6 +37,14 @@ export class TransformRequestMiddleware implements NestMiddleware {
       ({ id } = await decrypt(request.session.user));
       if (!id) throw new ForbiddenException();
     }
+
+    const metadata = new Metadata();
+
+    if (this.config.get(APP) === 'admin')
+      metadata.set(
+        'Authorization',
+        base64(`${this.config.get(ADM_MRO_USR)}:${this.config.get(ADM_MRO_PWD)}`),
+      );
 
     const { config, isSubActive, merchant, user, basicAuth } =
       await this.adminAppService.getAuthData({ url: request.originalUrl, id });

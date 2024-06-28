@@ -6,7 +6,7 @@ import { IsEmail, IsNotEmpty, ValidateIf } from 'class-validator';
 import { SchemaTypes } from 'mongoose';
 import { BaseSchema } from './base.schema';
 import { Merchant } from './merchant.schema';
-import { UserServicePermission } from './user_service_permission.schema';
+import { Permission } from './permission.schema';
 
 @Schema()
 export class User extends BaseSchema {
@@ -49,11 +49,10 @@ export class User extends BaseSchema {
   merchant?: Merchant;
 
   @AppProp({
-    type: [{ type: SchemaTypes.ObjectId, ref: 'UserServicePermission', required: false }],
+    type: [{ type: SchemaTypes.ObjectId, ref: 'Permission' }],
     required: false,
-    immutable: false,
   })
-  servicePermissions?: UserServicePermission[];
+  permissions?: Permission[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

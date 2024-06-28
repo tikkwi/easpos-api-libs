@@ -1,21 +1,25 @@
 import { Schema, SchemaFactory } from '@nestjs/mongoose';
 import { BaseSchema } from './base.schema';
 import { AppProp } from '@common/decorator/app_prop.decorator';
+import { IsUrl } from 'class-validator';
 
 @Schema()
 export class Permission extends BaseSchema {
-  @AppProp({ type: String }, { swagger: { example: 'ParcelStatus' } })
-  name: string;
+  @AppProp({ type: String }, { swagger: { example: 'InventoryService' } })
+  service: string;
 
   @AppProp(
-    { type: [{ type: String }] },
-    {
-      swagger: {
-        example: ['/inventory/parcel/current-status', '/inventory/parcel/change-status'],
-      },
-    },
+    { type: String },
+    { validateString: false, swagger: { example: '/inventory/parcel/current-status' } },
   )
-  services: string[];
+  @IsUrl()
+  url: string;
+
+  @AppProp({ type: String }, { swagger: { example: 'CurrentPercelStatus' } })
+  auxillaryService: string;
+
+  @AppProp({ type: String, required: false }, { swagger: { example: 'Parcel Status' } })
+  name?: string;
 
   @AppProp({ type: String, required: false, immutable: false })
   description?: string;

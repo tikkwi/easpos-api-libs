@@ -97,18 +97,14 @@ export abstract class MetadataService implements MetadataServiceMethods {
           if (!isArray) isValid = false;
           else
             for (let i = 0; i < value[name].length; i++) {
-              if (
-                !(await this.isValid({ value: value[name], field: type })).data
-              ) {
+              if (!(await this.isValid({ value: value[name], field: type })).data) {
                 isValid = false;
                 break;
               }
             }
         } else {
           if (isArray) isValid = false;
-          else
-            isValid = (await this.isValid({ value: value[name], field: type }))
-              .data;
+          else isValid = (await this.isValid({ value: value[name], field: type })).data;
         }
       }
       if (!isValid) {

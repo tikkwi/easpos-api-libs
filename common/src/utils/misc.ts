@@ -1,5 +1,11 @@
 import { ADMIN_URL, REPOSITORY } from '@common/constant';
-import { HttpException, HttpStatus, InternalServerErrorException, Provider } from '@nestjs/common';
+import {
+  ForbiddenException,
+  HttpException,
+  HttpStatus,
+  InternalServerErrorException,
+  Provider,
+} from '@nestjs/common';
 import { ClientGrpc, ClientsModuleOptions, Transport } from '@nestjs/microservices';
 import { getModelToken } from '@nestjs/mongoose';
 import { camelCase } from 'lodash';
@@ -9,6 +15,7 @@ import { EAuthCredential } from './enum';
 import { Repository } from '@common/core/repository';
 import { Request, Response } from 'express';
 import { ContextService } from '@common/core/context/context.service';
+import { compare } from 'bcryptjs';
 
 type RepositoryProviderType = { name: string; provide?: string };
 
@@ -89,4 +96,12 @@ export const responseError = (req: Request, res: Response, err: any) => {
     path: req.originalUrl,
     message: err.message || 'Internal server erroreee',
   });
+};
+
+export const base64 = (str: string) => Buffer.from(str).toString('base64');
+
+export const authenticateBasicAuth = async ({ userName, password }: BasicAuth, cred: string) => {
+  const [usr, pass] = Buffer.from(cred.split(' ')[1], 'base64').toString('ascii').split(':');
+  if (userName === usr && (await compare(pass, password))) return true;
+  throw new ForbiddenException('Incorrect username or password');
 };

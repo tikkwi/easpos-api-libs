@@ -6,6 +6,7 @@ import { IsNotEmpty, ValidateNested } from 'class-validator';
 import { CategoryDto } from './action.dto';
 import { CoreDto, FindByIdDto } from './core.dto';
 import { CreateUserDto } from './user.dto';
+import { Metadata } from '@grpc/grpc-js';
 
 export class CreateMerchantDto extends OmitType(CoreDto(Merchant), [
   'activePurchase',
@@ -39,4 +40,12 @@ export interface MerchantServiceMethods {
   tmpTst(): { data: string };
 }
 
-export interface MerchantSharedServiceMethods extends MerchantServiceMethods {}
+export interface MerchantSharedServiceMethods {
+  getMerchant(dto: FindByIdDto, meta?: Metadata): Promise<MerchantReturn>;
+  merchantWithAuth(
+    dto: FindByIdDto,
+    meta?: Metadata,
+  ): Promise<{ data: Merchant; isSubActive: boolean }>;
+  createMerchant(dto: CreateMerchantDto, meta?: Metadata): Promise<MerchantReturn>;
+  tmpTst(dto, meta?: Metadata): { data: string };
+}

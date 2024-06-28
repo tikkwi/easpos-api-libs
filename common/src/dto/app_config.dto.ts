@@ -1,3 +1,4 @@
+import { Metadata } from '@grpc/grpc-js';
 import { PartialType, PickType } from '@nestjs/swagger';
 import { ExceedLimitThreshold } from '@shared/exceed_limit/exceed_limit_threshold.schema';
 import { Type } from 'class-transformer';
@@ -22,4 +23,8 @@ export type AppConfigReturn = { data: AppConfig };
 
 export interface AppConfigServiceMethods {
   getConfig(): Promise<AppConfigReturn>;
+}
+
+export interface AppConfigSharedServiceMethods {
+  getConfig(dto, meta?: Metadata): Promise<AppConfigReturn>;
 }

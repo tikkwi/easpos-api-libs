@@ -8,7 +8,8 @@ import {
   ValidateIf,
   ValidateNested,
 } from 'class-validator';
-import { Metadata } from '../schema/metadata.schema';
+import { Metadata as MetadataSchema } from '../schema/metadata.schema';
+import { Metadata } from '@grpc/grpc-js';
 export class GetMetadataDto extends FindDto {
   @IsMongoId()
   id?: string;
@@ -36,7 +37,7 @@ export class ValidateMetaValueDto {
   entity: EEntityMetadata;
 }
 
-export type MetadataReturn = { data: Metadata };
+export type MetadataReturn = { data: MetadataSchema };
 
 export interface MetadataServiceMethods {
   getMetadata(dto: GetMetadataDto): Promise<MetadataReturn>;
@@ -44,4 +45,8 @@ export interface MetadataServiceMethods {
   validateMetaValue(dto: ValidateMetaValueDto): Promise<void>;
 }
 
-export interface MetadataSharedServiceMethods extends MetadataServiceMethods {}
+export interface MetadataSharedServiceMethods {
+  getMetadata(dto: GetMetadataDto, meta?: Metadata): Promise<MetadataReturn>;
+  isValid(dto: IsValidDto, meta?: Metadata): Promise<{ data: boolean }>;
+  validateMetaValue(dto: ValidateMetaValueDto, meta?: Metadata): Promise<void>;
+}

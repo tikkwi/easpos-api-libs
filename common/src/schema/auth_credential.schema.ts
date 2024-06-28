@@ -3,7 +3,20 @@ import { EAuthCredential } from '@common/utils/enum';
 import { Schema, SchemaFactory } from '@nestjs/mongoose';
 import { hashSync } from 'bcryptjs';
 import { BaseSchema } from './base.schema';
-import { IsUrl } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, IsUrl, ValidateIf } from 'class-validator';
+import { SchemaTypes } from 'mongoose';
+import { Type } from 'class-transformer';
+
+class AllowedService {
+  @IsString()
+  @IsNotEmpty()
+  service: string;
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  paths?: string[];
+}
 
 @Schema()
 export class AuthCredential extends BaseSchema {
@@ -16,6 +29,16 @@ export class AuthCredential extends BaseSchema {
   @AppProp({ type: String, set: (pas) => hashSync(pas, 16) })
   password: string;
 
+  @ValidateIf((o) => !!o.type.includes('rpc'))
+  @AppProp({ type: [{ type: String }] })
+  allowedPeers: string[];
+
+  @ValidateIf((o) => !!o.type.includes('rpc'))
+  @AppProp({ type: [{ type: SchemaTypes.Mixed }] })
+  @Type(() => AllowedService)
+  authServices: AllowedService[];
+
+  @ValidateIf((o) => !!!o.type.includes('rpc'))
   @AppProp({ type: [{ type: String }] })
   @IsUrl()
   authPaths: string[];

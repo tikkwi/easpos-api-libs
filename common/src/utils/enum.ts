@@ -11,6 +11,7 @@ export enum EApp {
 
 //service name
 export enum EAuthCredential {
+  AdminRpc = 'admin_rpc',
   Swagger = 'swagger',
   Admin = 'admin',
   Merchant = 'merchant',

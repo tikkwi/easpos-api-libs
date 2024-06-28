@@ -40,6 +40,8 @@ declare global {
   type CustomActionType<T> = {
     action: (model: Model<T>) => any;
   };
+
+  type BasicAuth = { userName: string; password: string };
 }
 
 declare module 'express-session' {

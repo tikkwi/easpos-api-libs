@@ -1,5 +1,6 @@
 import { C_APP, C_BASIC_AUTH } from '@common/constant';
 import { ContextService } from '@common/core/context/context.service';
+import { authenticateBasicAuth } from '@common/utils/misc';
 import {
   ForbiddenException,
   Injectable,
@@ -24,11 +25,7 @@ export class BasicAuthMiddleware implements NestMiddleware {
         .setHeader('WWW-Authenticate', `Basic realm=${this.context.get(C_APP)}`)
         .send('Authentication Required...');
 
-    const [usr, pass] = Buffer.from(authHeader.split(' ')[1], 'base64')
-      .toString('ascii')
-      .split(':');
-    if (basicAuth.userName === usr && (await compare(pass, basicAuth.password)))
-      next();
+    if (await authenticateBasicAuth(basicAuth, request.headers.authorization)) next();
     else throw new ForbiddenException('Incorrect username or password');
   }
 }

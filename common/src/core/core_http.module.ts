@@ -28,9 +28,11 @@ import { MailModule } from '@shared/mail/mail.module';
 import * as cookieParser from 'cookie-parser';
 import { Redis } from 'ioredis';
 import { ContextService } from './context/context.service';
+import { CoreModule } from './core.module';
 
 @Module({
   imports: [
+    CoreModule,
     ThrottlerModule.forRoot([
       {
         ttl: 60000,
