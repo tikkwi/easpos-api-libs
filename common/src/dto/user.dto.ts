@@ -14,8 +14,9 @@ import {
   ValidateIf,
   ValidateNested,
 } from 'class-validator';
-import { AuthUser, CoreDto, FindByIdDto, FindDto } from './core.dto';
+import { CoreDto, FindByIdDto, FindDto } from './core.dto';
 import { Metadata } from '@grpc/grpc-js';
+import { AuthUser } from './entity.dto';
 
 export class GetUserDto extends FindDto {
   @IsMongoId()
@@ -28,7 +29,11 @@ export class GetUserDto extends FindDto {
   mail?: string;
 }
 
-export class CreateUserDto extends OmitType(CoreDto(User), ['merchant', 'permissions', 'status']) {
+export class CreateUserDto extends OmitType(CoreDto(User), [
+  'merchant',
+  'servicePermissions',
+  'status',
+]) {
   @IsOptional()
   @ValidateNested()
   @Type(() => AuthUser)
@@ -62,12 +67,12 @@ export type UserReturn = { data: User };
 
 export interface UserServiceMethods {
   getUser(dto: GetUserDto): Promise<UserReturn>;
-  userWithAuth(dto: FindByIdDto): Promise<{ data: AuthUser }>;
+  getAuthUser(dto: FindByIdDto): Promise<{ data: AuthUser }>;
   createUser(dto: CreateUserDto): Promise<UserReturn>;
 }
 
 export interface UserSharedServiceMethods {
   getUser(dto: GetUserDto, meta?: Metadata): Promise<UserReturn>;
-  userWithAuth(dto: FindByIdDto, meta?: Metadata): Promise<{ data: AuthUser }>;
+  getAuthUser(dto: FindByIdDto, meta?: Metadata): Promise<{ data: AuthUser }>;
   createUser(dto: CreateUserDto, meta?: Metadata): Promise<UserReturn>;
 }

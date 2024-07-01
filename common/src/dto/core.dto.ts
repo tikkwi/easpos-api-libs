@@ -47,45 +47,6 @@ export class PaginationDto<T> {
 //   request: AppRequest;
 // }
 
-export class AuthUser {
-  @IsNotEmpty()
-  @IsMongoId()
-  _id: string;
-
-  @IsNotEmpty()
-  @IsMongoId()
-  userName: string;
-
-  @IsNotEmpty()
-  @IsMongoId()
-  firstName: string;
-
-  @IsNotEmpty()
-  @IsMongoId()
-  lastName: string;
-
-  @IsNotEmpty()
-  @IsMongoId()
-  mail: string;
-
-  @IsNotEmpty()
-  @IsEnum(EStatus)
-  status: EStatus;
-
-  @IsNotEmpty()
-  @IsBoolean()
-  isOwner: boolean;
-
-  @IsNotEmpty()
-  @IsEnum(EUser)
-  type: EUser;
-
-  @IsMongoId()
-  merchant?: string;
-
-  metadata: any;
-}
-
 export function CoreDto<T>(classRef: Type<T>): Type<Omit<T, '_id' | 'createdAt' | 'updatedAt'>> {
   class CoreDtoClass extends OmitType(classRef as any, ['_id', 'createdAt', 'updatedAt'] as any) {}
   return CoreDtoClass as any;

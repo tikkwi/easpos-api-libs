@@ -7,6 +7,8 @@ import { IsEmail, IsPhoneNumber } from 'class-validator';
 import { SchemaTypes } from 'mongoose';
 import { BaseSchema } from './base.schema';
 import { MerchantPurchase } from './merchant_purchase.schema';
+import { Type } from 'class-transformer';
+import { Status } from '@common/dto/entity.dto';
 
 @Schema()
 export class Merchant extends BaseSchema {
@@ -35,14 +37,9 @@ export class Merchant extends BaseSchema {
   })
   subscriptionType?: ESubscription;
 
-  @AppProp({
-    type: String,
-    enum: EStatus,
-    default: EStatus.Pending,
-    required: false,
-    immutable: false,
-  })
-  status: EStatus;
+  @AppProp({ type: SchemaTypes.Mixed, immutable: false, default: { status: EStatus.Pending } })
+  @Type(() => Status)
+  status?: Status;
 
   @AppProp({ type: SchemaTypes.Mixed, required: false })
   metadata?: any;

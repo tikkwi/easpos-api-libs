@@ -46,6 +46,9 @@ declare global {
 
 declare module 'express-session' {
   interface SessionData {
-    user: string;
+    user?: string;
+    ip?: string;
+    blockedUntil?: string; //NOTE: rate limit can't solely depend on sessionID as user can bypass by logging out or sth like session expire
+    blockedThreshold?: string; //NOTE:permanent block will be handle by user.status=Blocked
   }
 }

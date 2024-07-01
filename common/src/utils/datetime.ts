@@ -1,7 +1,10 @@
 import { Period } from '@common/dto/entity.dto';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
+import duration from 'dayjs/plugin/duration';
 
-export const getPeriodDate = (period: Period, date: Date) => {
+dayjs.extend(duration);
+
+export const getPeriodDate = (period: Period, date: Date | Dayjs) => {
   const { days, hours, minutes, seconds } = period;
   return dayjs(date).add(dayjs.duration({ days, hours, minutes, seconds })).toDate();
 };

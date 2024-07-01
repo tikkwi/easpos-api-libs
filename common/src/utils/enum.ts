@@ -34,6 +34,12 @@ export enum EStatus {
   Suspended = 'Suspended',
 }
 
+export enum ETmpBlock {
+  WrongPassF = 'WrongPassF',
+  WrongPassS = 'WrongPassS',
+  WrongPassT = 'WrongPassT',
+}
+
 export enum ESchemaStatus {
   Merchant = 'Merchant',
 }

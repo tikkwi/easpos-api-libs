@@ -1,15 +1,15 @@
 import {
   APP_CONTEXT,
-  EXCEED_LIMIT,
   REDIS_CLIENT,
   REDIS_HOST,
   REDIS_PASSWORD,
   REDIS_PORT,
+  TRT_TRS_HVY_F,
+  TRT_TRS_HVY_S,
+  TRT_TRS_HVY_T,
 } from '@common/constant';
-import { AppThrottleGuard } from '@common/guard/app_throttle.guard';
 import { AuthGuard } from '@common/guard/auth.guard';
 import { BasicAuthMiddleware } from '@common/middleware/basic_auth.middleware';
-import { getServiceToken } from '@common/utils/misc';
 import {
   InternalServerErrorException,
   MiddlewareConsumer,
@@ -18,30 +18,41 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
-import { ThrottlerModule } from '@nestjs/throttler';
+import { ThrottlerModule, hours, minutes } from '@nestjs/throttler';
 import { AddressModule } from '@shared/address/address.module';
-import { AuditModule } from '@shared/audit/audit.module';
 import { CategoryModule } from '@shared/category/category.module';
-import { ExceedLimitModule } from '@shared/exceed_limit/exceed_limit.module';
-import { ExceedLimitService } from '@shared/exceed_limit/exceed_limit.service';
 import { MailModule } from '@shared/mail/mail.module';
 import * as cookieParser from 'cookie-parser';
 import { Redis } from 'ioredis';
 import { ContextService } from './context/context.service';
 import { CoreModule } from './core.module';
+import { ThrottlerStorageRedis } from './redis_throttler_storage.service';
 
 @Module({
   imports: [
     CoreModule,
-    ThrottlerModule.forRoot([
-      {
-        ttl: 60000,
-        limit: 10,
-      },
-    ]),
+    ThrottlerModule.forRootAsync({
+      useFactory: (client: Redis, config: ConfigService) => ({
+        throttlers: [
+          {
+            ttl: minutes(1),
+            limit: config.get(TRT_TRS_HVY_F),
+          },
+          {
+            ttl: minutes(30),
+            limit: config.get(TRT_TRS_HVY_S),
+          },
+          {
+            ttl: hours(3),
+            limit: config.get(TRT_TRS_HVY_T),
+          },
+        ],
+        storage: new ThrottlerStorageRedis(client),
+      }),
+      inject: [REDIS_CLIENT, ConfigService],
+    }),
     AddressModule,
     CategoryModule,
-    ExceedLimitModule,
     MailModule,
   ],
   providers: [
@@ -65,11 +76,6 @@ import { CoreModule } from './core.module';
       provide: APP_GUARD,
       useClass: AuthGuard,
     },
-    {
-      provide: APP_GUARD,
-      useClass: AppThrottleGuard,
-    },
-    { provide: getServiceToken(EXCEED_LIMIT), useExisting: ExceedLimitService },
     { provide: APP_CONTEXT, useExisting: ContextService },
   ],
 })

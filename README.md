@@ -23,6 +23,7 @@
 
 ## Don't 
 - Except standalone files that won't have connection with other files (eg. ```constant```),don't aggregate exports with barrel files(```index.ts``` -> ```export * ...```) which can raise tan of unexpected errors and circular dependencies which is very hard to trace..
+- End-point can't be more than four segment (eg. ```/admin-api/user/```)
 
 ## NOTE
 - ### Difference between ```common/shared``` and ```shared lib```
@@ -38,3 +39,4 @@
   - ```Default Scope Service``` create only only once and by the time they are create ```Request Scope Dependencies``` are ```undefined``` and as ```Default Scope Service``` won't re-create instance, these will be ```undefined``` forever
   - So we'll have to use run-time dep resolver like ```ModuleRef``` every time we need throughout the service
   - So, we should avoid ```Request Scope``` as much as we can and should handle ```Request``` specific state with ```Interceptor```.
+- Naming is matter for handler (both ```http``` and ```grpc```) and proto definition

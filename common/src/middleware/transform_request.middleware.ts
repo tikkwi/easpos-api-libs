@@ -10,6 +10,7 @@ import {
   C_REQ,
   C_RES,
   C_USER,
+  SESSION_USER,
 } from '@common/constant';
 import { ContextService } from '@common/core/context/context.service';
 import { AdminAppSharedServiceMethods } from '@common/dto/admin_app.dto';
@@ -31,11 +32,10 @@ export class TransformRequestMiddleware implements NestMiddleware {
 
   async use(request: Request, response: Response, next: () => void) {
     const [app]: any = parsePath(request.originalUrl);
-    let id;
 
     if (request.session.user) {
-      ({ id } = await decrypt(request.session.user));
-      if (!id) throw new ForbiddenException();
+      const user = await decrypt(request.session.user);
+      this.context.set({ [SESSION_USER]: user });
     }
 
     const metadata = new Metadata();

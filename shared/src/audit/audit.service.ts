@@ -5,7 +5,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { AuditServiceMethods } from '@shared/audit/audit.dto';
 import { Audit } from './audit.schema';
 import { Request } from 'express';
-import { AuthUser } from '@common/dto/core.dto';
+import { AuthUser } from '@common/dto/entity.dto';
 
 @Injectable()
 export class AuditService implements AuditServiceMethods {
