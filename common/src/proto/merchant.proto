@@ -39,11 +39,13 @@ message TstReturn {
     int32 code = 1;
     optional string message = 2;
     string data = 3;
+    optional string token = 4;
 }
 
 message MerchantReturn {
     int32 code = 1;
     optional string message = 2;
     Merchant data = 3;
+    optional string token = 4;
 }
 

@@ -33,4 +33,5 @@ message CreateAddressReturn {
     int32 code = 1;
     optional string message = 2;
     Address data = 3;
+    optional string token = 4;
 }

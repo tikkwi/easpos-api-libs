@@ -1,11 +1,9 @@
-import { EAllowedUser, EStatus, EUser } from '@common/utils/enum';
+import { EAllowedUser } from '@common/utils/enum';
 import { Type } from '@nestjs/common';
-import { IntersectionType, OmitType } from '@nestjs/swagger';
+import { OmitType } from '@nestjs/swagger';
 import {
   IsBoolean,
   IsDateString,
-  IsEnum,
-  IsMongoId,
   IsNotEmpty,
   IsNumber,
   IsObject,

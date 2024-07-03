@@ -1,4 +1,5 @@
-import { AUTH_CREDENTIAL, JWT_SECRET, USER } from '@common/constant';
+import { AUTH_CREDENTIAL, C_NEW_TKN, JWT_SECRET, USER } from '@common/constant';
+import { ContextService } from '@common/core/context/context.service';
 import { AuthCredentialServiceMethods } from '@common/dto/auth_credential.dto';
 import { UserSharedServiceMethods } from '@common/dto/user.dto';
 import { decrypt } from '@common/utils/encrypt';
@@ -7,6 +8,7 @@ import { ServerUnaryCall } from '@grpc/grpc-js';
 import { CanActivate, ExecutionContext, Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import dayjs from 'dayjs';
 
 @Injectable()
 export class GrpcAuthGuard implements CanActivate {
@@ -16,6 +18,7 @@ export class GrpcAuthGuard implements CanActivate {
     @Inject(getServiceToken(USER)) private readonly userService: UserSharedServiceMethods,
     private readonly jwtService: JwtService,
     private readonly config: ConfigService,
+    private readonly context: ContextService,
   ) {}
 
   async canActivate(context: ExecutionContext) {
@@ -30,12 +33,20 @@ export class GrpcAuthGuard implements CanActivate {
       return await authenticateBasicAuth(basicAuth, authHeader);
     }
     try {
-      const { usr } = await this.jwtService.verifyAsync(authHeader, {
+      const { token } = await decrypt(authHeader);
+      const { usr, exp } = await this.jwtService.verifyAsync(token, {
         secret: this.config.get(JWT_SECRET),
       });
+
       const { id } = await decrypt(usr);
       const { data: user } = await this.userService.getUser({ id });
-      return !!user; //NOTE: permission will be handler by client's http auth guard
+      if (user) {
+        const isExpireSoon = dayjs(exp).subtract(1, 'days').isBefore(dayjs());
+        if (isExpireSoon)
+          this.context.set({ [C_NEW_TKN]: await this.jwtService.signAsync({ usr }) });
+        return true;
+      }
+      return false; //NOTE: permission will be handler by client's http auth guard
     } catch (error) {
       return false;
     }

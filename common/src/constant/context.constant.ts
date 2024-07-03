@@ -9,4 +9,4 @@ export const C_RES = 'C_RES';
 export const C_USER = 'C_USER';
 export const C_MERCHANT = 'C_MERCHANT';
 export const C_IS_SUB_ACTIVE = 'C_IS_SUB_ACTIVE';
-export const C_GRPC_META = 'C_GRPC_META';
+export const C_NEW_TKN = 'C_NEW_TKN';

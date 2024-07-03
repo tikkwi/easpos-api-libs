@@ -4,6 +4,7 @@ declare global {
   type Request = import('express').Request;
   type Response = import('express').Response;
   type Session = import('mongoose').ClientSession;
+  type Metadata = import('@grpc/grpc-js').Metadata;
   type Model<T> = import('mongoose').Model<T>;
   type FilterQuery<T> = import('mongoose').FilterQuery<T>;
   type ProjectionType<T> = import('mongoose').ProjectionType<T>;
@@ -12,7 +13,7 @@ declare global {
   type User = import('@common/schema').User;
   type AppConfig = import('@common/schema').AppConfig;
   type RequestLog = import('@common/schema').RequestLog;
-  type EApp = import('@common/utils').EApp;
+  type EApp = import('@common/utils/enum').EApp;
   type Log = import('@shared/dto').LogRequestDto;
 
   type CreateType<T> = Omit<T, '_id' | 'createdAt' | 'updatedAt'>;
@@ -42,13 +43,13 @@ declare global {
   };
 
   type BasicAuth = { userName: string; password: string };
+
+  type GrpcReturn = { data: any; code: number; message?: string; token?: string };
 }
 
 declare module 'express-session' {
   interface SessionData {
     user?: string;
-    ip?: string;
-    blockedUntil?: string; //NOTE: rate limit can't solely depend on sessionID as user can bypass by logging out or sth like session expire
-    blockedThreshold?: string; //NOTE:permanent block will be handle by user.status=Blocked
+    admin_tkn?: string;
   }
 }

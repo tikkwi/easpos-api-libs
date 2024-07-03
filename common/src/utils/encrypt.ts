@@ -5,13 +5,9 @@ import { promisify } from 'util';
 const getKey = async (password: string) =>
   (await promisify(scrypt)(password, 'salt', 32)) as Buffer;
 
-export const encrypt = async (data: string) => {
+export const encrypt = async (data: string, pwd?: string) => {
   const iv = randomBytes(20);
-  const cipher = createCipheriv(
-    'aes-256-gcm',
-    await getKey(process.env[ENC_PASSWD]),
-    iv,
-  );
+  const cipher = createCipheriv('aes-256-gcm', await getKey(pwd ?? process.env[ENC_PASSWD]), iv);
   return Buffer.from(
     JSON.stringify({
       iv,
@@ -20,19 +16,14 @@ export const encrypt = async (data: string) => {
   ).toString('base64');
 };
 
-export const decrypt = async (encrypted: string) => {
-  const { iv, encrypted: data } = JSON.parse(
-    Buffer.from(encrypted, 'base64').toString(),
-  );
+export const decrypt = async (encrypted: string, pwd?: string) => {
+  const { iv, encrypted: data } = JSON.parse(Buffer.from(encrypted, 'base64').toString());
   const decipher = createCipheriv(
     'aes-256-gcm',
-    await getKey(process.env[ENC_PASSWD]),
+    await getKey(pwd ?? process.env[ENC_PASSWD]),
     Buffer.from(iv),
   );
   return JSON.parse(
-    Buffer.concat([
-      decipher.update(Buffer.from(data)),
-      decipher.final(),
-    ]).toString(),
+    Buffer.concat([decipher.update(Buffer.from(data)), decipher.final()]).toString(),
   );
 };
