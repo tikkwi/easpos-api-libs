@@ -11,10 +11,16 @@ export class AppExceptionFilter implements ExceptionFilter {
 
   catch(exception: any, host: ArgumentsHost) {
     const logger = new Logger(firstUpperCase(this.config.get(APP)));
-    const ctx = host.switchToHttp();
-    const response = ctx.getResponse<Response>();
-    const request = ctx.getRequest<Request>();
     logger.error(exception);
-    responseError(request, response, exception);
+    if (host.getType() === 'http') {
+      const ctx = host.switchToHttp();
+      const response = ctx.getResponse<Response>();
+      const request = ctx.getRequest<Request>();
+      return responseError(request, response, exception);
+    }
+    return {
+      code: exception.error === 'Forbidden resource' ? 403 : exception.status ?? 500,
+      message: exception.message ?? 'Internal Server Error',
+    };
   }
 }

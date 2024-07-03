@@ -16,9 +16,12 @@ export class TransactionInterceptor implements NestInterceptor {
     context: ExecutionContext,
     next: CallHandler<any>,
   ): Observable<any> | Promise<Observable<any>> {
-    return next.handle();
-    // return from(this.transaction.makeTransaction(() => lastValueFrom(next.handle()))).pipe(
-    //   tap(() => this.context.reset()),
-    // );
+    const action = () => {
+      if (context.getType() === 'http')
+        return from(this.transaction.makeTransaction(() => lastValueFrom(next.handle())));
+      return next.handle();
+    };
+
+    return action().pipe(tap(() => this.context.reset()));
   }
 }

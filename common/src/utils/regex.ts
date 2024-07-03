@@ -7,6 +7,6 @@ export const regex = {
 export const firstUpperCase = (str: string) =>
   str.replace(regex.firstUpperCase, (_, letter) => letter.toUpperCase());
 
-export const parsePath = (path: string) => /^\/([^/]+)\/([^/]+)(\/.*)?/g.exec(path).slice(1, 3);
+export const parsePath = (path: string) => /^\/([^/]+)\/([^/]+)(\/.*)?/g.exec(path).slice(1, 4);
 
-export const parseGrpcPath = (path: string) => /\/(.+)\.(.+)\/(.+)/g.exec(path).slice(1, 3);
+export const parseGrpcPath = (path: string) => /\/(.+)\.(.+)\/(.+)/g.exec(path).slice(1, 4);

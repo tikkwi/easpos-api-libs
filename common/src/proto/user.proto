@@ -21,7 +21,9 @@ message User {
 }
 
 message UserReturn {
-    User data = 1;
+    int32 code = 1;
+    optional string message = 2;
+    User data = 3;
 }
 
 message GetUserDto {

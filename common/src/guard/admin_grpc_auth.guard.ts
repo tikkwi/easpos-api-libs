@@ -7,7 +7,6 @@ import { ServerUnaryCall } from '@grpc/grpc-js';
 import { CanActivate, ExecutionContext, Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import dayjs from 'dayjs';
 
 @Injectable()
 export class GrpcAuthGuard implements CanActivate {
@@ -24,7 +23,7 @@ export class GrpcAuthGuard implements CanActivate {
     const authHeader = ctx.metadata.getMap().authorization?.toString();
     const { data: basicAuth } = await this.credService.getAuthCredential({
       url: ctx.getPath(),
-      ip: ctx.getPeer(),
+      ip: ctx.getPeer().replace(/:\d+$/, ''),
     });
     if (basicAuth) {
       if (!authHeader?.startsWith('Basic ')) return false;
@@ -36,8 +35,7 @@ export class GrpcAuthGuard implements CanActivate {
       });
       const { id } = await decrypt(usr);
       const { data: user } = await this.userService.getUser({ id });
-
-      // const = await this.
+      return !!user; //NOTE: permission will be handler by client's http auth guard
     } catch (error) {
       return false;
     }

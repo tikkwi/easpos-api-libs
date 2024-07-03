@@ -30,5 +30,7 @@ message CreateAddressDto {
 }
 
 message CreateAddressReturn {
-    Address data = 1;
+    int32 code = 1;
+    optional string message = 2;
+    Address data = 3;
 }
