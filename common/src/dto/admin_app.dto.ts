@@ -1,22 +1,18 @@
-import { IsMongoId, IsNotEmpty, IsUrl } from 'class-validator';
-import { AuthUser } from './core.dto';
 import { Merchant } from '@common/schema/merchant.schema';
 import { Metadata } from '@grpc/grpc-js';
+import { IsMongoId, IsNotEmpty, IsUrl } from 'class-validator';
 
 export class GetAuthDataDto {
-  @IsNotEmpty()
   @IsUrl()
   url: string;
 
   @IsMongoId()
-  id?: string;
+  id: string;
 }
 
 type GetAuthDataReturnType = {
-  config: AppConfig;
-  user: AuthUser;
-  merchant: Merchant;
   isSubActive: boolean;
+  merchant: Merchant | undefined;
   basicAuth: { userName: string; password: string };
 };
 

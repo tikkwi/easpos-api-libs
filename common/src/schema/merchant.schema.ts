@@ -48,9 +48,8 @@ export class Merchant extends BaseSchema {
     type: SchemaTypes.ObjectId,
     ref: 'MerchantPurchase',
     immutable: false,
-    required: false,
   })
-  activePurchase?: MerchantPurchase;
+  activePurchase: MerchantPurchase;
 
   @AppProp({ type: SchemaTypes.ObjectId, ref: 'User', required: false })
   owner?: User;

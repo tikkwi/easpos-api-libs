@@ -32,24 +32,31 @@ import { ThrottlerStorageRedis } from './redis_throttler_storage.service';
   imports: [
     CoreModule,
     ThrottlerModule.forRootAsync({
-      useFactory: (client: Redis, config: ConfigService) => ({
-        throttlers: [
-          {
-            ttl: minutes(1),
-            limit: config.get(TRT_TRS_HVY_F),
-          },
-          {
-            ttl: minutes(30),
-            limit: config.get(TRT_TRS_HVY_S),
-          },
-          {
-            ttl: hours(3),
-            limit: config.get(TRT_TRS_HVY_T),
-          },
-        ],
-        storage: new ThrottlerStorageRedis(client),
-      }),
-      inject: [REDIS_CLIENT, ConfigService],
+      useFactory: async (config: ConfigService) => {
+        const client = await new Redis({
+          host: config.get<string>(REDIS_HOST),
+          port: config.get<number>(REDIS_PORT),
+          password: config.get<string>(REDIS_PASSWORD),
+        });
+        return {
+          throttlers: [
+            {
+              ttl: minutes(1),
+              limit: config.get(TRT_TRS_HVY_F),
+            },
+            {
+              ttl: minutes(30),
+              limit: config.get(TRT_TRS_HVY_S),
+            },
+            {
+              ttl: hours(3),
+              limit: config.get(TRT_TRS_HVY_T),
+            },
+          ],
+          storage: new ThrottlerStorageRedis(client),
+        };
+      },
+      inject: [ConfigService],
     }),
     AddressModule,
     CategoryModule,
@@ -82,9 +89,5 @@ import { ThrottlerStorageRedis } from './redis_throttler_storage.service';
 export class CoreHttpModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(cookieParser.default()).forRoutes('*');
-
-    consumer
-      .apply(BasicAuthMiddleware)
-      .forRoutes('/^.*/swagger$/', '/^.*/login$/', '/^.*/register$/');
   }
 }

@@ -67,12 +67,10 @@ export type UserReturn = { data: User };
 
 export interface UserServiceMethods {
   getUser(dto: GetUserDto): Promise<UserReturn>;
-  getAuthUser(dto: FindByIdDto): Promise<{ data: AuthUser }>;
   createUser(dto: CreateUserDto): Promise<UserReturn>;
 }
 
 export interface UserSharedServiceMethods {
   getUser(dto: GetUserDto, meta?: Metadata): Promise<UserReturn>;
-  getAuthUser(dto: FindByIdDto, meta?: Metadata): Promise<{ data: AuthUser }>;
   createUser(dto: CreateUserDto, meta?: Metadata): Promise<UserReturn>;
 }

@@ -1,18 +1,20 @@
-import { JWT_SECRET } from '@common/constant';
+import { AUTH_CREDENTIAL, JWT_SECRET, USER } from '@common/constant';
+import { AuthCredentialServiceMethods } from '@common/dto/auth_credential.dto';
+import { UserSharedServiceMethods } from '@common/dto/user.dto';
 import { decrypt } from '@common/utils/encrypt';
-import { authenticateBasicAuth } from '@common/utils/misc';
+import { authenticateBasicAuth, getServiceToken } from '@common/utils/misc';
 import { ServerUnaryCall } from '@grpc/grpc-js';
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { AuthCredentialService } from 'src/auth_credential/auth_credential.service';
-import { UserService } from 'src/user/user.service';
+import dayjs from 'dayjs';
 
 @Injectable()
 export class GrpcAuthGuard implements CanActivate {
   constructor(
-    private readonly userService: UserService,
-    private readonly credService: AuthCredentialService,
+    @Inject(getServiceToken(AUTH_CREDENTIAL))
+    private readonly credService: AuthCredentialServiceMethods,
+    @Inject(getServiceToken(USER)) private readonly userService: UserSharedServiceMethods,
     private readonly jwtService: JwtService,
     private readonly config: ConfigService,
   ) {}
@@ -29,10 +31,13 @@ export class GrpcAuthGuard implements CanActivate {
       return await authenticateBasicAuth(basicAuth, authHeader);
     }
     try {
-      const { usr, exp } = await this.jwtService.verifyAsync(authHeader, {
+      const { usr } = await this.jwtService.verifyAsync(authHeader, {
         secret: this.config.get(JWT_SECRET),
       });
-      const id = await decrypt(usr);
+      const { id } = await decrypt(usr);
+      const { data: user } = await this.userService.getUser({ id });
+
+      // const = await this.
     } catch (error) {
       return false;
     }

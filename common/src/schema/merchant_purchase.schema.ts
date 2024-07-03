@@ -20,6 +20,12 @@ export class MerchantPurchase extends BaseSchema {
   @AppProp({ type: String, enum: EMerchantPurchase })
   type: EMerchantPurchase;
 
+  @AppProp({ type: Boolean, default: false, required: false })
+  sentSubEndMail?: boolean;
+
+  @AppProp({ type: Boolean, default: false, required: false })
+  sentPreSubEndMail?: boolean;
+
   @AppProp({ type: SchemaTypes.ObjectId, ref: 'Merchant' })
   merchant: Merchant;
 

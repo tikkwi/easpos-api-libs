@@ -3,6 +3,7 @@ export const ADMIN_URL = 'localhost:4001';
 
 //Env
 export const NODE_ENV = 'NODE_ENV';
+export const PRE_END_SUB_MAIL = 'PRE_END_SUB_MAIL';
 export const MONGO_URI = 'MONGO_URI';
 export const ENC_PASSWD = 'ENC_PASSWD';
 export const COOKIE_SECRET = 'COOKIE_SECRET';

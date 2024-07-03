@@ -22,14 +22,14 @@ export class AuditService implements AuditServiceMethods {
       sessionId: request.sessionID,
       userAgent: request.headers['user-agent'] as any,
       logTrail: this.context.get(C_LOG_TRAIL),
-      user: user
-        ? {
-            type: user.type,
-            email: user.mail,
-            name: `${user.firstName} ${user.lastName}`,
-            user: user._id,
-          }
-        : undefined,
+      // user: user
+      //   ? {
+      //       type: user.type,
+      //       email: user.mail,
+      //       name: `${user.firstName} ${user.lastName}`,
+      //       user: user._id,
+      //     }
+      //   : undefined,
     });
   }
 }
