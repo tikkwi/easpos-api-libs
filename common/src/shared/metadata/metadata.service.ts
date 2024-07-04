@@ -1,4 +1,5 @@
 import { REPOSITORY } from '@common/constant';
+import { CoreService } from '@common/core/core.service';
 import { Repository } from '@common/core/repository';
 import { MerchantSharedServiceMethods } from '@common/dto/merchant.dto';
 import {
@@ -24,7 +25,7 @@ import {
 } from 'class-validator';
 import { isNumber } from 'lodash';
 
-export abstract class MetadataService implements MetadataServiceMethods {
+export abstract class MetadataService extends CoreService implements MetadataServiceMethods {
   @Inject(REPOSITORY) private readonly repository: Repository<Metadata>;
   protected abstract addressService: AddressServiceMethods;
   protected abstract userService: UserSharedServiceMethods;

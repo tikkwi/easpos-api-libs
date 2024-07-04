@@ -1,16 +1,20 @@
 import { REPOSITORY } from '@common/constant';
 import { ContextService } from '@common/core/context/context.service';
+import { CoreService } from '@common/core/core.service';
 import { Repository } from '@common/core/repository';
-import { Inject, Injectable } from '@nestjs/common';
+import { AppService } from '@common/decorator/app_service.decorator';
+import { Inject } from '@nestjs/common';
 import { AuditServiceMethods } from '@shared/audit/audit.dto';
 import { Audit } from './audit.schema';
 
-@Injectable()
-export class AuditService implements AuditServiceMethods {
+@AppService()
+export class AuditService extends CoreService implements AuditServiceMethods {
   constructor(
     @Inject(REPOSITORY) private readonly repository: Repository<Audit>,
-    private readonly context: ContextService,
-  ) {}
+    protected readonly context: ContextService,
+  ) {
+    super();
+  }
 
   async logRequest() {
     const request = this.context.get('request');

@@ -12,9 +12,10 @@ export class ContextService {
     return this.data[key];
   }
 
-  update<K extends keyof AppContext>(key: K, updFun: (val) => any) {
+  update<K extends keyof AppContext>(key: K, updFun: (val: AppContext[K]) => void | AppContext[K]) {
     if (!(key in this.data)) throw new Error('No data..');
-    this.data[key] = updFun(this.data[key]);
+    const updated = updFun(this.data[key]);
+    if (updated) this.data[key] = updated;
   }
 
   reset() {

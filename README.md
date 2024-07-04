@@ -18,8 +18,7 @@
 
 
 ## Do
-- All service methods' args **must** be ```dto, meta```
-- ```newTransaction``` **must** be ```false``` for using same app's service and ```true``` for different app
+- ```Service``` class ***must*** extend ```CoreService``` and use ```AppService``` rather than ```Injectable``` 
 
 ## Don't 
 - Except standalone files that won't have connection with other files (eg. ```constant```),don't aggregate exports with barrel files(```index.ts``` -> ```export * ...```) which can raise tan of unexpected errors and circular dependencies which is very hard to trace..

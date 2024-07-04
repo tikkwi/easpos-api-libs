@@ -15,9 +15,6 @@ export class RequestLog {
   @IsString()
   auxillaryService: string;
 
-  @AppProp({ type: String })
-  method: string;
-
   @AppProp({ type: SchemaTypes.Mixed, required: false })
   payload?: any;
 

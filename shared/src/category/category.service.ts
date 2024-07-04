@@ -1,13 +1,21 @@
-import { Category } from './category.schema';
-import { CategoryServiceMethods, CreateCategoryDto } from '@shared/category/category.dto';
-import { FindByIdDto } from '@common/dto/core.dto';
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { Repository } from '@common/core/repository';
 import { REPOSITORY } from '@common/constant';
+import { ContextService } from '@common/core/context/context.service';
+import { CoreService } from '@common/core/core.service';
+import { Repository } from '@common/core/repository';
+import { AppService } from '@common/decorator/app_service.decorator';
+import { FindByIdDto } from '@common/dto/core.dto';
+import { BadRequestException, Inject } from '@nestjs/common';
+import { CategoryServiceMethods, CreateCategoryDto } from '@shared/category/category.dto';
+import { Category } from './category.schema';
 
-@Injectable()
-export class CategoryService implements CategoryServiceMethods {
-  constructor(@Inject(REPOSITORY) private readonly repository: Repository<Category>) {}
+@AppService()
+export class CategoryService extends CoreService implements CategoryServiceMethods {
+  constructor(
+    @Inject(REPOSITORY) private readonly repository: Repository<Category>,
+    protected readonly context: ContextService,
+  ) {
+    super();
+  }
 
   async getCategory(dto: FindByIdDto) {
     return await this.repository.findById(dto);

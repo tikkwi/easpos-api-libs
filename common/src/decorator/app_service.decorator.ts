@@ -1,11 +1,5 @@
-import 'reflect-metadata';
-import { FORBIDDEN_USERS, USERS } from '@common/constant';
-import { AllowedUser } from '@common/dto/core.dto';
-import { Controller, Injectable } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
-import { pull } from 'lodash';
-import { Users } from './users.decorator';
 import { ContextService } from '@common/core/context/context.service';
+import { Injectable } from '@nestjs/common';
 
 export function AppService() {
   return function (target: any) {
@@ -16,8 +10,16 @@ export function AppService() {
       const oriMeth = descriptor.value;
       if (typeof oriMeth === 'function' && key !== 'constructor') {
         descriptor.value = async function (...args) {
-          console.log('hello', this.context);
-          return oriMeth.apply();
+          const res = await oriMeth.apply(args);
+          (this.context as ContextService).update('logTrail', (log) => {
+            log.push({
+              service: target.name,
+              auxillaryService: key,
+              payload: args[0],
+              response: res,
+            });
+          });
+          return res;
         };
         Object.defineProperty(target.prototype, key, descriptor);
       }

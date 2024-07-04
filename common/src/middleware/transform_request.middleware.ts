@@ -39,7 +39,7 @@ export class TransformRequestMiddleware implements NestMiddleware {
         });
     }
 
-    this.context.set({ app, request, response });
+    this.context.set({ app, request, response, logTrail: [] });
 
     next();
   }
