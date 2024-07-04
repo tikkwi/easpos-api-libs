@@ -1,4 +1,5 @@
 import { Metadata } from '@grpc/grpc-js';
+import { Observable } from 'rxjs';
 
 export type AppConfigReturn = { data: AppConfig };
 
@@ -7,5 +8,5 @@ export interface AppConfigServiceMethods {
 }
 
 export interface AppConfigSharedServiceMethods {
-  getConfig(dto, meta?: Metadata): Promise<AppConfigReturn>;
+  getConfig(dto, meta?: Metadata): Observable<GrpcReturn & AppConfigReturn>;
 }

@@ -1,6 +1,7 @@
 import { AuthCredential } from '@common/schema/auth_credential.schema';
 import { Metadata } from '@grpc/grpc-js';
 import { IsIP, IsNotEmpty, IsOptional, IsUrl } from 'class-validator';
+import { Observable } from 'rxjs';
 
 export class GetAuthCredentialDto {
   @IsNotEmpty()
@@ -19,5 +20,8 @@ export interface AuthCredentialServiceMethods {
 }
 
 export interface AuthCredentialSharedServiceMethods {
-  getAuthCredential(dto: GetAuthCredentialDto, meta?: Metadata): Promise<AuthCredentialReturn>;
+  getAuthCredential(
+    dto: GetAuthCredentialDto,
+    meta?: Metadata,
+  ): Observable<GrpcReturn & AuthCredentialReturn>;
 }

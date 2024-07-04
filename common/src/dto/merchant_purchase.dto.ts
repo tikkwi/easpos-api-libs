@@ -9,5 +9,3 @@ export class SubMonitorDto extends FindByIdDto {
 export interface MerchantPurchaseServiceMethods {
   subMonitor(dto: SubMonitorDto): Promise<{ data: boolean }>;
 }
-
-export interface MetadataSharedServiceMethods {}

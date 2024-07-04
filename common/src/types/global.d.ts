@@ -44,7 +44,7 @@ declare global {
 
   type BasicAuth = { userName: string; password: string };
 
-  type GrpcReturn = { data: any; code: number; message?: string; token?: string };
+  type GrpcReturn = { code: number; message?: string; token?: string };
 }
 
 declare module 'express-session' {

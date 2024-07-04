@@ -7,6 +7,7 @@ import { CategoryDto } from './action.dto';
 import { CoreDto, FindByIdDto } from './core.dto';
 import { CreateUserDto } from './user.dto';
 import { Metadata } from '@grpc/grpc-js';
+import { Observable } from 'rxjs';
 
 export class CreateMerchantDto extends OmitType(CoreDto(Merchant), [
   'activePurchase',
@@ -43,11 +44,11 @@ export interface MerchantServiceMethods {
 }
 
 export interface MerchantSharedServiceMethods {
-  getMerchant(dto: FindByIdDto, meta?: Metadata): Promise<MerchantReturn>;
+  getMerchant(dto: FindByIdDto, meta?: Metadata): Observable<GrpcReturn & MerchantReturn>;
   merchantWithAuth(
     dto: FindByIdDto,
     meta?: Metadata,
-  ): Promise<{ data: Merchant; isSubActive: boolean }>;
-  createMerchant(dto: CreateMerchantDto, meta?: Metadata): Promise<MerchantReturn>;
-  tmpTst(dto, meta?: Metadata): { data: string };
+  ): Observable<GrpcReturn & { data: Merchant; isSubActive: boolean }>;
+  createMerchant(dto: CreateMerchantDto, meta?: Metadata): Observable<GrpcReturn & MerchantReturn>;
+  tmpTst(dto, meta?: Metadata): Observable<GrpcReturn & { data: string }>;
 }

@@ -1,6 +1,7 @@
 import { AUTH_CREDENTIAL, C_APP } from '@common/constant';
+import { AppBrokerService } from '@common/core/app_broker/app_broker.service';
 import { ContextService } from '@common/core/context/context.service';
-import { AuthCredentialSharedServiceMethods } from '@common/dto/auth_credential.dto';
+import { EApp } from '@common/utils/enum';
 import { authenticateBasicAuth, getServiceToken } from '@common/utils/misc';
 import {
   ForbiddenException,
@@ -14,15 +15,18 @@ import { Request, Response } from 'express';
 @Injectable()
 export class BasicAuthMiddleware implements NestMiddleware {
   constructor(
-    @Inject(getServiceToken(AUTH_CREDENTIAL))
-    private readonly credService: AuthCredentialSharedServiceMethods,
+    @Inject(getServiceToken(AUTH_CREDENTIAL)) private readonly credService,
+    private readonly appBroker: AppBrokerService,
     private readonly context: ContextService,
   ) {}
 
   async use(request: Request, response: Response, next: () => void) {
-    const {
-      data: { userName, password },
-    } = await this.credService.getAuthCredential({ url: request.originalUrl });
+    const { userName, password } = await this.appBroker.request(
+      (meta) => this.credService.getAuthCredential({ url: request.originalUrl }, meta),
+      true,
+      EApp.Admin,
+    );
+
     if (!userName) throw new InternalServerErrorException('No Auth Cred');
 
     const authHeader = request.headers.authorization;

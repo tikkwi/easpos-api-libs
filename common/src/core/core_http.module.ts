@@ -9,7 +9,6 @@ import {
   TRT_TRS_HVY_T,
 } from '@common/constant';
 import { AuthGuard } from '@common/guard/auth.guard';
-import { BasicAuthMiddleware } from '@common/middleware/basic_auth.middleware';
 import {
   InternalServerErrorException,
   MiddlewareConsumer,
@@ -27,6 +26,7 @@ import { Redis } from 'ioredis';
 import { ContextService } from './context/context.service';
 import { CoreModule } from './core.module';
 import { ThrottlerStorageRedis } from './redis_throttler_storage.service';
+import { AppBrokerModule } from './app_broker/app_broker.module';
 
 @Module({
   imports: [
@@ -61,6 +61,7 @@ import { ThrottlerStorageRedis } from './redis_throttler_storage.service';
     AddressModule,
     CategoryModule,
     MailModule,
+    AppBrokerModule,
   ],
   providers: [
     {
