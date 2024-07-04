@@ -5,7 +5,6 @@ import { Audit, AuditSchema } from './audit.schema';
 import { MongooseModule } from '@nestjs/mongoose';
 import { getRepositoryProvider } from '@common/utils/misc';
 
-@Global()
 @Module({
   imports: [MongooseModule.forFeature([{ name: Audit.name, schema: AuditSchema }])],
   controllers: [AuditController],

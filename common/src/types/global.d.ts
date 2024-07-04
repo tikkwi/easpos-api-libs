@@ -4,17 +4,25 @@ declare global {
   type Request = import('express').Request;
   type Response = import('express').Response;
   type Session = import('mongoose').ClientSession;
+  type ObjectId = import('mongoose').Types.ObjectId;
   type Metadata = import('@grpc/grpc-js').Metadata;
   type Model<T> = import('mongoose').Model<T>;
   type FilterQuery<T> = import('mongoose').FilterQuery<T>;
   type ProjectionType<T> = import('mongoose').ProjectionType<T>;
   type QueryOptions<T> = import('mongoose').QueryOptions<T>;
   type UpdateQuery<T> = import('mongoose').UpdateQuery<T>;
-  type User = import('@common/schema').User;
-  type AppConfig = import('@common/schema').AppConfig;
-  type RequestLog = import('@common/schema').RequestLog;
+
+  type EUser = import('@common/utils/enum').EUser;
   type EApp = import('@common/utils/enum').EApp;
-  type Log = import('@shared/dto').LogRequestDto;
+  type EStatus = import('@common/utils/enum').EStatus;
+  type ESubscription = import('@common/utils/enum').ESubscription;
+
+  type UserServicePermission = import('@common/dto/entity.dto').UserServicePermission;
+
+  type User = import('@common/schema/user.schema').User;
+  type Merchant = import('@common/schema/merchant.schema').Merchant;
+  type AppConfig = import('@common/schema/app_config.schema').AppConfig;
+  type RequestLog = import('@shared/audit/audit.schema').RequestLog;
 
   type CreateType<T> = Omit<T, '_id' | 'createdAt' | 'updatedAt'>;
 
@@ -42,9 +50,37 @@ declare global {
     action: (model: Model<T>) => any;
   };
 
+  type AuthUser = {
+    id?: string;
+    userName: string;
+    firstName: string;
+    lastName: string;
+    mail: string;
+    userStatus: EStatus;
+    isOwner: boolean;
+    type: EUser;
+    servicePermissions: UserServicePermission[];
+    merchant?: string;
+    merchantSubType: ESubscription;
+    merchantStatus: EStatus;
+    merchantEndSub?: Date;
+  };
+
   type BasicAuth = { userName: string; password: string };
 
   type GrpcReturn = { code: number; message?: string; token?: string };
+
+  type AppContext = {
+    logTrail?: Array<RequestLog>;
+    session?: Session;
+    request?: Request;
+    response?: Response;
+    user?: AuthUser;
+    app?: EApp;
+    merchant?: Merchant;
+    isSubActive?: boolean;
+    newToken?: string;
+  };
 }
 
 declare module 'express-session' {

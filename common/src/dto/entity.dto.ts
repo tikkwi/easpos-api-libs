@@ -24,7 +24,7 @@ class UserPermissions {
   auxillaryServices: string[];
 }
 
-class UserServicePermission {
+export class UserServicePermission {
   @IsString()
   service: string;
 

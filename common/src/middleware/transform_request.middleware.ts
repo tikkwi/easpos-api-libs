@@ -1,15 +1,6 @@
-import {
-  C_APP,
-  C_IS_SUB_ACTIVE,
-  C_MERCHANT,
-  C_REQ,
-  C_RES,
-  C_USER,
-  MERCHANT,
-} from '@common/constant';
+import { MERCHANT } from '@common/constant';
 import { AppBrokerService } from '@common/core/app_broker/app_broker.service';
 import { ContextService } from '@common/core/context/context.service';
-import { MerchantServiceMethods } from '@common/dto/merchant.dto';
 import { decrypt } from '@common/utils/encrypt';
 import { EApp } from '@common/utils/enum';
 import { getServiceToken } from '@common/utils/misc';
@@ -37,11 +28,7 @@ export class TransformRequestMiddleware implements NestMiddleware {
         EApp.Admin,
       );
 
-      this.context.set({
-        [C_USER]: user,
-        [C_IS_SUB_ACTIVE]: isSubActive,
-        [C_MERCHANT]: merchant,
-      });
+      this.context.set({ user, isSubActive, merchant });
 
       const sessNearExp = dayjs(request.session.cookie.expires)
         .subtract(12, 'hours')
@@ -52,11 +39,7 @@ export class TransformRequestMiddleware implements NestMiddleware {
         });
     }
 
-    this.context.set({
-      [C_APP]: app,
-      [C_REQ]: request,
-      [C_RES]: response,
-    });
+    this.context.set({ app, request, response });
 
     next();
   }

@@ -1,5 +1,4 @@
 import {
-  APP_CONTEXT,
   REDIS_CLIENT,
   REDIS_HOST,
   REDIS_PASSWORD,
@@ -8,7 +7,6 @@ import {
   TRT_TRS_HVY_S,
   TRT_TRS_HVY_T,
 } from '@common/constant';
-import { AuthGuard } from '@common/guard/auth.guard';
 import {
   InternalServerErrorException,
   MiddlewareConsumer,
@@ -16,17 +14,15 @@ import {
   NestModule,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerModule, hours, minutes } from '@nestjs/throttler';
 import { AddressModule } from '@shared/address/address.module';
 import { CategoryModule } from '@shared/category/category.module';
 import { MailModule } from '@shared/mail/mail.module';
 import * as cookieParser from 'cookie-parser';
 import { Redis } from 'ioredis';
-import { ContextService } from './context/context.service';
+import { AppBrokerModule } from './app_broker/app_broker.module';
 import { CoreModule } from './core.module';
 import { ThrottlerStorageRedis } from './redis_throttler_storage.service';
-import { AppBrokerModule } from './app_broker/app_broker.module';
 
 @Module({
   imports: [
@@ -80,11 +76,10 @@ import { AppBrokerModule } from './app_broker/app_broker.module';
       },
       inject: [ConfigService],
     },
-    {
-      provide: APP_GUARD,
-      useClass: AuthGuard,
-    },
-    { provide: APP_CONTEXT, useExisting: ContextService },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: AuthGuard,
+    // },
   ],
 })
 export class CoreHttpModule implements NestModule {

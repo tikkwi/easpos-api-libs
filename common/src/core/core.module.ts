@@ -49,7 +49,7 @@ import { Redis } from 'ioredis';
       inject: [ConfigService],
     },
     { provide: APP_INTERCEPTOR, useClass: TransactionInterceptor },
-    { provide: APP_FILTER, useClass: AppExceptionFilter },
+    // { provide: APP_FILTER, useClass: AppExceptionFilter },
     {
       provide: APP_PIPE,
       useFactory: () =>

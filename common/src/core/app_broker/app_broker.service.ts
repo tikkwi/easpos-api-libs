@@ -1,4 +1,4 @@
-import { ADM_MRO_PWD, ADM_MRO_USR, APP, C_REQ, C_RES } from '@common/constant';
+import { ADM_MRO_PWD, ADM_MRO_USR, APP } from '@common/constant';
 import { base64 } from '@common/utils/misc';
 import { Metadata } from '@grpc/grpc-js';
 import { ConfigService } from '@nestjs/config';
@@ -19,8 +19,8 @@ export class AppBrokerService {
     const $action = isCrossApp ? (meta) => lastValueFrom(action(meta)) : action;
 
     if (isCrossApp) {
-      const req = this.context.get<Request>(C_REQ);
-      const res = this.context.get<Response>(C_RES);
+      const req = this.context.get('request');
+      const res = this.context.get('response');
       const meta = new Metadata();
       meta.set(
         'authorization',

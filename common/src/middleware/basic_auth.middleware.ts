@@ -1,4 +1,4 @@
-import { AUTH_CREDENTIAL, C_APP } from '@common/constant';
+import { AUTH_CREDENTIAL } from '@common/constant';
 import { AppBrokerService } from '@common/core/app_broker/app_broker.service';
 import { ContextService } from '@common/core/context/context.service';
 import { EApp } from '@common/utils/enum';
@@ -33,7 +33,7 @@ export class BasicAuthMiddleware implements NestMiddleware {
     if (!authHeader || !authHeader.startsWith('Basic'))
       response
         .status(401)
-        .setHeader('WWW-Authenticate', `Basic realm=${this.context.get(C_APP)}`)
+        .setHeader('WWW-Authenticate', `Basic realm=${this.context.get('app')}`)
         .send('Authentication Required...');
 
     if (await authenticateBasicAuth({ userName, password }, request.headers.authorization)) next();

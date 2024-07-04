@@ -1,4 +1,4 @@
-import { AUTH_CREDENTIAL, C_NEW_TKN, JWT_SECRET, USER } from '@common/constant';
+import { AUTH_CREDENTIAL, JWT_SECRET, USER } from '@common/constant';
 import { ContextService } from '@common/core/context/context.service';
 import { AuthCredentialServiceMethods } from '@common/dto/auth_credential.dto';
 import { UserSharedServiceMethods } from '@common/dto/user.dto';
@@ -42,8 +42,7 @@ export class GrpcAuthGuard implements CanActivate {
       const { data: user } = await this.userService.getUser({ id });
       if (user) {
         const isExpireSoon = dayjs(exp).subtract(1, 'days').isBefore(dayjs());
-        if (isExpireSoon)
-          this.context.set({ [C_NEW_TKN]: await this.jwtService.signAsync({ usr }) });
+        if (isExpireSoon) this.context.set({ newToken: await this.jwtService.signAsync({ usr }) });
         return true;
       }
       return false; //NOTE: permission will be handler by client's http auth guard

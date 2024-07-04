@@ -2,18 +2,18 @@ import { Injectable, Scope } from '@nestjs/common';
 
 @Injectable()
 export class ContextService {
-  private data: Record<string, any> = {};
+  private data: AppContext = {};
 
-  set(data: Record<string, any>) {
+  set(data: Partial<Record<keyof AppContext, any>>) {
     Object.entries(data).forEach(([k, v]) => (this.data[k] = v));
   }
 
-  get<T = any>(key: string) {
-    return this.data[key] as T;
+  get<K extends keyof AppContext>(key: K): AppContext[K] {
+    return this.data[key];
   }
 
-  update(key: string, updFun: (val) => any) {
-    if (!this.data[key]) throw new Error('No data..');
+  update<K extends keyof AppContext>(key: K, updFun: (val) => any) {
+    if (!(key in this.data)) throw new Error('No data..');
     this.data[key] = updFun(this.data[key]);
   }
 

@@ -1,4 +1,3 @@
-import { C_NEW_TKN } from '@common/constant';
 import { ContextService } from '@common/core/context/context.service';
 import { TransactionService } from '@common/core/transaction/transaction.service';
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
@@ -18,7 +17,7 @@ export class TransactionInterceptor implements NestInterceptor {
     const action = () => {
       if (context.getType() === 'http')
         return from(this.transaction.makeTransaction(() => lastValueFrom(next.handle())));
-      return next.handle().pipe(map((res) => ({ ...res, token: this.context.get(C_NEW_TKN) })));
+      return next.handle().pipe(map((res) => ({ ...res, token: this.context.get('newToken') })));
     };
 
     return action().pipe(tap(() => this.context.reset()));
