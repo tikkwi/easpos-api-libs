@@ -20,7 +20,6 @@ import { CategoryModule } from '@shared/category/category.module';
 import { MailModule } from '@shared/mail/mail.module';
 import * as cookieParser from 'cookie-parser';
 import { Redis } from 'ioredis';
-import { AppBrokerModule } from './app_broker/app_broker.module';
 import { CoreModule } from './core.module';
 import { ThrottlerStorageRedis } from './redis_throttler_storage.service';
 
@@ -57,7 +56,6 @@ import { ThrottlerStorageRedis } from './redis_throttler_storage.service';
     AddressModule,
     CategoryModule,
     MailModule,
-    AppBrokerModule,
   ],
   providers: [
     {
@@ -76,10 +74,6 @@ import { ThrottlerStorageRedis } from './redis_throttler_storage.service';
       },
       inject: [ConfigService],
     },
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: AuthGuard,
-    // },
   ],
 })
 export class CoreHttpModule implements NestModule {

@@ -19,10 +19,13 @@ export class AuditService extends CoreService implements AuditServiceMethods {
   async logRequest() {
     const request = this.context.get('request');
     const user = this.context.get('user');
+
     return await this.repository.create({
-      submittedIP: request.ip,
-      sessionId: request.sessionID,
-      userAgent: request.headers['user-agent'] as any,
+      submittedIP: this.context.get('ip'),
+      sessionId: request?.sessionID,
+      crossAppRequest: !this.context.get('isHttp'),
+      requestedFrom: this.context.get('requestedApp'),
+      userAgent: this.context.get('userAgent') as any,
       logTrail: this.context.get('logTrail'),
       user: user
         ? {

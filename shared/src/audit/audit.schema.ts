@@ -1,9 +1,10 @@
 import { AppProp } from '@common/decorator/app_prop.decorator';
 import { User } from '@common/dto/entity.dto';
 import { BaseSchema } from '@common/schema/base.schema';
-import { Schema, SchemaFactory } from '@nestjs/mongoose';
+import { EApp } from '@common/utils/enum';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Type } from 'class-transformer';
-import { IsIP, IsNotEmpty, IsString, ValidateNested } from 'class-validator';
+import { IsBoolean, IsIP, IsNotEmpty, IsString, ValidateIf, ValidateNested } from 'class-validator';
 import { SchemaTypes } from 'mongoose';
 
 export class RequestLog {
@@ -29,6 +30,13 @@ export class Audit extends BaseSchema {
   @ValidateNested({ each: true })
   @Type(() => RequestLog)
   logTrail: RequestLog[];
+
+  @AppProp({ type: Boolean })
+  crossAppRequest: boolean;
+
+  @ValidateIf((o) => !!o.crossAppRequest)
+  @Prop({ type: String, enum: EApp })
+  requestedFrom?: EApp;
 
   @AppProp({ type: String }, { swagger: { example: '102.205.88.126' } })
   @IsIP()

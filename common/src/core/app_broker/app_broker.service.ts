@@ -22,7 +22,8 @@ export class AppBrokerService {
       const req = this.context.get('request');
       const res = this.context.get('response');
       const meta = new Metadata();
-      meta.set(
+      meta.add('app', this.config.get(APP));
+      meta.add(
         'authorization',
         isBasicAuth
           ? `Basic ${base64(`${this.config.get(ADM_MRO_USR)}:${this.config.get(ADM_MRO_PWD)}`)}`

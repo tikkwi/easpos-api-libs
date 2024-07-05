@@ -2,7 +2,7 @@ import { MONGO_URI, REDIS_CLIENT, REDIS_HOST, REDIS_PASSWORD, REDIS_PORT } from 
 import { TransactionInterceptor } from '@common/interceptors/transaction.interceptor';
 import { InternalServerErrorException, Module, ValidationPipe } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { MongooseModule, MongooseModuleOptions } from '@nestjs/mongoose';
 import { join } from 'path';
 import { ContextModule } from './context/context.module';
@@ -10,6 +10,8 @@ import { AppExceptionFilter } from './exception.filter';
 import { TransactionModule } from './transaction/transaction.module';
 import { AuditModule } from '@shared/audit/audit.module';
 import { Redis } from 'ioredis';
+import { TransformGuard } from '@common/guard/transform.guard';
+import { AppBrokerModule } from './app_broker/app_broker.module';
 
 @Module({
   imports: [
@@ -29,7 +31,7 @@ import { Redis } from 'ioredis';
 
     ContextModule,
     TransactionModule,
-    AuditModule,
+    AppBrokerModule,
   ],
   providers: [
     {
@@ -48,6 +50,7 @@ import { Redis } from 'ioredis';
       },
       inject: [ConfigService],
     },
+    { provide: APP_GUARD, useClass: TransformGuard },
     { provide: APP_INTERCEPTOR, useClass: TransactionInterceptor },
     // { provide: APP_FILTER, useClass: AppExceptionFilter },
     {

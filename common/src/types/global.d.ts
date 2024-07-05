@@ -71,14 +71,17 @@ declare global {
   type GrpcReturn = { code: number; message?: string; token?: string };
 
   type AppContext = {
+    isHttp?: boolean;
+    ip?: string;
+    userAgent?: string;
     logTrail?: Array<RequestLog>;
+    requestedApp?: EApp;
     session?: Session;
     request?: Request;
     response?: Response;
     user?: AuthUser;
     app?: EApp;
     merchant?: Merchant;
-    isSubActive?: boolean;
     newToken?: string;
   };
 }

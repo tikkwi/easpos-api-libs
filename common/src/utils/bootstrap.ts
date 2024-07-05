@@ -1,5 +1,4 @@
 import { APP, COOKIE_SECRET, REDIS_CLIENT } from '@common/constant';
-import { TransformRequestMiddleware } from '@common/middleware/transform_request.middleware';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { Transport } from '@nestjs/microservices';

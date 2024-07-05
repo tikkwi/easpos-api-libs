@@ -15,9 +15,8 @@ export class TransactionService {
     try {
       session.startTransaction();
       this.context.set({ session: session });
-      this.context.set({ logTrail: [] });
       const res = await action();
-      // this.auditService.logRequest();
+      this.auditService.logRequest();
       await session.commitTransaction();
       session.endSession();
       return res;

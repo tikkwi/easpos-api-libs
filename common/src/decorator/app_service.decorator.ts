@@ -10,14 +10,19 @@ export function AppService() {
       const oriMeth = descriptor.value;
       if (typeof oriMeth === 'function' && key !== 'constructor') {
         descriptor.value = async function (...args) {
-          const res = await oriMeth.apply(args);
+          const res = await oriMeth.apply(this, args);
           (this.context as ContextService).update('logTrail', (log) => {
-            log.push({
+            const reqLog = {
               service: target.name,
               auxillaryService: key,
               payload: args[0],
               response: res,
-            });
+            };
+            if (log) log.push(reqLog);
+            else {
+              log = [reqLog];
+              return log;
+            }
           });
           return res;
         };

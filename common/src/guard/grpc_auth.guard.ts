@@ -28,10 +28,12 @@ export class GrpcAuthGuard implements CanActivate {
       url: ctx.getPath(),
       ip: ctx.getPeer().replace(/:\d+$/, ''),
     });
+
     if (basicAuth) {
       if (!authHeader?.startsWith('Basic ')) return false;
       return await authenticateBasicAuth(basicAuth, authHeader);
     }
+
     try {
       const { token } = await decrypt(authHeader);
       const { usr, exp } = await this.jwtService.verifyAsync(token, {
