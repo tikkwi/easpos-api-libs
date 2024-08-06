@@ -4,5 +4,5 @@ import { EAllowedUser } from '@common/utils/enum';
 
 @AppController('mail', [EAllowedUser.Admin])
 export class MailController {
-  constructor(private readonly service: MailService) {}
+   constructor(private readonly service: MailService) {}
 }

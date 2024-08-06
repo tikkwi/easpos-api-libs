@@ -2,14 +2,14 @@ import { EAllowedUser } from '@common/utils/enum';
 import { Type } from '@nestjs/common';
 import { OmitType } from '@nestjs/swagger';
 import {
-  IsBoolean,
-  IsDateString,
-  IsNotEmpty,
-  IsNumber,
-  IsObject,
-  IsOptional,
-  IsString,
-  Min,
+   IsBoolean,
+   IsDateString,
+   IsNotEmpty,
+   IsNumber,
+   IsObject,
+   IsOptional,
+   IsString,
+   Min,
 } from 'class-validator';
 
 //types
@@ -17,28 +17,28 @@ export type AllowedUser = keyof typeof EAllowedUser;
 
 //classes
 export class UpdateDto {
-  @IsBoolean()
-  isFailed: boolean;
+   @IsBoolean()
+   isFailed: boolean;
 }
 
 export class PaginationDto<T> {
-  @IsNumber()
-  @Min(1)
-  page?: number;
+   @IsNumber()
+   @Min(1)
+   page?: number;
 
-  @IsDateString()
-  startDate?: string;
+   @IsDateString()
+   startDate?: string;
 
-  @IsDateString()
-  endDate?: string;
+   @IsDateString()
+   endDate?: string;
 
-  @IsNumber()
-  @Min(1)
-  pageSize?: number;
+   @IsNumber()
+   @Min(1)
+   pageSize?: number;
 
-  //NOTE: sanitize manually
-  @IsObject()
-  sort?: Record<keyof T, any>;
+   //NOTE: sanitize manually
+   @IsObject()
+   sort?: Record<keyof T, any>;
 }
 
 // export class BaseDto {
@@ -47,17 +47,17 @@ export class PaginationDto<T> {
 // }
 
 export function CoreDto<T>(classRef: Type<T>): Type<Omit<T, '_id' | 'createdAt' | 'updatedAt'>> {
-  class CoreDtoClass extends OmitType(classRef as any, ['_id', 'createdAt', 'updatedAt'] as any) {}
-  return CoreDtoClass as any;
+   class CoreDtoClass extends OmitType(classRef as any, ['_id', 'createdAt', 'updatedAt'] as any) {}
+   return CoreDtoClass as any;
 }
 
 export class FindDto {
-  @IsBoolean()
-  lean?: boolean;
+   @IsBoolean()
+   lean?: boolean;
 }
 
 export class FindByIdDto extends FindDto {
-  @IsNotEmpty()
-  @IsString()
-  id: string;
+   @IsNotEmpty()
+   @IsString()
+   id: string;
 }

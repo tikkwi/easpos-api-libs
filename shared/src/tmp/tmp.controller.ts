@@ -4,10 +4,10 @@ import { TmpService } from './tmp.service';
 
 @AppController('tmp')
 export class TmpController {
-  constructor(private readonly service: TmpService) {}
+   constructor(private readonly service: TmpService) {}
 
-  @Post('create')
-  async create(@Body() dto) {
-    return await this.service.create(dto);
-  }
+   @Post('create')
+   async create(@Body() dto) {
+      return await this.service.create(dto);
+   }
 }

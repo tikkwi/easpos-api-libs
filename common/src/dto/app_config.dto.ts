@@ -4,9 +4,9 @@ import { Observable } from 'rxjs';
 export type AppConfigReturn = { data: AppConfig };
 
 export interface AppConfigServiceMethods {
-  getConfig(): Promise<AppConfigReturn>;
+   getConfig(): Promise<AppConfigReturn>;
 }
 
 export interface AppConfigSharedServiceMethods {
-  getConfig(dto, meta?: Metadata): Observable<GrpcReturn & AppConfigReturn>;
+   getConfig(dto, meta?: Metadata): Observable<GrpcReturn & AppConfigReturn>;
 }

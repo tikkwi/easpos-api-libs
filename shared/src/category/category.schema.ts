@@ -5,11 +5,11 @@ import { Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema()
 export class Category extends BaseSchema {
-  @AppProp({ type: String })
-  name: string;
+   @AppProp({ type: String })
+   name: string;
 
-  @AppProp({ type: String, enum: ECategory })
-  type: ECategory;
+   @AppProp({ type: String, enum: ECategory })
+   type: ECategory;
 }
 
 export const CategorySchema = SchemaFactory.createForClass(Category);

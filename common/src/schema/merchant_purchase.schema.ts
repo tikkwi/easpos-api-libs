@@ -10,27 +10,27 @@ import { Merchant } from './merchant.schema';
 
 @Schema()
 export class MerchantPurchase extends BaseSchema {
-  @AppProp({ type: String })
-  vouncherId: string;
+   @AppProp({ type: String })
+   vouncherId: string;
 
-  @AppProp({ type: SchemaTypes.Mixed, required: false })
-  @Type(() => Period)
-  subscriptionPeriod?: Period;
+   @AppProp({ type: SchemaTypes.Mixed, required: false })
+   @Type(() => Period)
+   subscriptionPeriod?: Period;
 
-  @AppProp({ type: String, enum: EMerchantPurchase })
-  type: EMerchantPurchase;
+   @AppProp({ type: String, enum: EMerchantPurchase })
+   type: EMerchantPurchase;
 
-  @AppProp({ type: Boolean, default: false, required: false })
-  sentSubEndMail?: boolean;
+   @AppProp({ type: Boolean, default: false, required: false })
+   sentSubEndMail?: boolean;
 
-  @AppProp({ type: Boolean, default: false, required: false })
-  sentPreSubEndMail?: boolean;
+   @AppProp({ type: Boolean, default: false, required: false })
+   sentPreSubEndMail?: boolean;
 
-  @AppProp({ type: SchemaTypes.ObjectId, ref: 'Merchant' })
-  merchant: Merchant;
+   @AppProp({ type: SchemaTypes.ObjectId, ref: 'Merchant' })
+   merchant: Merchant;
 
-  @AppProp({ type: SchemaTypes.ObjectId, ref: 'Payment', required: false })
-  payment: Payment;
+   @AppProp({ type: SchemaTypes.ObjectId, ref: 'Payment', required: false })
+   payment: Payment;
 }
 
 export const MerchantPurchaseSchema = SchemaFactory.createForClass(MerchantPurchase);

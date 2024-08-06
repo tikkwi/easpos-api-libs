@@ -3,15 +3,15 @@ import { regex } from '@common/utils/regex';
 import { IsEnum, IsMongoId, IsNotEmpty, IsOptional, Matches, ValidateIf } from 'class-validator';
 
 export class CategoryDto {
-  @IsOptional()
-  @IsMongoId()
-  id?: string;
+   @IsOptional()
+   @IsMongoId()
+   id?: string;
 
-  @ValidateIf((o) => !!!o.id)
-  @Matches(regex.enum)
-  name?: string;
+   @ValidateIf((o) => !!!o.id)
+   @Matches(regex.enum)
+   name?: string;
 
-  @IsOptional()
-  @IsEnum(ECategory)
-  type?: ECategory;
+   @IsOptional()
+   @IsEnum(ECategory)
+   type?: ECategory;
 }

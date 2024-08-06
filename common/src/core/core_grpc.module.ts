@@ -5,14 +5,14 @@ import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 @Module({
-  imports: [CoreModule],
-  providers: [
-    {
-      provide: ADM_MRO_BSC_AUH,
-      useFactory: (config: ConfigService) =>
-        base64(`${config.get(ADM_MRO_USR)}:${config.get(ADM_MRO_PWD)}`),
-      inject: [ConfigService],
-    },
-  ],
+   imports: [CoreModule],
+   providers: [
+      {
+         provide: ADM_MRO_BSC_AUH,
+         useFactory: (config: ConfigService) =>
+            base64(`${config.get(ADM_MRO_USR)}:${config.get(ADM_MRO_PWD)}`),
+         inject: [ConfigService],
+      },
+   ],
 })
 export class GrpcModule {}

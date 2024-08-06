@@ -8,7 +8,7 @@ import { ContextService } from './context.service';
 
 @Global()
 @Module({
-  providers: [ContextService],
-  exports: [ContextService],
+   providers: [ContextService],
+   exports: [ContextService],
 })
 export class ContextModule {}

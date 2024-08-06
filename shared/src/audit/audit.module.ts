@@ -6,9 +6,9 @@ import { Audit, AuditSchema } from './audit.schema';
 import { AuditService } from './audit.service';
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: Audit.name, schema: AuditSchema }])],
-  controllers: [AuditController],
-  providers: [AuditService, getRepositoryProvider({ name: Audit.name })],
-  exports: [AuditService],
+   imports: [MongooseModule.forFeature([{ name: Audit.name, schema: AuditSchema }])],
+   controllers: [AuditController],
+   providers: [AuditService, getRepositoryProvider({ name: Audit.name })],
+   exports: [AuditService],
 })
 export class AuditModule {}

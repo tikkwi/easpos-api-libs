@@ -10,20 +10,22 @@ import { Category } from './category.schema';
 
 @AppService()
 export class CategoryService extends CoreService implements CategoryServiceMethods {
-  constructor(
-    @Inject(REPOSITORY) private readonly repository: Repository<Category>,
-    protected readonly context: ContextService,
-  ) {
-    super();
-  }
+   constructor(
+      @Inject(REPOSITORY) private readonly repository: Repository<Category>,
+      protected readonly context: ContextService,
+   ) {
+      super();
+   }
 
-  async getCategory(dto: FindByIdDto) {
-    return await this.repository.findById(dto);
-  }
+   async getCategory(dto: FindByIdDto) {
+      return await this.repository.findById(dto);
+   }
 
-  async createCategory(dto: CreateCategoryDto) {
-    const existing = await this.repository.findOne({ filter: { name: dto.name, type: dto.type } });
-    if (existing) throw new BadRequestException('Already exist the category');
-    return await this.repository.create(dto);
-  }
+   async createCategory(dto: CreateCategoryDto) {
+      const existing = await this.repository.findOne({
+         filter: { name: dto.name, type: dto.type },
+      });
+      if (existing) throw new BadRequestException('Already exist the category');
+      return await this.repository.create(dto);
+   }
 }

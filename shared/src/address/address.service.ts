@@ -10,18 +10,18 @@ import { Address } from './address.schema';
 
 @AppService()
 export class AddressService extends CoreService implements AddressServiceMethods {
-  constructor(
-    @Inject(REPOSITORY) private readonly repository: Repository<Address>,
-    protected readonly context: ContextService,
-  ) {
-    super();
-  }
+   constructor(
+      @Inject(REPOSITORY) private readonly repository: Repository<Address>,
+      protected readonly context: ContextService,
+   ) {
+      super();
+   }
 
-  async getAddress({ id, lean = true }: FindByIdDto) {
-    return await this.repository.findById({ id, options: { lean } });
-  }
+   async getAddress({ id, lean = true }: FindByIdDto) {
+      return await this.repository.findById({ id, options: { lean } });
+   }
 
-  async createAddress(dto: CreateAddressDto) {
-    return await this.repository.create(dto);
-  }
+   async createAddress(dto: CreateAddressDto) {
+      return await this.repository.create(dto);
+   }
 }

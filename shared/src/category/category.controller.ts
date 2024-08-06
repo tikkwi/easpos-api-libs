@@ -5,10 +5,10 @@ import { CreateCategoryDto } from './category.dto';
 
 @AppController('category')
 export class CategoryController {
-  constructor(private readonly service: CategoryService) {}
+   constructor(private readonly service: CategoryService) {}
 
-  @Post('create')
-  async createCategory(@Body() dto: CreateCategoryDto) {
-    return this.service.createCategory(dto);
-  }
+   @Post('create')
+   async createCategory(@Body() dto: CreateCategoryDto) {
+      return this.service.createCategory(dto);
+   }
 }

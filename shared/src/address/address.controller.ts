@@ -5,10 +5,10 @@ import { AddressService } from './address.service';
 
 @AppController('address')
 export class AddressController {
-  constructor(private readonly service: AddressService) {}
+   constructor(private readonly service: AddressService) {}
 
-  @Post('create')
-  async createAddress(@Body() dto: Omit<CreateAddressDto, 'request'>) {
-    return this.service.createAddress(dto);
-  }
+   @Post('create')
+   async createAddress(@Body() dto: Omit<CreateAddressDto, 'request'>) {
+      return this.service.createAddress(dto);
+   }
 }

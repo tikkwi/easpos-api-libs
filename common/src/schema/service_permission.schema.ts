@@ -6,11 +6,11 @@ import { SchemaTypes } from 'mongoose';
 
 @Schema()
 export class ServicePermission extends PickType(Permission, ['name', 'description', 'remark']) {
-  @AppProp({ type: String }, { swagger: { example: 'PercelService' } })
-  service: string;
+   @AppProp({ type: String }, { swagger: { example: 'PercelService' } })
+   service: string;
 
-  @AppProp({ type: SchemaTypes.ObjectId, ref: 'Permission' })
-  permissions?: Permission[];
+   @AppProp({ type: SchemaTypes.ObjectId, ref: 'Permission' })
+   permissions?: Permission[];
 }
 
 export const ServicePermissionSchema = SchemaFactory.createForClass(ServicePermission);

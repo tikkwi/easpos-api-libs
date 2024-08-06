@@ -12,6 +12,7 @@ export const SESSION_USER = 'SESSION_USER';
 export const JWT_SECRET = 'JWT_SECRET';
 export const REDIS_HOST = 'REDIS_HOST';
 export const REDIS_PORT = 'REDIS_PORT';
+export const REDIS_USR = 'REDIS_USR';
 export const REDIS_PASSWORD = 'REDIS_PASSWORD';
 export const USR_APP_USR = 'USR_APP_USR';
 export const USR_APP_PWD = 'USR_APP_PWD';

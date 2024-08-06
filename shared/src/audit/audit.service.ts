@@ -9,32 +9,32 @@ import { Audit } from './audit.schema';
 
 @AppService()
 export class AuditService extends CoreService implements AuditServiceMethods {
-  constructor(
-    @Inject(REPOSITORY) private readonly repository: Repository<Audit>,
-    protected readonly context: ContextService,
-  ) {
-    super();
-  }
+   constructor(
+      @Inject(REPOSITORY) private readonly repository: Repository<Audit>,
+      protected readonly context: ContextService,
+   ) {
+      super();
+   }
 
-  async logRequest() {
-    const request = this.context.get('request');
-    const user = this.context.get('user');
+   async logRequest() {
+      const request = this.context.get('request');
+      const user = this.context.get('user');
 
-    return await this.repository.create({
-      submittedIP: this.context.get('ip'),
-      sessionId: request?.sessionID,
-      crossAppRequest: !this.context.get('isHttp'),
-      requestedFrom: this.context.get('requestedApp'),
-      userAgent: this.context.get('userAgent') as any,
-      logTrail: this.context.get('logTrail'),
-      user: user
-        ? {
-            type: user.type,
-            email: user.mail,
-            name: `${user.firstName} ${user.lastName}`,
-            user: user.id,
-          }
-        : undefined,
-    });
-  }
+      return await this.repository.create({
+         submittedIP: this.context.get('ip'),
+         sessionId: request?.sessionID,
+         crossAppRequest: !this.context.get('isHttp'),
+         requestedFrom: this.context.get('requestedApp'),
+         userAgent: this.context.get('userAgent') as any,
+         logTrail: this.context.get('logTrail'),
+         user: user
+            ? {
+                 type: user.type,
+                 email: user.mail,
+                 name: `${user.firstName} ${user.lastName}`,
+                 user: user.id,
+              }
+            : undefined,
+      });
+   }
 }

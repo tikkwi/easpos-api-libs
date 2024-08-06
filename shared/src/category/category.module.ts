@@ -6,9 +6,9 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { getRepositoryProvider } from '@common/utils/misc';
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: Category.name, schema: CategorySchema }])],
-  controllers: [CategoryController],
-  providers: [CategoryService, getRepositoryProvider({ name: Category.name })],
-  exports: [CategoryService],
+   imports: [MongooseModule.forFeature([{ name: Category.name, schema: CategorySchema }])],
+   controllers: [CategoryController],
+   providers: [CategoryService, getRepositoryProvider({ name: Category.name })],
+   exports: [CategoryService],
 })
 export class CategoryModule {}

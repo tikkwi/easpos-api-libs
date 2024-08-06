@@ -6,8 +6,8 @@ import { TmpController } from './tmp.controller';
 import { TmpService } from './tmp.service';
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: AppConfig.name, schema: AppConfigSchema }])],
-  controllers: [TmpController],
-  providers: [getRepositoryProvider({ name: AppConfig.name }), TmpService],
+   imports: [MongooseModule.forFeature([{ name: AppConfig.name, schema: AppConfigSchema }])],
+   controllers: [TmpController],
+   providers: [getRepositoryProvider({ name: AppConfig.name }), TmpService],
 })
 export class TmpModule {}
