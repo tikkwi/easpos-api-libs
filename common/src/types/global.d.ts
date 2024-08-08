@@ -82,6 +82,7 @@ declare global {
       user?: AuthUser;
       app?: EApp;
       merchant?: Merchant;
+      isSubActive?: boolean;
       newToken?: string;
    };
 }

@@ -1,6 +1,5 @@
 import { Merchant } from '@common/schema/merchant.schema';
 import { OmitType } from '@nestjs/swagger';
-import { CreateAddressDto } from '@shared/address/address.dto';
 import { Type } from 'class-transformer';
 import { IsNotEmpty, ValidateNested } from 'class-validator';
 import { CategoryDto } from './action.dto';
@@ -14,13 +13,7 @@ export class CreateMerchantDto extends OmitType(CoreDto(Merchant), [
    'owner',
    'status',
    'type',
-   'address',
 ]) {
-   @IsNotEmpty()
-   @ValidateNested()
-   @Type(() => CreateAddressDto)
-   address: CreateAddressDto;
-
    @IsNotEmpty()
    @ValidateNested()
    @Type(() => CategoryDto)
@@ -36,19 +29,25 @@ type MerchantReturn = { data: Merchant };
 
 export interface MerchantServiceMethods {
    getMerchant(dto: FindByIdDto): Promise<MerchantReturn>;
+
    merchantWithAuth(
       dto: FindByIdDto,
    ): Promise<{ merchant: Merchant | undefined; isSubActive: boolean }>;
+
    createMerchant(dto: CreateMerchantDto): Promise<MerchantReturn>;
+
    tmpTst(): { data: string };
 }
 
 export interface MerchantSharedServiceMethods {
    getMerchant(dto: FindByIdDto, meta?: Metadata): Observable<GrpcReturn & MerchantReturn>;
+
    merchantWithAuth(
       dto: FindByIdDto,
       meta?: Metadata,
    ): Observable<GrpcReturn & { data: Merchant; isSubActive: boolean }>;
+
    createMerchant(dto: CreateMerchantDto, meta?: Metadata): Observable<GrpcReturn & MerchantReturn>;
+
    tmpTst(dto, meta?: Metadata): Observable<GrpcReturn & { data: string }>;
 }

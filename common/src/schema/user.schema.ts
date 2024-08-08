@@ -17,7 +17,6 @@ import {
 import { SchemaTypes } from 'mongoose';
 import { BaseSchema } from './base.schema';
 import { Merchant } from './merchant.schema';
-import { Permission } from './permission.schema';
 import { ServicePermission } from './service_permission.schema';
 
 class TmpBlock {

@@ -18,6 +18,7 @@ export enum EAuthCredential {
 }
 
 export enum ESubscription {
+   Demo = 'Demo',
    Offline = 'Offline',
    DedicatedServer = 'DedicatedServer',
    Dedicated = 'Dedicated', //NOTE: dedicated both server & db

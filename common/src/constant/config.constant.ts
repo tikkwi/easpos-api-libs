@@ -3,6 +3,7 @@ export const ADMIN_URL = 'localhost:4001';
 
 //Env
 export const NODE_ENV = 'NODE_ENV';
+export const ENV = 'ENV';
 export const PRE_END_SUB_MAIL = 'PRE_END_SUB_MAIL';
 export const MONGO_URI = 'MONGO_URI';
 export const ENC_PASSWD = 'ENC_PASSWD';
@@ -14,6 +15,8 @@ export const REDIS_HOST = 'REDIS_HOST';
 export const REDIS_PORT = 'REDIS_PORT';
 export const REDIS_USR = 'REDIS_USR';
 export const REDIS_PASSWORD = 'REDIS_PASSWORD';
+export const REDIS_LCL_USR = 'REDIS_LCL_USR';
+export const REDIS_LCL_PWD = 'REDIS_LCL_PWD';
 export const USR_APP_USR = 'USR_APP_USR';
 export const USR_APP_PWD = 'USR_APP_PWD';
 export const ADM_MRO_USR = 'ADM_MRO_USR';

@@ -7,7 +7,7 @@ import { CoreModule } from './core.module';
 import { hours, minutes, ThrottlerModule } from '@nestjs/throttler';
 import { ConfigService } from '@nestjs/config';
 import { Redis } from 'ioredis';
-import { REDIS_CLIENT, TRT_TRS_HVY_F, TRT_TRS_HVY_S, TRT_TRS_HVY_T } from '@common/constant';
+import { REDIS_LCL_CLIENT, TRT_TRS_HVY_F, TRT_TRS_HVY_S, TRT_TRS_HVY_T } from '@common/constant';
 import { ThrottlerStorageRedis } from '@common/core/redis_throttler_storage.service';
 
 @Module({
@@ -34,7 +34,7 @@ import { ThrottlerStorageRedis } from '@common/core/redis_throttler_storage.serv
                storage: new ThrottlerStorageRedis(client),
             };
          },
-         inject: [ConfigService, REDIS_CLIENT],
+         inject: [ConfigService, REDIS_LCL_CLIENT],
       }),
       AddressModule,
       CategoryModule,

@@ -55,7 +55,7 @@ export function AppProp(
 
       if (
          pOpt.type.name === 'SchemaMixed' ||
-         (Array.isArray(pOpt.type) && pOpt.type[0].type.name === 'SchemaMixed')
+         (Array.isArray(pOpt.type) && pOpt.type[0].type?.name === 'SchemaMixed')
       )
          ValidateNested({ each: Array.isArray(pOpt.type) ? true : undefined })(target, key);
       if (!allowEmpty) IsNotEmpty()(target, key);
