@@ -1,6 +1,6 @@
 import { REPOSITORY } from '@common/constant';
 import { ContextService } from '@common/core/context/context.service';
-import { CoreService } from '@common/core/core.service';
+import { CoreService } from '@common/core/service/core.service';
 import { Repository } from '@common/core/repository';
 import { AppService } from '@common/decorator/app_service.decorator';
 import { FindByIdDto } from '@common/dto/core.dto';

@@ -11,12 +11,11 @@ import { getModelToken } from '@nestjs/mongoose';
 import { camelCase } from 'lodash';
 import { join } from 'path';
 import { firstUpperCase } from './regex';
-import { EAuthCredential, EStatus } from './enum';
+import { EAuthCredential } from './enum';
 import { Repository } from '@common/core/repository';
 import { Request, Response } from 'express';
 import { ContextService } from '@common/core/context/context.service';
 import { compare } from 'bcryptjs';
-import dayjs from 'dayjs';
 
 type RepositoryProviderType = { name: string; provide?: string };
 

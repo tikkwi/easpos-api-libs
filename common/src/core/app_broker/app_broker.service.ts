@@ -2,7 +2,6 @@ import { ADM_MRO_PWD, ADM_MRO_USR, APP } from '@common/constant';
 import { base64 } from '@common/utils/misc';
 import { Metadata } from '@grpc/grpc-js';
 import { ConfigService } from '@nestjs/config';
-import { Request, Response } from 'express';
 import { ContextService } from '../context/context.service';
 import { lastValueFrom } from 'rxjs';
 import { Injectable } from '@nestjs/common';

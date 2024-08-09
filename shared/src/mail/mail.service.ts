@@ -1,5 +1,5 @@
 import { ContextService } from '@common/core/context/context.service';
-import { CoreService } from '@common/core/core.service';
+import { CoreService } from '@common/core/service/core.service';
 import { AppService } from '@common/decorator/app_service.decorator';
 import { MailServiceMethods, SendMailDto } from '@shared/mail/mail.dto';
 

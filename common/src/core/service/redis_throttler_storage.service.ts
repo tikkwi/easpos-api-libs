@@ -8,13 +8,14 @@ import { Cluster, Redis, RedisOptions } from 'ioredis';
 export class ThrottlerStorageRedis implements ThrottlerStorage, OnModuleDestroy {
    scriptSrc: string;
    redis: Redis | Cluster;
+   prefix: string;
    disconnectRequired?: boolean;
 
-   constructor(redis?: Redis);
-   constructor(cluster?: Cluster);
-   constructor(options?: RedisOptions);
-   constructor(url?: string);
-   constructor(redisOrOptions?: Redis | Cluster | RedisOptions | string) {
+   constructor(redis?: Redis, prefix?: string);
+   constructor(cluster?: Cluster, prefix?: string);
+   constructor(options?: RedisOptions, prefix?: string);
+   constructor(url?: string, prefix?: string);
+   constructor(redisOrOptions?: Redis | Cluster | RedisOptions | string, prefix?: string) {
       if (redisOrOptions instanceof Redis || redisOrOptions instanceof Cluster) {
          this.redis = redisOrOptions;
       } else if (typeof redisOrOptions === 'string') {
@@ -26,6 +27,7 @@ export class ThrottlerStorageRedis implements ThrottlerStorage, OnModuleDestroy 
       }
 
       this.scriptSrc = this.getScriptSrc();
+      this.prefix = prefix ?? 'ses';
    }
 
    getScriptSrc(): string {
@@ -51,7 +53,7 @@ export class ThrottlerStorageRedis implements ThrottlerStorage, OnModuleDestroy 
          'EVAL',
          this.scriptSrc,
          1,
-         `${this.redis.options.keyPrefix}${key}`,
+         `${this.prefix}_${key}`,
          ttl,
       )) as number[];
 

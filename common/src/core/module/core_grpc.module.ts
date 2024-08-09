@@ -1,5 +1,5 @@
 import { ADM_MRO_BSC_AUH, ADM_MRO_PWD, ADM_MRO_USR } from '@common/constant';
-import { CoreModule } from '@common/core/core.module';
+import { CoreModule } from '@common/core/module/core.module';
 import { base64 } from '@common/utils/misc';
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';

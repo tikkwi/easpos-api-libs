@@ -64,6 +64,7 @@ declare global {
       merchantSubType: ESubscription;
       merchantStatus: EStatus;
       merchantEndSub?: Date;
+      permissions?: Record<string, string[] | undefined>;
    };
 
    type BasicAuth = { userName: string; password: string };
@@ -84,6 +85,11 @@ declare global {
       merchant?: Merchant;
       isSubActive?: boolean;
       newToken?: string;
+   };
+
+   type AppMerchant = {
+      merchant?: Merchant;
+      isSubActive: boolean;
    };
 }
 

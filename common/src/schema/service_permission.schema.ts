@@ -9,7 +9,7 @@ export class ServicePermission extends PickType(Permission, ['name', 'descriptio
    @AppProp({ type: String }, { swagger: { example: 'PercelService' } })
    service: string;
 
-   @AppProp({ type: SchemaTypes.ObjectId, ref: 'Permission' })
+   @AppProp({ type: [{ type: SchemaTypes.ObjectId, ref: 'Permission' }], required: false })
    permissions?: Permission[];
 }
 

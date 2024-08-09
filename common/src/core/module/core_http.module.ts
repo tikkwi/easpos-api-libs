@@ -8,13 +8,12 @@ import { hours, minutes, ThrottlerModule } from '@nestjs/throttler';
 import { ConfigService } from '@nestjs/config';
 import { Redis } from 'ioredis';
 import { REDIS_LCL_CLIENT, TRT_TRS_HVY_F, TRT_TRS_HVY_S, TRT_TRS_HVY_T } from '@common/constant';
-import { ThrottlerStorageRedis } from '@common/core/redis_throttler_storage.service';
+import { ThrottlerStorageRedis } from '@common/core/service/redis_throttler_storage.service';
 
 @Module({
    imports: [
       CoreModule,
       ThrottlerModule.forRootAsync({
-         imports: [CoreModule],
          useFactory: async (config: ConfigService, client: Redis) => {
             return {
                throttlers: [

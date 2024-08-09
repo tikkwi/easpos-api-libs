@@ -23,7 +23,10 @@ export const decrypt = async (encrypted: string, pwd?: string) => {
       await getKey(pwd ?? process.env[ENC_PASSWD]),
       Buffer.from(iv),
    );
-   return JSON.parse(
-      Buffer.concat([decipher.update(Buffer.from(data)), decipher.final()]).toString(),
-   );
+   const res = Buffer.concat([decipher.update(Buffer.from(data)), decipher.final()]).toString();
+   try {
+      return JSON.parse(res);
+   } catch (e) {
+      return res;
+   }
 };

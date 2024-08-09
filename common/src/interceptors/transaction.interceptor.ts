@@ -1,9 +1,8 @@
 import { ContextService } from '@common/core/context/context.service';
 import { TransactionService } from '@common/core/transaction/transaction.service';
-import { parsePath } from '@common/utils/regex';
-import { ServerUnaryCall } from '@grpc/grpc-js';
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
-import { Observable, from, lastValueFrom, map, tap } from 'rxjs';
+import { from, lastValueFrom, map, Observable, tap } from 'rxjs';
+import { encrypt } from '@common/utils/encrypt';
 
 @Injectable()
 export class TransactionInterceptor implements NestInterceptor {
@@ -19,7 +18,18 @@ export class TransactionInterceptor implements NestInterceptor {
       const action = () => {
          if (context.getType() === 'http')
             return from(this.transaction.makeTransaction(() => lastValueFrom(next.handle())));
-         return next.handle().pipe(map((res) => ({ ...res, token: this.context.get('newToken') })));
+         return next.handle().pipe(
+            map(async ({ data, ...res }) => {
+               let d;
+               try {
+                  d = JSON.parse(data);
+               } catch (_) {
+                  d = data;
+               }
+               d = await encrypt(d);
+               return { data: d, ...res, token: this.context.get('newToken') };
+            }),
+         );
       };
 
       return action().pipe(tap(() => this.context.reset()));
