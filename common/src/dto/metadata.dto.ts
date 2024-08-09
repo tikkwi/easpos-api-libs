@@ -9,7 +9,7 @@ import {
    ValidateNested,
 } from 'class-validator';
 import { Metadata as MetadataSchema } from '../schema/metadata.schema';
-import { Metadata } from '@grpc/grpc-js';
+
 export class GetMetadataDto extends FindDto {
    @IsMongoId()
    id?: string;
@@ -41,12 +41,8 @@ export type MetadataReturn = { data: MetadataSchema };
 
 export interface MetadataServiceMethods {
    getMetadata(dto: GetMetadataDto): Promise<MetadataReturn>;
-   isValid(dto: IsValidDto): Promise<{ data: boolean }>;
-   validateMetaValue(dto: ValidateMetaValueDto): Promise<void>;
-}
 
-export interface MetadataSharedServiceMethods {
-   getMetadata(dto: GetMetadataDto, meta?: Metadata): Promise<MetadataReturn>;
-   isValid(dto: IsValidDto, meta?: Metadata): Promise<{ data: boolean }>;
-   validateMetaValue(dto: ValidateMetaValueDto, meta?: Metadata): Promise<void>;
+   isValid(dto: IsValidDto): Promise<{ data: boolean }>;
+
+   validateMetaValue(dto: ValidateMetaValueDto): Promise<void>;
 }

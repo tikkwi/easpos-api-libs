@@ -7,7 +7,6 @@ import {
    IsNotEmpty,
    IsNumber,
    IsObject,
-   IsOptional,
    IsString,
    Min,
 } from 'class-validator';
@@ -48,6 +47,7 @@ export class PaginationDto<T> {
 
 export function CoreDto<T>(classRef: Type<T>): Type<Omit<T, '_id' | 'createdAt' | 'updatedAt'>> {
    class CoreDtoClass extends OmitType(classRef as any, ['_id', 'createdAt', 'updatedAt'] as any) {}
+
    return CoreDtoClass as any;
 }
 

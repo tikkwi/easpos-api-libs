@@ -1,4 +1,3 @@
-import { ServicePermission } from '@common/schema/service_permission.schema';
 import { EStatus, ESubscription, EUser } from '@common/utils/enum';
 import { Type } from 'class-transformer';
 import {

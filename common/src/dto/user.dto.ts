@@ -15,7 +15,6 @@ import {
    ValidateNested,
 } from 'class-validator';
 import { CoreDto, FindByIdDto, FindDto } from './core.dto';
-import { Metadata } from '@grpc/grpc-js';
 import { AuthUser } from './entity.dto';
 
 export class GetUserDto extends FindDto {
@@ -67,10 +66,6 @@ export type UserReturn = { data: User };
 
 export interface UserServiceMethods {
    getUser(dto: GetUserDto): Promise<UserReturn>;
-   createUser(dto: CreateUserDto): Promise<UserReturn>;
-}
 
-export interface UserSharedServiceMethods {
-   getUser(dto: GetUserDto, meta?: Metadata): Promise<UserReturn>;
-   createUser(dto: CreateUserDto, meta?: Metadata): Promise<UserReturn>;
+   createUser(dto: CreateUserDto): Promise<UserReturn>;
 }

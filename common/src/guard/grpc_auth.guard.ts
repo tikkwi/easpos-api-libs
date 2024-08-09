@@ -1,7 +1,7 @@
 import { AUTH_CREDENTIAL, JWT_SECRET, USER } from '@common/constant';
 import { ContextService } from '@common/core/context/context.service';
 import { AuthCredentialServiceMethods } from '@common/dto/auth_credential.dto';
-import { UserSharedServiceMethods } from '@common/dto/user.dto';
+import { UserServiceMethods } from '@common/dto/user.dto';
 import { decrypt } from '@common/utils/encrypt';
 import { authenticateBasicAuth, getServiceToken } from '@common/utils/misc';
 import { ServerUnaryCall } from '@grpc/grpc-js';
@@ -15,7 +15,7 @@ export class GrpcAuthGuard implements CanActivate {
    constructor(
       @Inject(getServiceToken(AUTH_CREDENTIAL))
       private readonly credService: AuthCredentialServiceMethods,
-      @Inject(getServiceToken(USER)) private readonly userService: UserSharedServiceMethods,
+      @Inject(getServiceToken(USER)) private readonly userService: UserServiceMethods,
       private readonly jwtService: JwtService,
       private readonly config: ConfigService,
       private readonly context: ContextService,

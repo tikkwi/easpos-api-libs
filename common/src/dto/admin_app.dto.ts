@@ -1,6 +1,5 @@
 import { Merchant } from '@common/schema/merchant.schema';
-import { Metadata } from '@grpc/grpc-js';
-import { IsMongoId, IsNotEmpty, IsUrl } from 'class-validator';
+import { IsMongoId, IsUrl } from 'class-validator';
 
 export class GetAuthDataDto {
    @IsUrl()
@@ -18,8 +17,4 @@ type GetAuthDataReturnType = {
 
 export interface AdminAppServiceMethods {
    getAuthData(dto: GetAuthDataDto): Promise<GetAuthDataReturnType>;
-}
-
-export interface AdminAppSharedServiceMethods {
-   getAuthData(dto: GetAuthDataDto, meta?: Metadata): Promise<GetAuthDataReturnType>;
 }

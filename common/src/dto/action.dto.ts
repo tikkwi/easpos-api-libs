@@ -1,6 +1,6 @@
 import { ECategory } from '@common/utils/enum';
 import { regex } from '@common/utils/regex';
-import { IsEnum, IsMongoId, IsNotEmpty, IsOptional, Matches, ValidateIf } from 'class-validator';
+import { IsEnum, IsMongoId, IsOptional, Matches, ValidateIf } from 'class-validator';
 
 export class CategoryDto {
    @IsOptional()

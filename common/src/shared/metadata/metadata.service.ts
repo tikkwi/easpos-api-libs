@@ -1,14 +1,14 @@
 import { REPOSITORY } from '@common/constant';
 import { CoreService } from '@common/core/service/core.service';
 import { Repository } from '@common/core/repository';
-import { MerchantSharedServiceMethods } from '@common/dto/merchant.dto';
+import { MerchantServiceMethods } from '@common/dto/merchant.dto';
 import {
    GetMetadataDto,
    IsValidDto,
    MetadataServiceMethods,
    ValidateMetaValueDto,
 } from '@common/dto/metadata.dto';
-import { UserSharedServiceMethods } from '@common/dto/user.dto';
+import { UserServiceMethods } from '@common/dto/user.dto';
 import { Metadata } from '@common/schema/metadata.schema';
 import { EField } from '@common/utils/enum';
 import { regex } from '@common/utils/regex';
@@ -27,8 +27,8 @@ import { isNumber } from 'lodash';
 
 export abstract class MetadataService extends CoreService implements MetadataServiceMethods {
    protected abstract addressService: AddressServiceMethods;
-   protected abstract userService: UserSharedServiceMethods;
-   protected abstract merchantService: MerchantSharedServiceMethods;
+   protected abstract userService: UserServiceMethods;
+   protected abstract merchantService: MerchantServiceMethods;
    @Inject(REPOSITORY) private readonly repository: Repository<Metadata>;
 
    async getMetadata({ id, entity }: GetMetadataDto) {
