@@ -1,10 +1,10 @@
 import { AppProp } from '@common/decorator/app_prop.decorator';
-import { User } from '@common/dto/entity.dto';
+import { UserProfile } from '@common/dto/entity.dto';
 import { BaseSchema } from '@common/schema/base.schema';
 import { EApp } from '@common/utils/enum';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Type } from 'class-transformer';
-import { IsBoolean, IsIP, IsNotEmpty, IsString, ValidateIf, ValidateNested } from 'class-validator';
+import { IsIP, IsNotEmpty, IsString, ValidateIf } from 'class-validator';
 import { SchemaTypes } from 'mongoose';
 
 export class RequestLog {
@@ -14,7 +14,7 @@ export class RequestLog {
 
    @IsNotEmpty()
    @IsString()
-   auxillaryService: string;
+   auxiliaryService: string;
 
    @AppProp({ type: SchemaTypes.Mixed, required: false })
    payload?: any;
@@ -26,8 +26,6 @@ export class RequestLog {
 @Schema()
 export class Audit extends BaseSchema {
    @AppProp({ type: SchemaTypes.Mixed })
-   @IsNotEmpty()
-   @ValidateNested({ each: true })
    @Type(() => RequestLog)
    logTrail: RequestLog[];
 
@@ -49,8 +47,8 @@ export class Audit extends BaseSchema {
    userAgent: string;
 
    @AppProp({ type: SchemaTypes.Mixed, required: false })
-   @Type(() => User)
-   user?: User;
+   @Type(() => UserProfile)
+   user?: UserProfile;
 }
 
 export const AuditSchema = SchemaFactory.createForClass(Audit);

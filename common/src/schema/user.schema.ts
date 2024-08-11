@@ -1,23 +1,21 @@
 import { AppProp } from '@common/decorator/app_prop.decorator';
 import { Status } from '@common/dto/entity.dto';
 import { EStatus, ETmpBlock, EUser } from '@common/utils/enum';
-import { Schema, SchemaFactory } from '@nestjs/mongoose';
+import { SchemaFactory } from '@nestjs/mongoose';
 import { hashSync } from 'bcryptjs';
 import { Type } from 'class-transformer';
 import {
    IsDateString,
    IsEmail,
    IsEnum,
-   IsNotEmpty,
    IsNumberString,
    IsOptional,
+   IsPhoneNumber,
    IsString,
-   ValidateIf,
 } from 'class-validator';
 import { SchemaTypes } from 'mongoose';
 import { BaseSchema } from './base.schema';
-import { Merchant } from './merchant.schema';
-import { ServicePermission } from './service_permission.schema';
+import { Address } from '@shared/address/address.schema';
 
 class TmpBlock {
    @IsDateString()
@@ -31,9 +29,8 @@ class TmpBlock {
    remark?: string;
 }
 
-@Schema()
 export class User extends BaseSchema {
-   @AppProp({ type: String }, { userName: true })
+   @AppProp({ type: String, unique: true }, { userName: true })
    userName: string;
 
    @AppProp({ type: String, enum: EUser, default: EUser.Merchant, required: false })
@@ -67,19 +64,12 @@ export class User extends BaseSchema {
    })
    password: string;
 
-   @AppProp({ type: SchemaTypes.Mixed, required: false })
-   metadata?: any;
+   @AppProp({ type: String, required: false })
+   @IsPhoneNumber()
+   mobileNo?: string;
 
-   @AppProp({ type: SchemaTypes.ObjectId, ref: 'Merchant', required: false })
-   @ValidateIf((o) => [EUser.Admin, EUser.Customer].includes(o.type))
-   @IsNotEmpty()
-   merchant?: Merchant;
-
-   @AppProp({
-      type: [{ type: SchemaTypes.ObjectId, ref: 'ServicePermission' }],
-      required: false,
-   })
-   servicePermissions?: ServicePermission[];
+   @AppProp({ type: SchemaTypes.ObjectId, ref: 'Address', required: false })
+   address?: Address;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

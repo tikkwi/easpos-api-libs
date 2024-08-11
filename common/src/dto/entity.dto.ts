@@ -77,7 +77,7 @@ export class Status {
    adjudicatedBy?: string; //NOTE: null for system manipulation
 }
 
-export class User {
+export class UserProfile {
    @IsNotEmpty()
    @IsEnum(EUser)
    type: EUser;
@@ -89,7 +89,7 @@ export class User {
    email?: string;
 
    @IsMongoId()
-   user?: string;
+   userName?: string;
 }
 
 export class AuthUser {
@@ -134,4 +134,14 @@ export class AuthUser {
    @IsOptional()
    @IsDateString()
    merchantEndSub?: Date;
+}
+
+export class UserRole {
+   @IsString()
+   @IsNotEmpty()
+   name: string;
+
+   @IsOptional()
+   @IsMongoId({ each: true })
+   permissions: string[];
 }

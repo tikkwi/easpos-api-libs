@@ -81,16 +81,14 @@ export enum EField {
    Color = 'Color',
 }
 
-export enum EStaff {
-   General = 'General',
-   Nutritionist = 'Nutritionist',
-   Doctor = 'Doctor',
-}
-
 export enum ECategory {
    Option = 'Option',
    Merchant = 'Merchant',
+   MerchantUserRole = 'MerchantUserRole',
    Admin = 'Admin',
+   Product = 'Product',
+   ProductTag = 'ProductTag',
+   Campaign = 'Campaign',
 }
 
 export enum EEntityMetadata {
@@ -99,4 +97,17 @@ export enum EEntityMetadata {
    MerchantUser = 'MerchantUser',
    Admin = 'Admin',
    Customer = 'Customer',
+}
+
+export enum EAllowanceTrigger {
+   Point = 'Point',
+   AmountSpend = 'AmountSpend',
+   BuyTogether = 'BuyTogether',
+}
+
+export enum EAllowanceType {
+   Point = 'Point',
+   Cash = 'Cash',
+   Product = 'Product',
+   Discount = 'Discount',
 }

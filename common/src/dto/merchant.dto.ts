@@ -28,7 +28,10 @@ type MerchantReturn = { data: Merchant };
 export interface MerchantServiceMethods {
    getMerchant(dto: FindByIdDto): Promise<MerchantReturn>;
 
-   merchantWithAuth(dto: FindByIdDto): Promise<{
+   merchantWithAuth(
+      dto: FindByIdDto,
+      meta?: Metadata,
+   ): Promise<{
       data: {
          merchant: Merchant;
          isSubActive: boolean;
@@ -37,5 +40,5 @@ export interface MerchantServiceMethods {
 
    createMerchant(dto: CreateMerchantDto): Promise<MerchantReturn>;
 
-   tmpTst(): { data: string };
+   tmpTst(meta: Metadata): { data: string };
 }
