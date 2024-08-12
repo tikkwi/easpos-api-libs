@@ -14,7 +14,7 @@ export function AppService() {
                (this.context as ContextService).update('logTrail', (log) => {
                   const reqLog = {
                      service: target.name,
-                     auxillaryService: key,
+                     auxiliaryService: key,
                      payload: args[0],
                      response: res,
                   };

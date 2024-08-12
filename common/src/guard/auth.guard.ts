@@ -11,7 +11,7 @@ import { getServiceToken } from '@common/utils/misc';
 import { parsePath } from '@common/utils/regex';
 
 /*
-TODO,NOTE cache authorized status up to 1 day which mean user may able to
+TODO,NOTE cache authorized status up to 1 day which mean merchant_user may able to
 authorized 1 day max even if subscription is expired..
 */
 @Injectable()

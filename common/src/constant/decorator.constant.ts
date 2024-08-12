@@ -1,3 +1,2 @@
-export const SKIP_VALIDATION = 'SKIP_VALIDATION';
 export const USERS = 'USERS';
-export const FORBIDDEN_USERS = 'FORBIDDEN_USERS';
+export const SKIP_USERS = 'SKIP_USERS';

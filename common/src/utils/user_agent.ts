@@ -7,7 +7,7 @@ export const parseUA = (ua: string, allowEmpty = false) => {
    let empty = 0;
 
    if (!allowEmpty) Object.values(parsed).forEach((val) => empty < 2 && isEmpty(val) && empty++);
-   if (empty === 2) throw new ForbiddenException('Unrecongnized user agent');
+   if (empty === 2) throw new ForbiddenException('Unrecongnized merchant_user agent');
    return parsed;
 };
 
@@ -17,7 +17,7 @@ export const checkUAIntegrity = (ua1: IResult, ua2: IResult) => {
       const ua1V = ua1[key].version;
       const ua2V = ua2[key].version;
       if (!isEqual(omit(ua1[key], 'version'), omit(ua2[key], 'version')))
-         error = 'Found spoofed user agent';
+         error = 'Found spoofed merchant_user agent';
       if (ua1V) {
          const errorMsg = 'Found substantial version difference';
          if (!ua2V) error = errorMsg;

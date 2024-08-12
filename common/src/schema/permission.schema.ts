@@ -5,6 +5,9 @@ import { IsUrl } from 'class-validator';
 
 @Schema()
 export class Permission extends BaseSchema {
+   @AppProp({ type: String }, { swagger: { example: 'Parcel' } })
+   service: string;
+
    @AppProp({ type: String }, { swagger: { example: 'Parcel Status' } })
    name: string;
 

@@ -1,7 +1,7 @@
 import { Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Matches, ValidateIf } from 'class-validator';
 import { EField } from '@common/utils/enum';
-import { BaseSchema } from './base.schema';
+import { BaseSchema } from '@common/schema/base.schema';
 import { AppProp } from '@common/decorator/app_prop.decorator';
 import { regex } from '@common/utils/regex';
 
