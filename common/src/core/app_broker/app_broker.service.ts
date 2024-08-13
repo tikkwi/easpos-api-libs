@@ -4,20 +4,25 @@ import { Metadata } from '@grpc/grpc-js';
 import { ConfigService } from '@nestjs/config';
 import { ContextService } from '../context/context.service';
 import { lastValueFrom } from 'rxjs';
-import { Injectable } from '@nestjs/common';
+import { AppRedisService } from '@common/core/app_redis/app_redis.service';
 
-@Injectable()
 export class AppBrokerService {
    constructor(
       private readonly context: ContextService,
       private readonly config: ConfigService,
+      private readonly db: AppRedisService,
    ) {}
 
-   async request(action: (meta?: Metadata) => Promise<any> | any, isBasicAuth: boolean, app: EApp) {
-      const isCrossApp = app !== this.config.get(APP);
+   async request<T>(
+      isBasicAuth: boolean,
+      action: (meta?: Metadata) => Promise<any> | any,
+      key: string,
+      app?: EApp,
+   ): Promise<T> {
+      const isCrossApp = !app || app !== this.config.get(APP);
       const $action = isCrossApp ? (meta) => lastValueFrom(action(meta)) : action;
 
-      if (isCrossApp) {
+      const crossRequest = async () => {
          const req = this.context.get('request');
          const res = this.context.get('response');
          const meta = new Metadata();
@@ -30,10 +35,11 @@ export class AppBrokerService {
          );
          const { data, token, code, message } = await $action(meta);
          if (token) req.session[`${app}_tkn`] = token;
-         if (code) return res.status(code).send({ message });
+         if (code) return res.status(code).send({ message }) as T;
          return data;
-      }
+      };
 
-      return action().then(({ data }) => data);
+      if (isCrossApp) return await this.db.get<T>(key, crossRequest);
+      return action().then(({ data }) => data) as T;
    }
 }

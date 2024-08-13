@@ -44,14 +44,6 @@ export class Merchant extends BaseSchema {
       required: false,
    })
    activePurchase?: MerchantPurchase;
-
-   @AppProp({
-      type: SchemaTypes.ObjectId,
-      ref: 'User',
-      required: false,
-      immutable: false,
-   })
-   owner?: User;
 }
 
 export const MerchantSchema = SchemaFactory.createForClass(Merchant);

@@ -1,4 +1,3 @@
-import { AppBrokerService } from '@common/core/app_broker/app_broker.service';
 import { ContextService } from '@common/core/context/context.service';
 import { decrypt } from '@common/utils/encrypt';
 import { parsePath } from '@common/utils/regex';
@@ -14,10 +13,7 @@ import { Request } from 'express';
 
 @Injectable()
 export class TransformGuard implements CanActivate {
-   constructor(
-      private readonly context: ContextService,
-      private readonly appBroker: AppBrokerService,
-   ) {}
+   constructor(private readonly context: ContextService) {}
 
    async canActivate(context: ExecutionContext) {
       if (context.getType() === 'http') {

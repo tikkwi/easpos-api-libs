@@ -5,10 +5,10 @@ import { EAllowedUser, EApp, EUser } from '@common/utils/enum';
 import { CanActivate, ExecutionContext, Inject, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { APP_MERCHANT } from '@common/constant/app_context.constant';
-import { AppRedisService } from '@common/core/app_redis/app_redis.service';
 import { AppBrokerService } from '@common/core/app_broker/app_broker.service';
 import { getServiceToken } from '@common/utils/misc';
 import { parsePath } from '@common/utils/regex';
+import { MerchantServiceMethods } from '@common/dto/merchant.dto';
 
 /*
 TODO,NOTE cache authorized status up to 1 day which mean merchant_user may able to
@@ -17,11 +17,10 @@ authorized 1 day max even if subscription is expired..
 @Injectable()
 export class AuthGuard implements CanActivate {
    constructor(
-      private readonly dbService: AppRedisService,
       private readonly reflector: Reflector,
       private readonly context: ContextService,
       private readonly appBroker: AppBrokerService,
-      @Inject(getServiceToken(MERCHANT)) private readonly merchantService,
+      @Inject(getServiceToken(MERCHANT)) private readonly merchantService: MerchantServiceMethods,
    ) {}
 
    async canActivate(context: ExecutionContext) {
@@ -30,32 +29,28 @@ export class AuthGuard implements CanActivate {
       const request = context.switchToHttp().getRequest();
       const [_, service]: any = parsePath(request.originalUrl);
 
-      if (allowedUsers.length) {
-         if (user) {
-            if (
-               !user.isOwner &&
-               (!user.permissions.hasOwnProperty(service) ||
-                  !user.permissions[service].includes(request.originalUrl))
-            )
-               return false;
+      if (!allowedUsers.length || allowedUsers.includes(EAllowedUser.Any)) return true;
+      if (user) {
+         if (
+            !user.isOwner &&
+            (!user.permissions.hasOwnProperty(service) ||
+               !user.permissions[service].includes(request.originalUrl))
+         )
+            return false;
 
-            if (EUser.Admin && allowedUsers.includes(EUser.Admin)) return true;
+         if (EUser.Admin && allowedUsers.includes(EUser.Admin)) return true;
 
-            let authMerchant = await this.dbService.get<AppMerchant>(APP_MERCHANT, 'json');
-            if (!authMerchant) {
-               authMerchant = await this.appBroker.request(
-                  (meta) => this.merchantService.merchantWithAuth({ id: user.id }, meta),
-                  true,
-                  EApp.Admin,
-               );
-            }
-            if (!authMerchant.merchant) return false;
+         const authMerchant = await this.appBroker.request<AppMerchant>(
+            true,
+            (meta) => this.merchantService.merchantWithAuth({ id: user.id }, meta),
+            APP_MERCHANT,
+            EApp.Admin,
+         );
 
-            return authMerchant.isSubActive || allowedUsers.includes(EAllowedUser.MerchantNoSub);
-         }
-         return false;
+         if (!authMerchant.merchant) return false;
+
+         return authMerchant.isSubActive || allowedUsers.includes(EAllowedUser.MerchantNoSub);
       }
-
-      return true;
+      return false;
    }
 }

@@ -8,7 +8,6 @@ import { CreateUserDto } from './user.dto';
 
 export class CreateMerchantDto extends OmitType(CoreDto(Merchant), [
    'activePurchase',
-   'owner',
    'status',
    'type',
 ]) {

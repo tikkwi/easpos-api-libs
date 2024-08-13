@@ -11,19 +11,22 @@ import {
    NestMiddleware,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
+import { AuthCredentialServiceMethods } from '@common/dto/auth_credential.dto';
 
 @Injectable()
 export class BasicAuthMiddleware implements NestMiddleware {
    constructor(
-      @Inject(getServiceToken(AUTH_CREDENTIAL)) private readonly credService,
+      @Inject(getServiceToken(AUTH_CREDENTIAL))
+      private readonly credService: AuthCredentialServiceMethods,
       private readonly appBroker: AppBrokerService,
       private readonly context: ContextService,
    ) {}
 
    async use(request: Request, response: Response, next: () => void) {
-      const { userName, password } = await this.appBroker.request(
-         (meta) => this.credService.getAuthCredential({ url: request.originalUrl }, meta),
+      const { userName, password } = await this.appBroker.request<BasicAuth>(
          true,
+         (meta) => this.credService.getAuthCredential({ url: request.originalUrl }, meta),
+         AUTH_CREDENTIAL,
          EApp.Admin,
       );
 

@@ -4,10 +4,10 @@ import { OmitType } from '@nestjs/swagger';
 import {
    IsBoolean,
    IsDateString,
+   IsMongoId,
    IsNotEmpty,
    IsNumber,
    IsObject,
-   IsString,
    Min,
 } from 'class-validator';
 
@@ -58,6 +58,6 @@ export class FindDto {
 
 export class FindByIdDto extends FindDto {
    @IsNotEmpty()
-   @IsString()
+   @IsMongoId()
    id: string;
 }

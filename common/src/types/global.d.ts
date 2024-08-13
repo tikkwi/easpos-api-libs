@@ -86,11 +86,6 @@ declare global {
       isSubActive?: boolean;
       newToken?: string;
    };
-
-   type AppMerchant = {
-      merchant?: Merchant;
-      isSubActive: boolean;
-   };
 }
 
 declare module 'express-session' {

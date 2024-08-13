@@ -14,5 +14,5 @@ export class GetAuthCredentialDto {
 export type AuthCredentialReturn = { data: AuthCredential };
 
 export interface AuthCredentialServiceMethods {
-   getAuthCredential(dto: GetAuthCredentialDto): Promise<AuthCredentialReturn>;
+   getAuthCredential(dto: GetAuthCredentialDto, meta: Metadata): Promise<AuthCredentialReturn>;
 }

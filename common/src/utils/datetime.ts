@@ -9,7 +9,7 @@ export const getPeriodDate = (period: Period, date: Date | Dayjs) => {
    return dayjs(date).add(dayjs.duration({ days, hours, minutes, seconds })).toDate();
 };
 
-export const isPeriodExceed = (period: Period, date: Date): [boolean, Date] => {
-   const until = dayjs(getPeriodDate(period, date));
+export const isPeriodExceed = (date: Date, period?: Period): [boolean, Date] => {
+   const until = dayjs(period ? getPeriodDate(period, date) : date);
    return [until.isBefore(new Date()), until.toDate()];
 };

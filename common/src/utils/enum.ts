@@ -59,6 +59,7 @@ export enum EUser {
 }
 
 export enum EAllowedUser {
+   Any = 'Any',
    Admin = 'Admin',
    Merchant = 'Merchant',
    Customer = 'Customer',

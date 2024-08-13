@@ -2,6 +2,7 @@ export const REPOSITORY = 'REPOSITORY';
 export const ADMIN_APP = 'ADMIN_APP';
 export const USER_APP = 'USER_APP';
 export const MERCHANT = 'MERCHANT';
+export const MERCHANT_USER_ROLE = 'MERCHANT_USER_ROLE';
 export const AUDIT = 'AUDIT';
 export const MAIL = 'MAIL';
 export const AUTH_CREDENTIAL = 'AUTH_CREDENTIAL';
