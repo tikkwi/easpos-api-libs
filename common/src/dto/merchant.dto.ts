@@ -25,7 +25,7 @@ export class CreateMerchantDto extends OmitType(CoreDto(Merchant), [
 type MerchantReturn = { data: Merchant };
 
 export interface MerchantServiceMethods {
-   getMerchant(dto: FindByIdDto): Promise<MerchantReturn>;
+   getMerchant(dto: FindByIdDto, meta?: Metadata): Promise<MerchantReturn>;
 
    merchantWithAuth(
       dto: FindByIdDto,

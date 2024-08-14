@@ -15,15 +15,16 @@ export class AppRedisService {
       if (getFnc) {
          const [isExpire] = d ? isPeriodExceed(new Date(d.expireIn)) : [];
          if (isExpire || !d) {
-            const d = await getFnc();
-            await this.db.set(
-               key,
-               JSON.stringify({
-                  data: d,
-                  expireIn: dayjs().add(1, 'days').toDate().getTime(),
-               }),
-            );
-            return d;
+            const data = await getFnc();
+            if (data)
+               await this.db.set(
+                  key,
+                  JSON.stringify({
+                     data,
+                     expireIn: dayjs().add(1, 'days').toDate().getTime(),
+                  }),
+               );
+            return data;
          }
       }
 

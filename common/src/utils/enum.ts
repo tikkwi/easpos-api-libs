@@ -56,6 +56,7 @@ export enum EUser {
    Admin = 'Admin',
    Merchant = 'Merchant',
    Customer = 'Customer',
+   Partner = 'Partner',
 }
 
 export enum EAllowedUser {
@@ -63,8 +64,14 @@ export enum EAllowedUser {
    Admin = 'Admin',
    Merchant = 'Merchant',
    Customer = 'Customer',
+   Partner = 'Partner',
    MerchantNoSub = 'MerchantNoSub',
    Owner = 'Owner',
+}
+
+export enum EGrpcAuth {
+   Basic = 'Basic',
+   Token = 'Token',
 }
 
 export enum EField {

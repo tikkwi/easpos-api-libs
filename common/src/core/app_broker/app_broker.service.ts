@@ -13,12 +13,8 @@ export class AppBrokerService {
       private readonly db: AppRedisService,
    ) {}
 
-   async request<T>(
-      isBasicAuth: boolean,
-      action: (meta?: Metadata) => Promise<any> | any,
-      key: string,
-      app?: EApp,
-   ): Promise<T> {
+   async request<T>({ basicAuth, action, app, cache, ...rest }: BrokerRequest): Promise<T> {
+      const { key } = rest as any;
       const isCrossApp = !app || app !== this.config.get(APP);
       const $action = isCrossApp ? (meta) => lastValueFrom(action(meta)) : action;
 
@@ -29,7 +25,7 @@ export class AppBrokerService {
          meta.add('app', this.config.get(APP));
          meta.add(
             'authorization',
-            isBasicAuth
+            basicAuth
                ? `Basic ${base64(`${this.config.get(ADM_MRO_USR)}:${this.config.get(ADM_MRO_PWD)}`)}`
                : req.session[`${app}_tkn`],
          );
@@ -39,7 +35,7 @@ export class AppBrokerService {
          return data;
       };
 
-      if (isCrossApp) return await this.db.get<T>(key, crossRequest);
+      if (isCrossApp) return await (cache ? this.db.get<T>(key, crossRequest) : crossRequest());
       return action().then(({ data }) => data) as T;
    }
 }

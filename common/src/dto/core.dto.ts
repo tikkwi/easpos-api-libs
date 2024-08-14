@@ -1,4 +1,4 @@
-import { EAllowedUser } from '@common/utils/enum';
+import { EAllowedUser, EGrpcAuth } from '@common/utils/enum';
 import { Type } from '@nestjs/common';
 import { OmitType } from '@nestjs/swagger';
 import {
@@ -13,6 +13,8 @@ import {
 
 //types
 export type AllowedUser = keyof typeof EAllowedUser;
+
+export type GrpcAuthType = keyof typeof EGrpcAuth;
 
 //classes
 export class UpdateDto {

@@ -40,12 +40,13 @@ export class AuthGuard implements CanActivate {
 
          if (EUser.Admin && allowedUsers.includes(EUser.Admin)) return true;
 
-         const authMerchant = await this.appBroker.request<AppMerchant>(
-            true,
-            (meta) => this.merchantService.merchantWithAuth({ id: user.id }, meta),
-            APP_MERCHANT,
-            EApp.Admin,
-         );
+         const authMerchant = await this.appBroker.request<AppMerchant>({
+            basicAuth: true,
+            action: (meta) => this.merchantService.merchantWithAuth({ id: user.id }, meta),
+            cache: true,
+            key: APP_MERCHANT,
+            app: EApp.Admin,
+         });
 
          if (!authMerchant.merchant) return false;
 
