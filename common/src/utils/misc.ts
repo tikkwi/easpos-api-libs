@@ -87,7 +87,7 @@ export function getRepositoryProvider(
    } else return repositoryProvider(args);
 }
 
-export const responseError = (req: Request, res: Response, err: any) => {
+export const responseError = (req: Request, res: Response, err?: any) => {
    const status = err instanceof HttpException ? err.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
 
    res.status(status).json({

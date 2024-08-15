@@ -25,15 +25,15 @@ export class Customer extends User {
    @AppProp({ type: SchemaTypes.ObjectId, ref: 'Merchant' })
    merchant: Merchant;
 
-   @AppProp({ type: SchemaTypes.Mixed })
+   @AppProp({ type: SchemaTypes.Mixed, required: false })
    @Type(() => AllowanceBenefit)
    point: AllowanceBenefit[];
 
-   @AppProp({ type: SchemaTypes.Mixed })
+   @AppProp({ type: SchemaTypes.Mixed, required: false })
    @Type(() => AllowanceBenefit)
    cash: AllowanceBenefit[];
 
-   @AppProp({ type: SchemaTypes.Mixed })
+   @AppProp({ type: SchemaTypes.Mixed, required: false })
    @Type(() => CustomerDiscount)
    discounts: CustomerDiscount[];
 }

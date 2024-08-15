@@ -17,7 +17,7 @@ import { SchemaTypes } from 'mongoose';
 import { BaseSchema } from './base.schema';
 import { Address } from '@shared/address/address.schema';
 
-class TmpBlock {
+export class TmpBlock {
    @IsDateString()
    until: Date;
 

@@ -8,12 +8,16 @@ import {
    Injectable,
    InternalServerErrorException,
 } from '@nestjs/common';
-import dayjs from 'dayjs';
 import { Request } from 'express';
+import { isPeriodExceed } from '@common/utils/datetime';
+import { AppRedisService } from '@common/core/app_redis/app_redis.service';
 
 @Injectable()
 export class TransformGuard implements CanActivate {
-   constructor(private readonly context: ContextService) {}
+   constructor(
+      private readonly context: ContextService,
+      private readonly db: AppRedisService,
+   ) {}
 
    async canActivate(context: ExecutionContext) {
       if (context.getType() === 'http') {
@@ -26,11 +30,14 @@ export class TransformGuard implements CanActivate {
          if (request.session.user) {
             ({ user } = await decrypt(request.session.user));
 
-            const sessNearExp = dayjs(request.session.cookie.expires)
-               .subtract(12, 'hours')
-               .isBefore(dayjs());
+            const isExpireSoon = isPeriodExceed(
+               request.session.cookie.expires,
+               undefined,
+               12,
+               'hours',
+            )[2];
 
-            if (sessNearExp)
+            if (isExpireSoon)
                request.session.regenerate((err) => {
                   throw new InternalServerErrorException(err);
                });

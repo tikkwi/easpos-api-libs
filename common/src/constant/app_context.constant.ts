@@ -1,2 +1,0 @@
-export const APP_MERCHANT = 'APP_MERCHANT';
-export const AUTH_CREDENTIAL = 'AUTH_CREDENTIAL';

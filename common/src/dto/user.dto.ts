@@ -1,13 +1,23 @@
 import { User } from '@common/schema/user.schema';
 import { regex } from '@common/utils/regex';
 import { OmitType } from '@nestjs/swagger';
-import { IsEmail, IsEnum, IsMongoId, Matches } from 'class-validator';
+import {
+   IsEmail,
+   IsEnum,
+   IsMongoId,
+   IsString,
+   Matches,
+   ValidateIf,
+   ValidateNested,
+} from 'class-validator';
 import { CoreDto, FindDto } from './core.dto';
 import { Admin } from '@common/schema/admin.schema';
 import { MerchantUser } from '@common/schema/merchant_user.schema';
 import { Customer } from '@common/schema/customer.schema';
 import { Partner } from '@common/schema/partner.schema';
 import { EUser } from '@common/utils/enum';
+import { Type } from 'class-transformer';
+import { CreateAddressDto } from '@shared/address/address.dto';
 
 export class GetUserDto extends FindDto {
    @IsMongoId()
@@ -20,7 +30,24 @@ export class GetUserDto extends FindDto {
    mail?: string;
 }
 
-export class CreateUserDto extends OmitType(CoreDto(User), ['status', 'tmpBlock', 'mfa']) {}
+export class LoginDto {
+   @ValidateIf((o) => !!!o.userName)
+   @IsEmail()
+   email?: string;
+
+   @ValidateIf((o) => !!!o.email)
+   @Matches(regex.userName)
+   userName?: string;
+
+   @IsString()
+   password: string;
+}
+
+export class CreateUserDto extends OmitType(CoreDto(User), ['status', 'tmpBlock', 'mfa']) {
+   @ValidateNested()
+   @Type(() => CreateAddressDto)
+   addressDto: CreateAddressDto;
+}
 
 type UserReturn = { data: Admin | MerchantUser | Customer | Partner };
 type AdminReturn = { data: Admin };

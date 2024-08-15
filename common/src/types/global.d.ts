@@ -6,7 +6,6 @@ declare global {
    type Session = import('mongoose').ClientSession;
    type ObjectId = import('mongoose').Types.ObjectId;
    type Metadata = import('@grpc/grpc-js').Metadata;
-   type Model<T> = import('mongoose').Model<T>;
    type FilterQuery<T> = import('mongoose').FilterQuery<T>;
    type ProjectionType<T> = import('mongoose').ProjectionType<T>;
    type QueryOptions<T> = import('mongoose').QueryOptions<T>;
@@ -46,25 +45,17 @@ declare global {
       update: UpdateQuery<T>;
    };
 
-   type CustomActionType<T> = {
-      action: (model: Model<T>) => any;
-   };
-
    type AuthUser = {
-      id?: string;
+      id: string;
       userName: string;
       firstName: string;
       lastName: string;
       mail: string;
-      userStatus: EStatus;
+      status: EStatus;
       isOwner: boolean;
       type: EUser;
-      servicePermissions: UserServicePermission[];
-      merchant?: string;
-      merchantSubType: ESubscription;
-      merchantStatus: EStatus;
-      merchantEndSub?: Date;
-      permissions?: Record<string, string[] | undefined>;
+      tmpBlock?: import('@common/schema/user.schema').TmpBlock;
+      permissions: Record<string, number>;
    };
 
    type BasicAuth = { userName: string; password: string };

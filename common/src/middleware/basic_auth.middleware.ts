@@ -1,4 +1,3 @@
-import { AUTH_CREDENTIAL } from '@common/constant';
 import { AppBrokerService } from '@common/core/app_broker/app_broker.service';
 import { ContextService } from '@common/core/context/context.service';
 import { EApp } from '@common/utils/enum';
@@ -12,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { AuthCredentialServiceMethods } from '@common/dto/auth_credential.dto';
+import { AUTH_CREDENTIAL } from '@common/constant';
 
 @Injectable()
 export class BasicAuthMiddleware implements NestMiddleware {
@@ -23,12 +23,13 @@ export class BasicAuthMiddleware implements NestMiddleware {
    ) {}
 
    async use(request: Request, response: Response, next: () => void) {
-      const { userName, password } = await this.appBroker.request<BasicAuth>(
-         true,
-         (meta) => this.credService.getAuthCredential({ url: request.originalUrl }, meta),
-         AUTH_CREDENTIAL,
-         EApp.Admin,
-      );
+      const { userName, password } = await this.appBroker.request<BasicAuth>({
+         basicAuth: true,
+         action: (meta) => this.credService.getAuthCredential({ url: request.originalUrl }, meta),
+         cache: true,
+         key: AUTH_CREDENTIAL,
+         app: EApp.Admin,
+      });
 
       if (!userName) throw new InternalServerErrorException('No Auth Cred');
 

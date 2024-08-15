@@ -9,9 +9,14 @@ export const getPeriodDate = (period: Period, date: Date | Dayjs) => {
    return dayjs(date).add(dayjs.duration({ days, hours, minutes, seconds })).toDate();
 };
 
-export const isPeriodExceed = (date: Date, period?: Period, offsetDay?: number) => {
+export const isPeriodExceed = (
+   date: Date,
+   period?: Period,
+   offset?: number,
+   unit?: dayjs.ManipulateType,
+) => {
    const until = dayjs(period ? getPeriodDate(period, date) : date);
    const res = [until.isBefore(new Date()), until.toDate()];
-   if (offsetDay) res.push(until.subtract(offsetDay, 'days').isBefore(new Date()));
+   if (offset) res.push(until.subtract(offset, unit ?? 'days').isBefore(new Date()));
    return res;
 };
