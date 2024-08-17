@@ -1,39 +1,53 @@
-import { AppService } from '@common/decorator/app_service.decorator';
 import { CoreService } from '@common/core/service/core.service';
+import { LoginDto } from '@common/shared/user/user.dto';
+import { Repository } from '@common/core/repository';
+import { User } from '@common/schema/user.schema';
+import { compareSync } from 'bcryptjs';
+import { BadRequestException, InternalServerErrorException } from '@nestjs/common';
+import { omit } from 'lodash';
+import { request } from 'express';
+import { encrypt } from '@common/utils/encrypt';
+import { APP_MERCHANT } from '@common/constant';
+import { responseError } from '@common/utils/misc';
 import { ContextService } from '@common/core/context/context.service';
-import { Inject } from '@nestjs/common';
-import { getServiceToken } from '@common/utils/misc';
-import { ADMIN, CUSTOMER, MERCHANT_USER, PARTNER } from '@common/constant';
-import {
-   AdminServiceMethods,
-   CustomerServiceMethods,
-   MerchantUserServiceMethods,
-   PartnerServiceMethods,
-   UserServiceGetUserDto,
-   UserServiceMethods,
-} from '@common/dto/user.dto';
-import { EUser } from '@common/utils/enum';
+import { AppRedisService } from '@common/core/app_redis/app_redis.service';
 
-@AppService()
-export class UserService extends CoreService implements UserServiceMethods {
-   constructor(
-      protected readonly context: ContextService,
-      @Inject(getServiceToken(ADMIN)) private readonly adminService: AdminServiceMethods,
-      @Inject(getServiceToken(MERCHANT_USER))
-      private readonly merchantUserService: MerchantUserServiceMethods,
-      @Inject(getServiceToken(CUSTOMER)) private readonly customerService: CustomerServiceMethods,
-      @Inject(getServiceToken(PARTNER)) private readonly partnerService: PartnerServiceMethods,
-   ) {
-      super();
+export abstract class UserService extends CoreService {
+   protected abstract repository: Repository<User>;
+   protected readonly context: ContextService;
+   protected readonly db: AppRedisService;
+
+   async logout() {
+      const request = this.context.get('request');
+      const response = this.context.get('response');
+      await this.db.logout();
+      request.session.destroy((err) => responseError(request, response, err));
    }
 
-   async getUser({ type, ...dto }: UserServiceGetUserDto) {
-      return await (type === EUser.Admin
-         ? this.adminService.getUser(dto)
-         : type === EUser.Merchant
-           ? this.merchantUserService.getUser(dto)
-           : type === EUser.Customer
-             ? this.customerService.getUser(dto)
-             : this.partnerService.getUser(dto));
+   protected async login(
+      { email, userName, password }: LoginDto,
+      getMerchant?: (id: string) => Promise<AppMerchant>,
+   ) {
+      const { data: user }: any = await this.repository.findOne({
+         filter: {
+            email,
+            userName,
+         },
+         options: { populate: ['role'] },
+      });
+      if (!user || !compareSync(password, user.password))
+         throw new BadRequestException(`Incorrect ${email ? 'email' : 'userName'} or password`);
+      const authUser = omit(user, ['mfa', 'password']);
+      if (user.merchant && !getMerchant) throw new InternalServerErrorException();
+      const merchant = getMerchant ? await getMerchant(user.merchant) : undefined;
+      if (user.role) {
+         authUser.isOwner = user.role.isOwner;
+         authUser.permissions = user.role.role?.permissions?.reduce((a, c) => {
+            a[c] = 1;
+            return a;
+         }, {});
+      }
+      request.session.user = await encrypt(JSON.stringify(authUser));
+      if (merchant) await this.db.set(APP_MERCHANT, merchant);
    }
 }

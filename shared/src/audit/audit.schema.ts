@@ -25,7 +25,7 @@ export class RequestLog {
 
 @Schema()
 export class Audit extends BaseSchema {
-   @AppProp({ type: SchemaTypes.Mixed })
+   @AppProp({ type: SchemaTypes.Mixed, required: false })
    @Type(() => RequestLog)
    logTrail: RequestLog[];
 

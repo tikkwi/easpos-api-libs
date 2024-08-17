@@ -20,14 +20,7 @@ export class TransactionInterceptor implements NestInterceptor {
             return from(this.transaction.makeTransaction(() => lastValueFrom(next.handle())));
          return next.handle().pipe(
             map(async ({ data, ...res }) => {
-               let d;
-               try {
-                  d = JSON.parse(data);
-               } catch (_) {
-                  d = data;
-               }
-               d = await encrypt(d);
-               return { data: d, ...res, token: this.context.get('newToken') };
+               return { data: encrypt(JSON.stringify(data)), ...res };
             }),
          );
       };

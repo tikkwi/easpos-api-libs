@@ -4,7 +4,7 @@ import { Type } from 'class-transformer';
 import { IsNotEmpty, ValidateNested } from 'class-validator';
 import { CategoryDto } from './action.dto';
 import { CoreDto, FindByIdDto } from './core.dto';
-import { CreateUserDto } from './user.dto';
+import { CreateUserDto } from '../shared/user/user.dto';
 
 export class CreateMerchantDto extends OmitType(CoreDto(Merchant), [
    'activePurchase',

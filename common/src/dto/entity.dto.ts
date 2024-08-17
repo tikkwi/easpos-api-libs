@@ -10,10 +10,12 @@ import {
    IsNumber,
    IsOptional,
    IsString,
+   Matches,
    Max,
    Min,
    ValidateNested,
 } from 'class-validator';
+import { regex } from '@common/utils/regex';
 
 class UserPermissions {
    @IsString({ each: true })
@@ -78,7 +80,9 @@ export class Status {
 }
 
 export class UserProfile {
-   @IsNotEmpty()
+   @IsMongoId()
+   id: string;
+
    @IsEnum(EUser)
    type: EUser;
 
@@ -86,9 +90,9 @@ export class UserProfile {
    name?: string;
 
    @IsEmail()
-   email?: string;
+   mail?: string;
 
-   @IsMongoId()
+   @Matches(regex.userName)
    userName?: string;
 }
 

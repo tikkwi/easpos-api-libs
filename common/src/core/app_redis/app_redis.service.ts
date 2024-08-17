@@ -10,7 +10,15 @@ export class AppRedisService {
    constructor(@Inject(REDIS_LCL_CLIENT) private readonly db: Redis) {}
 
    async set(key: string, value: any) {
-      await this.db.set(key, await encrypt(JSON.stringify({ data: value, expireIn: Date.now() })));
+      await this.db.set(
+         key,
+         await encrypt(
+            JSON.stringify({
+               data: value,
+               expireIn: dayjs().add(1, 'days').toDate().getTime(),
+            }),
+         ),
+      );
    }
 
    async get<T>(key: string, getFnc?: () => Promise<T> | T): Promise<T | undefined> {
@@ -20,14 +28,7 @@ export class AppRedisService {
          const [isExpire] = d ? isPeriodExceed(new Date(d.expireIn)) : [];
          if (isExpire || !d) {
             const data = await getFnc();
-            if (data)
-               await this.db.set(
-                  key,
-                  JSON.stringify({
-                     data,
-                     expireIn: dayjs().add(1, 'days').toDate().getTime(),
-                  }),
-               );
+            if (data) await this.set(key, data);
             return data;
          }
       }

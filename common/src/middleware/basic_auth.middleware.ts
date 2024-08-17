@@ -1,5 +1,4 @@
 import { AppBrokerService } from '@common/core/app_broker/app_broker.service';
-import { ContextService } from '@common/core/context/context.service';
 import { EApp } from '@common/utils/enum';
 import { authenticateBasicAuth, getServiceToken } from '@common/utils/misc';
 import {
@@ -11,7 +10,8 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { AuthCredentialServiceMethods } from '@common/dto/auth_credential.dto';
-import { AUTH_CREDENTIAL } from '@common/constant';
+import { APP, AUTH_CREDENTIAL } from '@common/constant';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class BasicAuthMiddleware implements NestMiddleware {
@@ -19,12 +19,11 @@ export class BasicAuthMiddleware implements NestMiddleware {
       @Inject(getServiceToken(AUTH_CREDENTIAL))
       private readonly credService: AuthCredentialServiceMethods,
       private readonly appBroker: AppBrokerService,
-      private readonly context: ContextService,
+      private readonly config: ConfigService,
    ) {}
 
    async use(request: Request, response: Response, next: () => void) {
       const { userName, password } = await this.appBroker.request<BasicAuth>({
-         basicAuth: true,
          action: (meta) => this.credService.getAuthCredential({ url: request.originalUrl }, meta),
          cache: true,
          key: AUTH_CREDENTIAL,
@@ -37,7 +36,7 @@ export class BasicAuthMiddleware implements NestMiddleware {
       if (!authHeader || !authHeader.startsWith('Basic'))
          response
             .status(401)
-            .setHeader('WWW-Authenticate', `Basic realm=${this.context.get('app')}`)
+            .setHeader('WWW-Authenticate', `Basic realm=${this.config.get(APP)}`)
             .send('Authentication Required...');
 
       if (await authenticateBasicAuth({ userName, password }, request.headers.authorization))

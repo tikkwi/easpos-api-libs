@@ -6,12 +6,13 @@ import { AppService } from '@common/decorator/app_service.decorator';
 import { Inject } from '@nestjs/common';
 import { AuditServiceMethods } from '@shared/audit/audit.dto';
 import { Audit } from './audit.schema';
+import { pick } from 'lodash';
 
 @AppService()
 export class AuditService extends CoreService implements AuditServiceMethods {
    constructor(
-      @Inject(REPOSITORY) private readonly repository: Repository<Audit>,
       protected readonly context: ContextService,
+      @Inject(REPOSITORY) private readonly repository: Repository<Audit>,
    ) {
       super();
    }
@@ -29,10 +30,9 @@ export class AuditService extends CoreService implements AuditServiceMethods {
          logTrail: this.context.get('logTrail'),
          user: user
             ? {
-                 type: user.type,
-                 email: user.mail,
+                 id: user.id,
                  name: `${user.firstName} ${user.lastName}`,
-                 user: user.id,
+                 ...pick(user, ['type', 'userName', 'mail']),
               }
             : undefined,
       });

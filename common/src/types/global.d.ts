@@ -72,16 +72,13 @@ declare global {
       request?: Request;
       response?: Response;
       user?: AuthUser;
-      app?: EApp;
       merchant?: Merchant;
       isSubActive?: boolean;
-      newToken?: string;
    };
 }
 
 declare module 'express-session' {
    interface SessionData {
       user?: string;
-      admin_tkn?: string;
    }
 }

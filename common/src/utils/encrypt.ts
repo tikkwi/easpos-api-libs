@@ -16,7 +16,7 @@ export const encrypt = async (data: string, pwd?: string) => {
    ).toString('base64');
 };
 
-export const decrypt = async (encrypted: string, pwd?: string) => {
+export const decrypt = async <T>(encrypted: string, pwd?: string) => {
    const { iv, encrypted: data } = JSON.parse(Buffer.from(encrypted, 'base64').toString());
    const decipher = createCipheriv(
       'aes-256-gcm',
@@ -25,8 +25,8 @@ export const decrypt = async (encrypted: string, pwd?: string) => {
    );
    const res = Buffer.concat([decipher.update(Buffer.from(data)), decipher.final()]).toString();
    try {
-      return JSON.parse(res);
+      return JSON.parse(res) as T;
    } catch (e) {
-      return res;
+      return res as T;
    }
 };

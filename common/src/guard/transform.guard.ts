@@ -1,6 +1,5 @@
 import { ContextService } from '@common/core/context/context.service';
 import { decrypt } from '@common/utils/encrypt';
-import { parsePath } from '@common/utils/regex';
 import { ServerUnaryCall } from '@grpc/grpc-js';
 import {
    CanActivate,
@@ -24,11 +23,10 @@ export class TransformGuard implements CanActivate {
          const ctx = context.switchToHttp();
          const request: Request = ctx.getRequest();
          const response = ctx.getResponse();
-         const [app]: any = parsePath(request.originalUrl);
 
          let user;
          if (request.session.user) {
-            ({ user } = await decrypt(request.session.user));
+            ({ user } = await decrypt<any>(request.session.user));
 
             const isExpireSoon = isPeriodExceed(
                request.session.cookie.expires,
@@ -49,7 +47,6 @@ export class TransformGuard implements CanActivate {
             isHttp: true,
             request,
             response,
-            app,
             user,
          });
       } else {

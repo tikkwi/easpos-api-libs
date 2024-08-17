@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { ContextService } from '../context/context.service';
 import { lastValueFrom } from 'rxjs';
 import { AppRedisService } from '@common/core/app_redis/app_redis.service';
+import { decrypt } from '@common/utils/encrypt';
 
 export class AppBrokerService {
    constructor(
@@ -13,26 +14,22 @@ export class AppBrokerService {
       private readonly db: AppRedisService,
    ) {}
 
-   async request<T>({ basicAuth, action, app, cache, ...rest }: BrokerRequest): Promise<T> {
+   async request<T>({ action, app, cache, ...rest }: BrokerRequest): Promise<T> {
       const { key } = rest as any;
       const isCrossApp = !app || app !== this.config.get(APP);
       const $action = isCrossApp ? (meta) => lastValueFrom(action(meta)) : action;
 
       const crossRequest = async () => {
-         const req = this.context.get('request');
          const res = this.context.get('response');
          const meta = new Metadata();
          meta.add('app', this.config.get(APP));
          meta.add(
             'authorization',
-            basicAuth
-               ? `Basic ${base64(`${this.config.get(ADM_MRO_USR)}:${this.config.get(ADM_MRO_PWD)}`)}`
-               : req.session[`${app}_tkn`],
+            `Basic ${base64(`${this.config.get(ADM_MRO_USR)}:${this.config.get(ADM_MRO_PWD)}`)}`,
          );
-         const { data, token, code, message } = await $action(meta);
-         if (token) req.session[`${app}_tkn`] = token;
+         const { data, code, message } = await $action(meta);
          if (code) return res.status(code).send({ message }) as T;
-         return data;
+         return (await decrypt(data)) as T;
       };
 
       if (isCrossApp) return await (cache ? this.db.get<T>(key, crossRequest) : crossRequest());

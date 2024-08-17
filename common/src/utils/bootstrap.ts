@@ -19,7 +19,7 @@ export async function appBootstrap(
    const currentApp = config.get<string>(APP);
    const documentConfig = new DocumentBuilder().setTitle(currentApp).setVersion('1.0').build();
 
-   app.setGlobalPrefix(`${currentApp}_api`);
+   // app.setGlobalPrefix(`${currentApp}_api`);
    const document = SwaggerModule.createDocument(app, documentConfig);
    SwaggerModule.setup('swagger', app, document);
    const redisClient = app.get<RedisClientType>(REDIS_CLIENT);
@@ -34,7 +34,7 @@ export async function appBootstrap(
          store,
          secret: COOKIE_SECRET,
          resave: false,
-         saveUninitialized: true,
+         saveUninitialized: false,
          cookie: {
             secure: process.env.NODE_ENV === 'prod',
             httpOnly: true,
