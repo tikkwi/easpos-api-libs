@@ -4,7 +4,6 @@ import { Type } from 'class-transformer';
 import { IsNotEmpty, ValidateNested } from 'class-validator';
 import { CategoryDto } from './action.dto';
 import { CoreDto, FindByIdDto } from './core.dto';
-import { CreateUserDto } from '../shared/user/user.dto';
 
 export class CreateMerchantDto extends OmitType(CoreDto(Merchant), [
    'activePurchase',
@@ -15,11 +14,6 @@ export class CreateMerchantDto extends OmitType(CoreDto(Merchant), [
    @ValidateNested()
    @Type(() => CategoryDto)
    category: CategoryDto;
-
-   @IsNotEmpty()
-   @ValidateNested()
-   @Type(() => CreateUserDto)
-   user: CreateUserDto;
 }
 
 type MerchantReturn = { data: Merchant };

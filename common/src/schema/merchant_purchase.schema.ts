@@ -11,7 +11,7 @@ import { Merchant } from './merchant.schema';
 @Schema()
 export class MerchantPurchase extends BaseSchema {
    @AppProp({ type: String })
-   vouncherId: string;
+   voucherId: string;
 
    @AppProp({ type: SchemaTypes.Mixed, required: false })
    @Type(() => Period)

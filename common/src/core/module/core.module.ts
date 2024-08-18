@@ -5,12 +5,12 @@ import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { MongooseModule, MongooseModuleOptions } from '@nestjs/mongoose';
 import { join } from 'path';
 import { ContextModule } from '../context/context.module';
-import { TransactionModule } from '../transaction/transaction.module';
 import { TransformGuard } from '@common/guard/transform.guard';
 import { AppBrokerModule } from '../app_broker/app_broker.module';
 import { AppRedisModule } from '@common/core/app_redis/app_redis.module';
 import { AppExceptionFilter } from '@common/core/exception.filter';
 import { TransactionInterceptor } from '@common/interceptors/transaction.interceptor';
+import { TransactionModule } from '@common/core/transaction/transaction.module';
 
 @Module({
    imports: [
@@ -28,8 +28,8 @@ import { TransactionInterceptor } from '@common/interceptors/transaction.interce
       }),
       AppRedisModule,
       ContextModule,
-      TransactionModule,
       AppBrokerModule,
+      TransactionModule,
    ],
    providers: [
       { provide: APP_GUARD, useClass: TransformGuard },

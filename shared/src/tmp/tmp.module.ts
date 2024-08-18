@@ -1,4 +1,4 @@
-import { AppConfig, AppConfigSchema } from '@common/schema/app_config.schema';
+import { AppConfig, AppConfigSchema } from '../../../../src/app_config/app_config.schema';
 import { getRepositoryProvider } from '@common/utils/misc';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';

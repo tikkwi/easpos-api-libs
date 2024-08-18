@@ -9,14 +9,10 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { isPeriodExceed } from '@common/utils/datetime';
-import { AppRedisService } from '@common/core/app_redis/app_redis.service';
 
 @Injectable()
 export class TransformGuard implements CanActivate {
-   constructor(
-      private readonly context: ContextService,
-      private readonly db: AppRedisService,
-   ) {}
+   constructor(private readonly context: ContextService) {}
 
    async canActivate(context: ExecutionContext) {
       if (context.getType() === 'http') {

@@ -11,8 +11,8 @@ import { Address } from './address.schema';
 @AppService()
 export class AddressService extends CoreService implements AddressServiceMethods {
    constructor(
-      @Inject(REPOSITORY) private readonly repository: Repository<Address>,
       protected readonly context: ContextService,
+      @Inject(REPOSITORY) private readonly repository: Repository<Address>,
    ) {
       super();
    }

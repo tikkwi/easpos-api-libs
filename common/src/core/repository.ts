@@ -21,7 +21,7 @@ export class Repository<T> {
       const pag = {};
       const fil = {};
       if (sort) pag['sort'] = sort;
-      pag['skip'] = page ?? 1 * pageSize ?? PAGE_SIZE;
+      pag['skip'] = page ?? pageSize ?? PAGE_SIZE;
       pag['limit'] = pageSize ?? PAGE_SIZE;
       if (startDate) fil['createdAt'] = { $gte: startDate };
       if (endDate) fil['endDate'] = { $lte: endDate };

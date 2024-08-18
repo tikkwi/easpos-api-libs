@@ -1,13 +1,17 @@
 import 'reflect-metadata';
-import { SKIP_USERS, USERS } from '@common/constant';
-import { AllowedUser } from '@common/dto/core.dto';
+import { APPS, SKIP_APPS, SKIP_USERS, USERS } from '@common/constant';
+import { AllowedApp, AllowedUser } from '@common/dto/core.dto';
 import { Controller } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { pull } from 'lodash';
 import { Users } from './users.decorator';
+import { Apps } from '@common/decorator/app.decorator';
 
-//TODO: create decorator & concat Users with nethod decorators using nest first party helpers(setMetadata etc.,)
-export function AppController(prefix?: string, allowedUsers?: AllowedUser[]) {
+export function AppController(
+   prefix?: string,
+   allowedUsers?: AllowedUser[],
+   allowedApps?: AllowedApp[],
+) {
    return function (target: any) {
       Controller(prefix)(target);
       const reflector = new Reflector();
@@ -21,9 +25,16 @@ export function AppController(prefix?: string, allowedUsers?: AllowedUser[]) {
                ...(reflector.get(USERS, target.prototype[key]) ?? []),
                ...(allowedUsers ?? []),
             ];
+            const apps = [
+               ...(reflector.get(APPS, target.prototype[key]) ?? []),
+               ...(allowedApps ?? []),
+            ];
             const skippedUsers = reflector.get(SKIP_USERS, target.prototype[key]);
+            const skippedApps = reflector.get(SKIP_APPS, target.prototype[key]);
             if (skippedUsers) pull(users, ...skippedUsers);
+            if (skippedApps) pull(apps, ...skippedApps);
             if (users.length) Users(users)(target.prototype[key], key, descriptor);
+            if (apps.length) Apps(apps)(target.prototype[key], key, descriptor);
          }
       }
 

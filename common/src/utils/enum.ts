@@ -9,6 +9,14 @@ export enum EApp {
    User = 'user',
 }
 
+export enum EUserApp {
+   SuperAdmin = 'SuperAdmin',
+   Seller = 'Seller',
+   Admin = 'Admin',
+   Partner = 'Partner',
+   Customer = 'Customer',
+}
+
 //service name
 export enum EAuthCredential {
    AdminRpc = 'admin_rpc',
@@ -67,11 +75,6 @@ export enum EAllowedUser {
    Partner = 'Partner',
    MerchantNoSub = 'MerchantNoSub',
    Owner = 'Owner',
-}
-
-export enum EGrpcAuth {
-   Basic = 'Basic',
-   Token = 'Token',
 }
 
 export enum EField {

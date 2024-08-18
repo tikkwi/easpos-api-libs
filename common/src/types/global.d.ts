@@ -20,7 +20,7 @@ declare global {
 
    type User = import('@common/schema/user.schema').User;
    type Merchant = import('@common/schema/merchant.schema').Merchant;
-   type AppConfig = import('@common/schema/app_config.schema').AppConfig;
+   type AppConfig = import('../../../../src/app_config/app_config.schema').AppConfig;
    type RequestLog = import('@shared/audit/audit.schema').RequestLog;
 
    type CreateType<T> = Omit<T, '_id' | 'createdAt' | 'updatedAt'>;
