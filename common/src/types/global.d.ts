@@ -1,10 +1,10 @@
 import 'express';
+import { EUserApp } from '@common/utils/enum';
 
 declare global {
    type Request = import('express').Request;
    type Response = import('express').Response;
    type Session = import('mongoose').ClientSession;
-   type ObjectId = import('mongoose').Types.ObjectId;
    type Metadata = import('@grpc/grpc-js').Metadata;
    type FilterQuery<T> = import('mongoose').FilterQuery<T>;
    type ProjectionType<T> = import('mongoose').ProjectionType<T>;
@@ -14,13 +14,9 @@ declare global {
    type EUser = import('@common/utils/enum').EUser;
    type EApp = import('@common/utils/enum').EApp;
    type EStatus = import('@common/utils/enum').EStatus;
-   type ESubscription = import('@common/utils/enum').ESubscription;
 
-   type UserServicePermission = import('@common/dto/entity.dto').UserServicePermission;
-
-   type User = import('@common/schema/user.schema').User;
    type Merchant = import('@common/schema/merchant.schema').Merchant;
-   type AppConfig = import('../../../../src/app_config/app_config.schema').AppConfig;
+   type AuthCredential = import('@common/schema/auth_credential.schema').AuthCredential;
    type RequestLog = import('@shared/audit/audit.schema').RequestLog;
 
    type CreateType<T> = Omit<T, '_id' | 'createdAt' | 'updatedAt'>;
@@ -54,15 +50,19 @@ declare global {
       status: EStatus;
       isOwner: boolean;
       type: EUser;
+      app: EUserApp;
       tmpBlock?: import('@common/schema/user.schema').TmpBlock;
       permissions: Record<string, number>;
    };
 
    type BasicAuth = { userName: string; password: string };
 
-   type GrpcReturn = { code: number; message?: string; token?: string };
+   type AppCache = {
+      merchant?: AppMerchant;
+      adm_auth_cred?: AuthCredential;
+   };
 
-   type AppContext = {
+   type AppContext = AppCache & {
       isHttp?: boolean;
       ip?: string;
       userAgent?: string;
@@ -72,7 +72,6 @@ declare global {
       request?: Request;
       response?: Response;
       user?: AuthUser;
-      merchant?: Merchant;
       isSubActive?: boolean;
    };
 }

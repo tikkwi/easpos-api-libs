@@ -1,10 +1,19 @@
 import { User } from '@common/schema/user.schema';
 import { regex } from '@common/utils/regex';
 import { OmitType } from '@nestjs/swagger';
-import { IsEmail, IsMongoId, IsString, Matches, ValidateIf, ValidateNested } from 'class-validator';
+import {
+   IsEmail,
+   IsEnum,
+   IsMongoId,
+   IsString,
+   Matches,
+   ValidateIf,
+   ValidateNested,
+} from 'class-validator';
 import { CoreDto, FindDto } from '../../dto/core.dto';
 import { Type } from 'class-transformer';
 import { CreateAddressDto } from '@shared/address/address.dto';
+import { EUserApp } from '@common/utils/enum';
 
 export class GetUserDto extends FindDto {
    @IsMongoId()
@@ -28,6 +37,9 @@ export class LoginDto {
 
    @IsString()
    password: string;
+
+   @IsEnum(EUserApp)
+   app: EUserApp;
 }
 
 export class CreateUserDto extends OmitType(CoreDto(User), ['status', 'tmpBlock', 'mfa']) {

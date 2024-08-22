@@ -1,4 +1,4 @@
-import { EStatus, ESubscription, EUser } from '@common/utils/enum';
+import { EStatus, EUser, EUserApp } from '@common/utils/enum';
 import { Type } from 'class-transformer';
 import {
    IsBoolean,
@@ -16,6 +16,8 @@ import {
    ValidateNested,
 } from 'class-validator';
 import { regex } from '@common/utils/regex';
+import { TmpBlock } from '@common/schema/user.schema';
+import { IsAppNumberString } from '@common/validator/is_number_string.validator';
 
 class UserPermissions {
    @IsString({ each: true })
@@ -79,6 +81,14 @@ export class Status {
    adjudicatedBy?: string; //NOTE: null for system manipulation
 }
 
+export class MFA {
+   @IsAppNumberString()
+   code: string;
+
+   @IsDateString()
+   expireAt: Date;
+}
+
 export class UserProfile {
    @IsMongoId()
    id: string;
@@ -98,7 +108,7 @@ export class UserProfile {
 
 export class AuthUser {
    @IsMongoId()
-   id?: string;
+   id: string;
 
    @IsString()
    userName: string;
@@ -113,7 +123,7 @@ export class AuthUser {
    mail: string;
 
    @IsEnum(Status)
-   userStatus: EStatus;
+   status: EStatus;
 
    @IsBoolean()
    isOwner: boolean;
@@ -121,23 +131,15 @@ export class AuthUser {
    @IsEnum(EUser)
    type: EUser;
 
-   @IsOptional()
-   @ValidateNested({ each: true })
-   @Type(() => UserServicePermission)
-   servicePermissions: UserServicePermission[];
-
-   @IsMongoId()
-   merchant?: string;
-
-   @IsEnum(ESubscription)
-   merchantSubType: ESubscription;
-
-   @IsEnum(EStatus)
-   merchantStatus: EStatus;
+   @IsEnum(EUserApp)
+   app: EUserApp;
 
    @IsOptional()
-   @IsDateString()
-   merchantEndSub?: Date;
+   @ValidateNested()
+   @Type(() => TmpBlock)
+   tmpBlock: TmpBlock;
+
+   permissions: Record<string, number>;
 }
 
 export class UserRole {
@@ -148,4 +150,22 @@ export class UserRole {
    @IsOptional()
    @IsMongoId({ each: true })
    permissions: string[];
+}
+
+export class AppliedAllowance {}
+
+export class Payment {
+   @IsNumber()
+   price: number;
+
+   @IsOptional()
+   @IsMongoId()
+   allowance?: string;
+
+   @IsOptional()
+   @IsMongoId()
+   paymentMethod?: string;
+
+   @IsNumber()
+   netPrice: number;
 }

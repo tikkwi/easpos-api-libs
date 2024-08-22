@@ -1,9 +1,3 @@
-export enum EMerchantPurchase {
-   Subscription = 'Subscription',
-   OneTime = 'OneTime',
-   FOC = 'FOC',
-}
-
 export enum EApp {
    Admin = 'admin',
    User = 'user',
@@ -41,6 +35,7 @@ export enum EStatus {
    Blocked = 'Blocked',
    Rejected = 'Rejected',
    Suspended = 'Suspended',
+   Stale = 'Stale',
 }
 
 export enum ETmpBlock {
@@ -73,6 +68,7 @@ export enum EAllowedUser {
    Merchant = 'Merchant',
    Customer = 'Customer',
    Partner = 'Partner',
+   MerchantNoVerified = 'MerchantNoVerified',
    MerchantNoSub = 'MerchantNoSub',
    Owner = 'Owner',
 }
@@ -100,6 +96,7 @@ export enum ECategory {
    Product = 'Product',
    ProductTag = 'ProductTag',
    Campaign = 'Campaign',
+   PaymentMethod = 'PaymentMethod',
 }
 
 export enum EEntityMetadata {

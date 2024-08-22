@@ -6,7 +6,9 @@ import { ContextService } from '../context/context.service';
 import { lastValueFrom } from 'rxjs';
 import { AppRedisService } from '@common/core/app_redis/app_redis.service';
 import { decrypt } from '@common/utils/encrypt';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class AppBrokerService {
    constructor(
       private readonly context: ContextService,
@@ -32,7 +34,7 @@ export class AppBrokerService {
          return (await decrypt(data)) as T;
       };
 
-      if (isCrossApp) return await (cache ? this.db.get<T>(key, crossRequest) : crossRequest());
+      if (isCrossApp) return await (cache ? this.db.get(key, crossRequest) : crossRequest());
       return action().then(({ data }) => data) as T;
    }
 }

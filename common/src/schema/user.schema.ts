@@ -1,5 +1,5 @@
 import { AppProp } from '@common/decorator/app_prop.decorator';
-import { Status } from '@common/dto/entity.dto';
+import { MFA, Status } from '@common/dto/entity.dto';
 import { EStatus, ETmpBlock, EUser } from '@common/utils/enum';
 import { SchemaFactory } from '@nestjs/mongoose';
 import { hashSync } from 'bcryptjs';
@@ -8,7 +8,6 @@ import {
    IsDateString,
    IsEmail,
    IsEnum,
-   IsNumberString,
    IsOptional,
    IsPhoneNumber,
    IsString,
@@ -44,9 +43,9 @@ export class User extends BaseSchema {
    @Type(() => TmpBlock)
    tmpBlock?: TmpBlock;
 
-   @AppProp({ type: String, required: false })
-   @IsNumberString()
-   mfa?: string;
+   @AppProp({ type: SchemaTypes.Mixed, required: false })
+   @Type(() => MFA)
+   mfa?: MFA;
 
    @AppProp({ type: String })
    firstName: string;

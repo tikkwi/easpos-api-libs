@@ -1,7 +1,7 @@
-import { AUTH_CREDENTIAL, MERCHANT, USERS } from '@common/constant';
+import { APPS, AUTH_CREDENTIAL, MERCHANT, USERS } from '@common/constant';
 import { ContextService } from '@common/core/context/context.service';
 import { AllowedUser } from '@common/dto/core.dto';
-import { EAllowedUser, EApp, EAuthCredential, EUser } from '@common/utils/enum';
+import { EAllowedUser, EApp, EUser } from '@common/utils/enum';
 import {
    CanActivate,
    ExecutionContext,
@@ -10,7 +10,6 @@ import {
    UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { APP_MERCHANT } from '@common/constant/db.constant';
 import { AppBrokerService } from '@common/core/app_broker/app_broker.service';
 import { authenticateBasicAuth, getServiceToken } from '@common/utils/misc';
 import { MerchantServiceMethods } from '@common/dto/merchant.dto';
@@ -39,12 +38,16 @@ export class AuthGuard implements CanActivate {
       const isHttp = context.getType() === 'http';
       if (isHttp) {
          const allowedUsers = this.reflector.get<AllowedUser[]>(USERS, context.getHandler());
+         const allowedApps = this.reflector.get(APPS, context.getHandler());
          const user = this.context.get('user');
          const request: Request = context.switchToHttp().getRequest();
 
          if (!allowedUsers.length || allowedUsers.includes(EAllowedUser.Any)) return true;
          if (user) {
+            if (allowedApps?.length && !allowedApps.includes(user.app)) return false;
+
             const allowedMerchantUser = intersection(allowedUsers, [
+               EAllowedUser.MerchantNoVerified,
                EAllowedUser.MerchantNoSub,
                EAllowedUser.Merchant,
                EAllowedUser.Owner,
@@ -64,9 +67,15 @@ export class AuthGuard implements CanActivate {
                const authMerchant = await this.broker.request<AppMerchant>({
                   action: (meta) => this.merchantService.merchantWithAuth({ id: user.id }, meta),
                   cache: true,
-                  key: APP_MERCHANT,
+                  key: 'merchant',
                   app: EApp.Admin,
                });
+
+               if (
+                  !authMerchant.merchant.verified &&
+                  !allowedUsers.includes(EAllowedUser.MerchantNoVerified)
+               )
+                  return false;
 
                if (
                   !authMerchant.merchant ||
@@ -94,7 +103,7 @@ export class AuthGuard implements CanActivate {
                   meta,
                ),
             cache: true,
-            key: `lcl_cre_${EAuthCredential.AdminRpc}`,
+            key: 'adm_auth_cred',
             app: EApp.Admin,
          });
          return await authenticateBasicAuth(basicAuth, authHeader);
