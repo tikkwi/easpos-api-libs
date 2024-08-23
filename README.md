@@ -11,7 +11,7 @@
 "paths": {
 "@app/*": ["src/utils/*"],
 "@common/*": ["libs/common/src/*"],
-"@shared/*": ["libs/shared/src/*"]
+"@global/*": ["libs/global/src/*"]
 } 
 ```
 

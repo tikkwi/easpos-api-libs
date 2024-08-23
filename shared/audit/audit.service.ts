@@ -1,0 +1,40 @@
+import { REPOSITORY } from '@constant';
+import { ContextService } from '@core/context/context.service';
+import { CoreService } from '@core/service/core.service';
+import { Repository } from '@core/repository';
+import { AppService } from '@decorator/app_service.decorator';
+import { Inject } from '@nestjs/common';
+import { AuditServiceMethods } from '@shared/audit/audit.dto';
+import { Audit } from './audit.schema';
+import { pick } from 'lodash';
+
+@AppService()
+export class AuditService extends CoreService implements AuditServiceMethods {
+   constructor(
+      protected readonly context: ContextService,
+      @Inject(REPOSITORY) private readonly repository: Repository<Audit>,
+   ) {
+      super();
+   }
+
+   async logRequest() {
+      const request = this.context.get('request');
+      const user = this.context.get('user');
+
+      return await this.repository.create({
+         submittedIP: this.context.get('ip'),
+         sessionId: request?.sessionID,
+         crossAppRequest: !this.context.get('isHttp'),
+         requestedFrom: this.context.get('requestedApp'),
+         userAgent: this.context.get('userAgent') as any,
+         logTrail: this.context.get('logTrail'),
+         user: user
+            ? {
+                 id: user.id,
+                 name: `${user.firstName} ${user.lastName}`,
+                 ...pick(user, ['type', 'userName', 'mail']),
+              }
+            : undefined,
+      });
+   }
+}

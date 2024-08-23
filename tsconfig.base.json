@@ -1,0 +1,39 @@
+{
+   "compilerOptions": {
+      "module": "NodeNext",
+      "declaration": true,
+      "removeComments": true,
+      "emitDecoratorMetadata": true,
+      "experimentalDecorators": true,
+      "target": "ES2021",
+      "sourceMap": true,
+      "incremental": true,
+      "skipLibCheck": true,
+      "strictNullChecks": false,
+      "noImplicitAny": false,
+      "strictBindCallApply": false,
+      "forceConsistentCasingInFileNames": false,
+      "noFallthroughCasesInSwitch": false,
+      "allowSyntheticDefaultImports": true,
+//      "outDir": "../dist",
+//      "typeRoots": ["../types", "common/types"],
+//      "paths": {
+//         "@app/*": ["../src/utils/*"],
+//         "@shared/*": ["shared/*"],
+//         "@constant/*": ["common/constant/*"],
+//         "@core/*": ["common/core/*"],
+//         "@decorator/*": ["/common/decorator/*"],
+//         "@guard/*": ["common/guard/*"],
+//         "@interceptor/*": ["common/interceptor/*"],
+//         "@middleware/*": ["common/middleware/*"],
+//         "@common_shared/*": ["common/shared/*"],
+//         "@utils/*": ["common/utils/*"],
+//         "@global_dto/*": ["common/dto/global/*"],
+//         "@service_dto/*": ["common/dto/service/*"],
+//         "@global_schema/*": ["common/schema/global/*"],
+//         "@service_schema/*": ["common/schema/service/*"],
+//         "@validator/*": ["common/validator/*"]
+//      }
+   },
+//   "include": ["../libs/**/*", "../src/**/*", "../type/*"]
+}
