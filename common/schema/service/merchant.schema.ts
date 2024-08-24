@@ -1,13 +1,13 @@
-import { AppProp } from '@decorator/app_prop.decorator';
-import { EStatus, ESubscription, EUserApp } from '@utils/enum';
 import { Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Category } from '@shared/category/category.schema';
 import { IsEmail, IsEnum, IsMongoId, IsPhoneNumber, IsString } from 'class-validator';
 import { SchemaTypes } from 'mongoose';
-import { BaseSchema } from '@global_schema/base.schema';
-import { PurchasedMerchantSubscription } from '@global_schema/purchased_merchant_subscription.schema';
+import { EStatus, ESubscription, EUserApp } from '@common/utils/enum';
+import { BaseSchema } from '@common/schema/global/base.schema';
+import { AppProp } from '@common/decorator/app_prop.decorator';
 import { Type } from 'class-transformer';
-import { MFA, Status } from '@global_dto/entity.dto';
+import { MFA, Status } from '@common/dto/global/entity.dto';
+import { PurchasedMerchantSubscription } from '@common/schema/global/purchased_merchant_subscription.schema';
 
 export class LoggedInMerchantUser {
    @IsMongoId()

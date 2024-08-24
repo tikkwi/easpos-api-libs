@@ -11,12 +11,11 @@ import { camelCase } from 'lodash';
 import { join } from 'path';
 import { firstUpperCase } from './regex';
 import { EAuthCredential } from './enum';
-import { Repository } from '@core/repository';
 import { Request, Response } from 'express';
-import { ContextService } from '@core/context/context.service';
 import { compare } from 'bcryptjs';
-import { REPOSITORY } from '@constant/model.constant';
-import { ADMIN_URL } from '@constant/config.constant';
+import { ContextService } from '@common/core/context/context.service';
+import { ADMIN_URL, REPOSITORY } from '@common/constant';
+import { Repository } from '@common/core/repository';
 
 type RepositoryProviderType = { name: string; provide?: string };
 

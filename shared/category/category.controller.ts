@@ -1,7 +1,7 @@
-import { AppController } from '@decorator/app_controller.decorator';
 import { CategoryService } from './category.service';
 import { Body, Post } from '@nestjs/common';
 import { CreateCategoryDto } from './category.dto';
+import { AppController } from '@common/decorator/app_controller.decorator';
 
 @AppController('category')
 export class CategoryController {

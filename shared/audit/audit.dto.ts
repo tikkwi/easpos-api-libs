@@ -1,6 +1,6 @@
-import { CoreDto } from '@global_dto/core.dto';
 import { OmitType } from '@nestjs/swagger';
 import { Audit } from '@shared/audit/audit.schema';
+import { CoreDto } from '@common/dto/global/core.dto';
 
 export class LogRequestDto extends OmitType(CoreDto(Audit), [
    'submittedIP',

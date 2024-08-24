@@ -1,4 +1,3 @@
-import { EStatus, EUser, EUserApp } from '@utils/enum';
 import { Type } from 'class-transformer';
 import {
    IsBoolean,
@@ -15,9 +14,10 @@ import {
    Min,
    ValidateNested,
 } from 'class-validator';
-import { regex } from '@utils/regex';
-import { TmpBlock } from '@global_schema/user.schema';
-import { IsAppNumberString } from '@validator/is_number_string.validator';
+import { EStatus, EUser, EUserApp } from '@common/utils/enum';
+import { regex } from '@common/utils/regex';
+import { IsAppNumberString } from '@common/validator';
+import { TmpBlock } from '@common/schema/global/user.schema';
 
 class UserPermissions {
    @IsString({ each: true })

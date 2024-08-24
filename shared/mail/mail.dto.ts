@@ -1,4 +1,3 @@
-import { EMail } from '@utils/enum';
 import { Type } from 'class-transformer';
 import {
    IsDateString,
@@ -8,6 +7,7 @@ import {
    ValidateIf,
    ValidateNested,
 } from 'class-validator';
+import { EMail } from '@common/utils/enum';
 
 class SubExpireDto {
    @IsNotEmpty()

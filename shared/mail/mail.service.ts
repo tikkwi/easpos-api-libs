@@ -1,7 +1,7 @@
-import { ContextService } from '@core/context/context.service';
-import { CoreService } from '@core/service/core.service';
-import { AppService } from '@decorator/app_service.decorator';
 import { MailServiceMethods, SendMailDto } from '@shared/mail/mail.dto';
+import { AppService } from '@common/decorator/app_service.decorator';
+import { CoreService } from '@common/core/service/core.service';
+import { ContextService } from '@common/core/context/context.service';
 
 @AppService()
 export class MailService extends CoreService implements MailServiceMethods {

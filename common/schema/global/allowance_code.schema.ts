@@ -1,10 +1,9 @@
 import { Schema, SchemaFactory } from '@nestjs/mongoose';
-import { BaseSchema } from '@global_schema/base.schema';
-import { AppProp } from '@decorator/app_prop.decorator';
+import { BaseSchema } from '@common/schema/global/base.schema';
+import { AppProp } from '@common/decorator/app_prop.decorator';
 import { SchemaTypes } from 'mongoose';
-import { EUser } from '@utils/enum';
+import { Allowance } from '@common/schema/global/allowance.schema';
 import { ValidateIf } from 'class-validator';
-import { Allowance } from '@global_schema/allowance.schema';
 
 @Schema()
 export class AllowanceCode extends BaseSchema {

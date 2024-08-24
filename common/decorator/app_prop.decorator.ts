@@ -1,4 +1,3 @@
-import { regex } from '@utils/regex';
 import { Prop, PropOptions } from '@nestjs/mongoose';
 import { ApiProperty, ApiPropertyOptions } from '@nestjs/swagger';
 import {
@@ -12,6 +11,7 @@ import {
    Matches,
    ValidateNested,
 } from 'class-validator';
+import { regex } from '@common/utils/regex';
 
 type Options = {
    userName?: boolean;

@@ -1,6 +1,6 @@
-import { Period } from '@global_dto/entity.dto';
 import dayjs, { Dayjs, ManipulateType } from 'dayjs';
 import duration from 'dayjs/plugin/duration';
+import { Period } from '@common/dto/global/entity.dto';
 
 export const $dayjs = dayjs;
 

@@ -1,7 +1,7 @@
 import { Schema, SchemaFactory } from '@nestjs/mongoose';
 import { BaseSchema } from './base.schema';
-import { AppProp } from '@decorator/app_prop.decorator';
 import { IsUrl } from 'class-validator';
+import { AppProp } from '@common/decorator/app_prop.decorator';
 
 @Schema()
 export class Permission extends BaseSchema {

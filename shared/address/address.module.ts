@@ -3,7 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AddressController } from './address.controller';
 import { Address, AddressSchema } from './address.schema';
 import { AddressService } from './address.service';
-import { getRepositoryProvider } from '@utils/misc';
+import { getRepositoryProvider } from '@common/utils/misc';
 
 @Module({
    imports: [MongooseModule.forFeature([{ name: Address.name, schema: AddressSchema }])],

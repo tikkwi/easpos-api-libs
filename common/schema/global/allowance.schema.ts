@@ -1,11 +1,11 @@
-import { BaseSchema } from '@global_schema/base.schema';
-import { AppProp } from '@decorator/app_prop.decorator';
 import { SchemaTypes } from 'mongoose';
-import { EAllowanceTrigger, EAllowanceType } from '@utils/enum';
 import { IsBoolean, IsEnum, IsMongoId, IsNumber, IsOptional, ValidateIf } from 'class-validator';
 import { Type } from 'class-transformer';
 import { SchemaFactory } from '@nestjs/mongoose';
-import { Campaign } from '@global_schema/campaign.schema';
+import { EAllowanceTrigger, EAllowanceType } from '@common/utils/enum';
+import { BaseSchema } from '@common/schema/global/base.schema';
+import { AppProp } from '@common/decorator/app_prop.decorator';
+import { Campaign } from '@common/schema/global/campaign.schema';
 
 class TriggerProduct {
    @IsMongoId()

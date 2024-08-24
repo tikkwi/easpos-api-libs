@@ -1,7 +1,3 @@
-import { CoreService } from '@core/service/core.service';
-import { LoginDto } from '@shared/user/user.dto';
-import { Repository } from '@core/repository';
-import { User } from '@global_schema/user.schema';
 import { compareSync } from 'bcryptjs';
 import {
    BadRequestException,
@@ -10,11 +6,15 @@ import {
 } from '@nestjs/common';
 import { omit } from 'lodash';
 import { request } from 'express';
-import { encrypt } from '@utils/encrypt';
-import { responseError } from '@utils/misc';
-import { ContextService } from '@core/context/context.service';
-import { AppRedisService } from '@core/app_redis/app_redis.service';
-import { EUser, EUserApp } from '@utils/enum';
+import { CoreService } from '@common/core/service/core.service';
+import { Repository } from '@common/core/repository';
+import { User } from '@common/schema/global/user.schema';
+import { ContextService } from '@common/core/context/context.service';
+import { AppRedisService } from '@common/core/app_redis/app_redis.service';
+import { responseError } from '@common/utils/misc';
+import { LoginDto } from '@common/shared/user/user.dto';
+import { EUser, EUserApp } from '@common/utils/enum';
+import { encrypt } from '@common/utils/encrypt';
 
 export abstract class UserService extends CoreService {
    protected abstract repository: Repository<User>;

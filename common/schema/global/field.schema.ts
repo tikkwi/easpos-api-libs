@@ -1,9 +1,9 @@
 import { Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Matches, ValidateIf } from 'class-validator';
-import { EField } from '@utils/enum';
-import { BaseSchema } from '@global_schema/base.schema';
-import { AppProp } from '@decorator/app_prop.decorator';
-import { regex } from '@utils/regex';
+import { BaseSchema } from '@common/schema/global/base.schema';
+import { AppProp } from '@common/decorator/app_prop.decorator';
+import { EField } from '@common/utils/enum';
+import { regex } from '@common/utils/regex';
 
 @Schema()
 export class Field extends BaseSchema {

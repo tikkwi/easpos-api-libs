@@ -1,5 +1,5 @@
-import { BaseSchema } from '@global_schema/base.schema';
-import { AppProp } from '@decorator/app_prop.decorator';
+import { BaseSchema } from '@common/schema/global/base.schema';
+import { AppProp } from '@common/decorator/app_prop.decorator';
 
 export class Currency extends BaseSchema {
    @AppProp({ type: String })

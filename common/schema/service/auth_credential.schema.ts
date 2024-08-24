@@ -1,11 +1,11 @@
-import { AppProp } from '@decorator/app_prop.decorator';
-import { EAuthCredential } from '@utils/enum';
 import { Schema, SchemaFactory } from '@nestjs/mongoose';
 import { hashSync } from 'bcryptjs';
 import { BaseSchema } from '../global/base.schema';
 import { IsNotEmpty, IsOptional, IsString, IsUrl, ValidateIf } from 'class-validator';
 import { SchemaTypes } from 'mongoose';
 import { Type } from 'class-transformer';
+import { AppProp } from '@common/decorator/app_prop.decorator';
+import { EAuthCredential } from '@common/utils/enum';
 
 class AllowedService {
    @IsString()

@@ -1,10 +1,10 @@
 import { Schema, SchemaFactory } from '@nestjs/mongoose';
 import { SchemaTypes } from 'mongoose';
-import { ESubscription } from '@utils/enum';
-import { AppProp } from '@decorator/app_prop.decorator';
 import { Merchant } from '../service/merchant.schema';
 import { ValidateIf } from 'class-validator';
-import { Purchase } from '@global_schema/purchase.schema';
+import { Purchase } from '@common/schema/global/purchase.schema';
+import { AppProp } from '@common/decorator/app_prop.decorator';
+import { ESubscription } from '@common/utils/enum';
 
 @Schema()
 export class PurchasedMerchantSubscription extends Purchase {

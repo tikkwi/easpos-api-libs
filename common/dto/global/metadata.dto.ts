@@ -1,5 +1,3 @@
-import { FindDto } from '@global_dto/core.dto';
-import { EEntityMetadata, EField } from '@utils/enum';
 import {
    IsEnum,
    IsMongoId,
@@ -9,6 +7,8 @@ import {
    ValidateNested,
 } from 'class-validator';
 import { Metadata as MetadataSchema } from '../../schema/global/metadata.schema';
+import { FindDto } from '@common/dto/global/core.dto';
+import { EEntityMetadata, EField } from '@common/utils/enum';
 
 export class GetMetadataDto extends FindDto {
    @IsMongoId()

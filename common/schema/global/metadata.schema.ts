@@ -1,10 +1,10 @@
 import { Schema, SchemaFactory } from '@nestjs/mongoose';
 import { SchemaTypes } from 'mongoose';
-import { EEntityMetadata } from '@utils/enum';
-import { AppProp } from '@decorator/app_prop.decorator';
-import { BaseSchema } from '@global_schema/base.schema';
 import { Field } from './field.schema';
-import { Permission } from '@global_schema/permission.schema';
+import { BaseSchema } from '@common/schema/global/base.schema';
+import { AppProp } from '@common/decorator/app_prop.decorator';
+import { EEntityMetadata } from '@common/utils/enum';
+import { Permission } from '@common/schema/global/permission.schema';
 
 @Schema()
 export class Metadata extends BaseSchema {
