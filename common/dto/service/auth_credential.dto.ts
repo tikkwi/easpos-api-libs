@@ -1,4 +1,3 @@
-import { AuthCredential } from '@service_schema/auth_credential.schema';
 import { IsIP, IsNotEmpty, IsOptional, IsUrl } from 'class-validator';
 
 export class GetAuthCredentialDto {

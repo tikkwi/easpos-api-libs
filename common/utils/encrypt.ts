@@ -1,6 +1,6 @@
-import { ENC_PASSWD } from '@constant';
 import { createCipheriv, randomBytes, scrypt } from 'crypto';
 import { promisify } from 'util';
+import { ENC_PASSWD } from '@common/constant';
 
 const getKey = async (password: string) =>
    (await promisify(scrypt)(password, 'salt', 32)) as Buffer;

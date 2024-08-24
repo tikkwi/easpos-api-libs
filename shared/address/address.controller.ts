@@ -1,7 +1,7 @@
-import { AppController } from '@decorator/app_controller.decorator';
 import { Body, Post } from '@nestjs/common';
 import { CreateAddressDto } from '@shared/address/address.dto';
 import { AddressService } from './address.service';
+import { AppController } from '@common/decorator/app_controller.decorator';
 
 @AppController('address')
 export class AddressController {

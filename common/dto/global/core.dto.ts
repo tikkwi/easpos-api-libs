@@ -1,4 +1,3 @@
-import { EAllowedUser, EUserApp } from '@utils/enum';
 import { Type } from '@nestjs/common';
 import { OmitType } from '@nestjs/swagger';
 import {
@@ -10,6 +9,7 @@ import {
    IsOptional,
    Min,
 } from 'class-validator';
+import { EAllowedUser, EUserApp } from '@common/utils/enum';
 
 //types
 export type AllowedUser = keyof typeof EAllowedUser;

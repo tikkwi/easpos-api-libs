@@ -1,4 +1,3 @@
-import { APP, COOKIE_SECRET, REDIS_CLIENT } from '@constant';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { Transport } from '@nestjs/microservices';
@@ -8,6 +7,7 @@ import RedisStore from 'connect-redis';
 import * as session from 'express-session';
 import helmet from 'helmet';
 import { RedisClientType } from 'redis';
+import { APP, COOKIE_SECRET, REDIS_CLIENT } from '@common/constant';
 
 export async function appBootstrap(
    module: any,

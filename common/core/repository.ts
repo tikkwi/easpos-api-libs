@@ -1,7 +1,7 @@
-import { PAGE_SIZE } from '@constant/config.constant';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Document, Model } from 'mongoose';
 import { ContextService } from './context/context.service';
+import { PAGE_SIZE } from '@common/constant';
 
 export class Repository<T> {
    constructor(

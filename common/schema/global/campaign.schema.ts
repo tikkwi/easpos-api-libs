@@ -1,11 +1,11 @@
 import { Schema, SchemaFactory } from '@nestjs/mongoose';
-import { BaseSchema } from '@global_schema/base.schema';
-import { AppProp } from '@decorator/app_prop.decorator';
 import { SchemaTypes } from 'mongoose';
 import { Type } from 'class-transformer';
-import { Status } from '@global_dto/entity.dto';
 import { Category } from '@shared/category/category.schema';
 import { ValidateIf } from 'class-validator';
+import { BaseSchema } from '@common/schema/global/base.schema';
+import { AppProp } from '@common/decorator/app_prop.decorator';
+import { Status } from '@common/dto/global/entity.dto';
 
 @Schema()
 export class Campaign extends BaseSchema {

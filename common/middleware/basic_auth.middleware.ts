@@ -1,6 +1,3 @@
-import { AppBrokerService } from '@core/app_broker/app_broker.service';
-import { EApp } from '@utils/enum';
-import { authenticateBasicAuth, getServiceToken } from '@utils/misc';
 import {
    ForbiddenException,
    Inject,
@@ -9,9 +6,12 @@ import {
    NestMiddleware,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { AuthCredentialServiceMethods } from '@service_dto/auth_credential.dto';
-import { APP, AUTH_CREDENTIAL } from '@constant';
+import { authenticateBasicAuth, getServiceToken } from '@common/utils/misc';
+import { APP, AUTH_CREDENTIAL } from '@common/constant';
+import { AuthCredentialServiceMethods } from '@common/dto/service/auth_credential.dto';
+import { AppBrokerService } from '@common/core/app_broker/app_broker.service';
 import { ConfigService } from '@nestjs/config';
+import { EApp } from '@common/utils/enum';
 
 @Injectable()
 export class BasicAuthMiddleware implements NestMiddleware {
@@ -26,7 +26,7 @@ export class BasicAuthMiddleware implements NestMiddleware {
       const { userName, password } = await this.appBroker.request<BasicAuth>({
          action: (meta) => this.credService.getAuthCredential({ url: request.originalUrl }, meta),
          cache: true,
-         key: AUTH_CREDENTIAL,
+         key: 'adm_auth_cred',
          app: EApp.Admin,
       });
 

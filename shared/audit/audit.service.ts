@@ -1,12 +1,12 @@
-import { REPOSITORY } from '@constant';
-import { ContextService } from '@core/context/context.service';
-import { CoreService } from '@core/service/core.service';
-import { Repository } from '@core/repository';
-import { AppService } from '@decorator/app_service.decorator';
 import { Inject } from '@nestjs/common';
 import { AuditServiceMethods } from '@shared/audit/audit.dto';
 import { Audit } from './audit.schema';
 import { pick } from 'lodash';
+import { AppService } from '@common/decorator/app_service.decorator';
+import { CoreService } from '@common/core/service/core.service';
+import { ContextService } from '@common/core/context/context.service';
+import { REPOSITORY } from '@common/constant';
+import { Repository } from '@common/core/repository';
 
 @AppService()
 export class AuditService extends CoreService implements AuditServiceMethods {

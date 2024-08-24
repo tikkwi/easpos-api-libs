@@ -1,6 +1,3 @@
-import { AppProp } from '@decorator/app_prop.decorator';
-import { MFA, Status } from '@global_dto/entity.dto';
-import { EStatus, ETmpBlock, EUser } from '@utils/enum';
 import { SchemaFactory } from '@nestjs/mongoose';
 import { hashSync } from 'bcryptjs';
 import { Type } from 'class-transformer';
@@ -15,6 +12,9 @@ import {
 import { SchemaTypes } from 'mongoose';
 import { BaseSchema } from './base.schema';
 import { Address } from '@shared/address/address.schema';
+import { EStatus, ETmpBlock, EUser } from '@common/utils/enum';
+import { AppProp } from '@common/decorator/app_prop.decorator';
+import { MFA, Status } from '@common/dto/global/entity.dto';
 
 export class TmpBlock {
    @IsDateString()

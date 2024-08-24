@@ -1,11 +1,11 @@
 import 'reflect-metadata';
-import { APPS, SKIP_APPS, SKIP_USERS, USERS } from '@constant/decorator.constant';
-import { AllowedApp, AllowedUser } from '@global_dto/core.dto';
 import { Controller } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { pull } from 'lodash';
 import { Users } from './users.decorator';
-import { Apps } from '@decorator/app.decorator';
+import { Apps } from './app.decorator';
+import { AllowedApp, AllowedUser } from '@common/dto/global/core.dto';
+import { APPS, SKIP_APPS, SKIP_USERS, USERS } from '@common/constant';
 
 export function AppController(
    prefix?: string,

@@ -3,7 +3,7 @@ import { CategoryController } from './category.controller';
 import { CategoryService } from './category.service';
 import { Category, CategorySchema } from './category.schema';
 import { MongooseModule } from '@nestjs/mongoose';
-import { getRepositoryProvider } from '@utils/misc';
+import { getRepositoryProvider } from '@common/utils/misc';
 
 @Module({
    imports: [MongooseModule.forFeature([{ name: Category.name, schema: CategorySchema }])],

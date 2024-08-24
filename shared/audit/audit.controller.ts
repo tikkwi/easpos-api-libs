@@ -1,6 +1,6 @@
-import { AppController } from '@decorator/app_controller.decorator';
-import { AuditService } from './audit.service';
-import { EAllowedUser } from '@utils/enum';
+import { AppController } from '@common/decorator/app_controller.decorator';
+import { EAllowedUser } from '@common/utils/enum';
+import { AuditService } from '@shared/audit/audit.service';
 
 @AppController('audit', [EAllowedUser.Admin])
 export class AuditController {

@@ -1,6 +1,6 @@
-import { AppController } from '@decorator/app_controller.decorator';
 import { Body, Post } from '@nestjs/common';
 import { TmpService } from './tmp.service';
+import { AppController } from '@common/decorator/app_controller.decorator';
 
 @AppController('tmp')
 export class TmpController {

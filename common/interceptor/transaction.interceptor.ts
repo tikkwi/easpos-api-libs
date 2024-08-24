@@ -1,8 +1,8 @@
-import { ContextService } from '@core/context/context.service';
-import { TransactionService } from '@core/transaction/transaction.service';
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
 import { from, lastValueFrom, map, Observable, tap } from 'rxjs';
-import { encrypt } from '@utils/encrypt';
+import { TransactionService } from '@common/core/transaction/transaction.service';
+import { ContextService } from '@common/core/context/context.service';
+import { encrypt } from '@common/utils/encrypt';
 
 @Injectable()
 export class TransactionInterceptor implements NestInterceptor {

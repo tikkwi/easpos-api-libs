@@ -1,5 +1,3 @@
-import { APP } from '@constant/config.constant';
-import { firstUpperCase } from '@utils/regex';
 import {
    ArgumentsHost,
    Catch,
@@ -10,8 +8,10 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Request, Response } from 'express';
-import { AppRedisService } from '@core/app_redis/app_redis.service';
-import { responseError } from '@utils/misc';
+import { APP } from '@common/constant';
+import { AppRedisService } from '@common/core/app_redis/app_redis.service';
+import { responseError } from '@common/utils/misc';
+import { firstUpperCase } from '@common/utils/regex';
 
 @Catch()
 export class AppExceptionFilter implements ExceptionFilter {

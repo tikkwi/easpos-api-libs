@@ -1,8 +1,8 @@
-import { FindByIdDto } from '@global_dto/core.dto';
-import { ECategory } from '@utils/enum';
-import { regex } from '@utils/regex';
 import { Category } from '@shared/category/category.schema';
 import { IsEnum, IsNotEmpty, Matches } from 'class-validator';
+import { regex } from '@common/utils/regex';
+import { ECategory } from '@common/utils/enum';
+import { FindByIdDto } from '@common/dto/global/core.dto';
 
 export class CreateCategoryDto {
    @IsNotEmpty()

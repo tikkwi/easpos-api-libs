@@ -1,6 +1,6 @@
-import { AppProp } from '@decorator/app_prop.decorator';
-import { BaseSchema } from '@global_schema/base.schema';
 import { Schema, SchemaFactory } from '@nestjs/mongoose';
+import { BaseSchema } from '@common/schema/global/base.schema';
+import { AppProp } from '@common/decorator/app_prop.decorator';
 
 @Schema()
 export class Address extends BaseSchema {

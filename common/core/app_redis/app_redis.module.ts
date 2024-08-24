@@ -1,17 +1,18 @@
 import { Global, InternalServerErrorException, Module } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { Redis } from 'ioredis';
+import { AppRedisService } from '@common/core/app_redis/app_redis.service';
 import {
    ENV,
+   REDIS_CLIENT,
    REDIS_HOST,
+   REDIS_LCL_CLIENT,
    REDIS_LCL_PWD,
    REDIS_LCL_USR,
    REDIS_PASSWORD,
    REDIS_PORT,
    REDIS_USR,
-} from '@constant/config.constant';
-import { ConfigService } from '@nestjs/config';
-import { Redis } from 'ioredis';
-import { AppRedisService } from '@core/app_redis/app_redis.service';
-import { REDIS_CLIENT, REDIS_LCL_CLIENT } from '@constant/provider.constant';
+} from '@common/constant';
 
 @Global()
 @Module({

@@ -1,7 +1,7 @@
-import { PurchasedMerchantSubscription } from '@global_schema/purchased_merchant_subscription.schema';
 import { IsMongoId, IsOptional, IsString } from 'class-validator';
 import { OmitType } from '@nestjs/swagger';
-import { CoreDto } from '@global_dto/core.dto';
+import { CoreDto } from '@common/dto/global/core.dto';
+import { PurchasedMerchantSubscription } from '@common/schema/global/purchased_merchant_subscription.schema';
 
 export class SubMonitorDto {
    @IsMongoId({ each: true })

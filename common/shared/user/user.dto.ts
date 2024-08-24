@@ -1,5 +1,3 @@
-import { User } from '@global_schema/user.schema';
-import { regex } from '@utils/regex';
 import { OmitType } from '@nestjs/swagger';
 import {
    IsEmail,
@@ -13,7 +11,9 @@ import {
 import { CoreDto, FindDto } from '../../dto/global/core.dto';
 import { Type } from 'class-transformer';
 import { CreateAddressDto } from '@shared/address/address.dto';
-import { EUserApp } from '@utils/enum';
+import { regex } from '@common/utils/regex';
+import { EUserApp } from '@common/utils/enum';
+import { User } from '@common/schema/global/user.schema';
 
 export class GetUserDto extends FindDto {
    @IsMongoId()

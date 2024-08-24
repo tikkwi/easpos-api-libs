@@ -1,11 +1,11 @@
-import { LoggedInMerchantUser, Merchant } from '@service_schema/merchant.schema';
 import { OmitType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsMongoId, IsNotEmpty, ValidateNested } from 'class-validator';
 import { CategoryDto } from '../global/action.dto';
 import { CoreDto, FindByIdDto } from '../global/core.dto';
-import { IsAppNumberString } from '@validator/is_number_string.validator';
-import { MFA } from '@global_dto/entity.dto';
+import { LoggedInMerchantUser, Merchant } from '@common/schema/service/merchant.schema';
+import { IsAppNumberString } from '@common/validator';
+import { MFA } from '@common/dto/global/entity.dto';
 
 export class CreateMerchantDto extends OmitType(CoreDto(Merchant), [
    'activePurchases',

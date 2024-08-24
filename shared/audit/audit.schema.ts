@@ -1,11 +1,11 @@
-import { AppProp } from '@decorator/app_prop.decorator';
-import { UserProfile } from '@global_dto/entity.dto';
-import { BaseSchema } from '@global_schema/base.schema';
-import { EApp } from '@utils/enum';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Type } from 'class-transformer';
 import { IsIP, IsNotEmpty, IsString, ValidateIf } from 'class-validator';
 import { SchemaTypes } from 'mongoose';
+import { AppProp } from '@common/decorator/app_prop.decorator';
+import { BaseSchema } from '@common/schema/global/base.schema';
+import { EApp } from '@common/utils/enum';
+import { UserProfile } from '@common/dto/global/entity.dto';
 
 export class RequestLog {
    @IsNotEmpty()

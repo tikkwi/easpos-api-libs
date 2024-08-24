@@ -15,25 +15,14 @@
       "forceConsistentCasingInFileNames": false,
       "noFallthroughCasesInSwitch": false,
       "allowSyntheticDefaultImports": true,
-//      "outDir": "../dist",
-//      "typeRoots": ["../types", "common/types"],
-//      "paths": {
-//         "@app/*": ["../src/utils/*"],
-//         "@shared/*": ["shared/*"],
-//         "@constant/*": ["common/constant/*"],
-//         "@core/*": ["common/core/*"],
-//         "@decorator/*": ["/common/decorator/*"],
-//         "@guard/*": ["common/guard/*"],
-//         "@interceptor/*": ["common/interceptor/*"],
-//         "@middleware/*": ["common/middleware/*"],
-//         "@common_shared/*": ["common/shared/*"],
-//         "@utils/*": ["common/utils/*"],
-//         "@global_dto/*": ["common/dto/global/*"],
-//         "@service_dto/*": ["common/dto/service/*"],
-//         "@global_schema/*": ["common/schema/global/*"],
-//         "@service_schema/*": ["common/schema/service/*"],
-//         "@validator/*": ["common/validator/*"]
-//      }
+      "baseUrl": ".",
+      "outDir": "../dist",
+      "typeRoots": ["../types", "common/types"],
+      "paths": {
+         "@app/*": ["../src/*"],
+         "@shared/*": ["shared/*"],
+         "@common/*": ["common/*"]
+      }
    },
-//   "include": ["../libs/**/*", "../src/**/*", "../type/*"]
+   "include": ["../libs/**/*", "../src/**/*", "../type/*"]
 }

@@ -1,16 +1,16 @@
-import { MONGO_URI } from '@constant/config.constant';
 import { Module, ValidationPipe } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { MongooseModule, MongooseModuleOptions } from '@nestjs/mongoose';
 import { join } from 'path';
 import { ContextModule } from '../context/context.module';
-import { TransformGuard } from '@guard/transform.guard';
-import { AppBrokerModule } from '../app_broker/app_broker.module';
-import { AppRedisModule } from '@core/app_redis/app_redis.module';
-import { AppExceptionFilter } from '@core/exception.filter';
-import { TransactionInterceptor } from '@interceptor/transaction.interceptor';
-import { TransactionModule } from '@core/transaction/transaction.module';
+import { MONGO_URI } from '@common/constant';
+import { AppRedisModule } from '@common/core/app_redis/app_redis.module';
+import { AppBrokerModule } from '@common/core/app_broker/app_broker.module';
+import { TransactionModule } from '@common/core/transaction/transaction.module';
+import { TransformGuard } from '@common/guard/transform.guard';
+import { TransactionInterceptor } from '@common/interceptor/transaction.interceptor';
+import { AppExceptionFilter } from '@common/core/exception.filter';
 
 @Module({
    imports: [

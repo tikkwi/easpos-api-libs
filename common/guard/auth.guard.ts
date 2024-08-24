@@ -1,8 +1,3 @@
-import { APPS, USERS } from '@constant/decorator.constant';
-import { AUTH_CREDENTIAL, MERCHANT } from '@constant/model.constant';
-import { ContextService } from '@core/context/context.service';
-import { AllowedUser } from '@global_dto/core.dto';
-import { EAllowedUser, EApp, EUser } from '@utils/enum';
 import {
    CanActivate,
    ExecutionContext,
@@ -11,14 +6,17 @@ import {
    UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { AppBrokerService } from '@core/app_broker/app_broker.service';
-import { authenticateBasicAuth, getServiceToken } from '@utils/misc';
-import { MerchantServiceMethods } from '@service_dto/merchant.dto';
 import { intersection } from 'lodash';
 import { Request } from 'express';
 import { ServerUnaryCall } from '@grpc/grpc-js';
-import { AuthCredential } from '@service_schema/auth_credential.schema';
-import { AuthCredentialServiceMethods } from '@service_dto/auth_credential.dto';
+import { ContextService } from '@common/core/context/context.service';
+import { AppBrokerService } from '@common/core/app_broker/app_broker.service';
+import { authenticateBasicAuth, getServiceToken } from '@common/utils/misc';
+import { APPS, AUTH_CREDENTIAL, MERCHANT, USERS } from '@common/constant';
+import { AuthCredentialServiceMethods } from '@common/dto/service/auth_credential.dto';
+import { MerchantServiceMethods } from '@common/dto/service/merchant.dto';
+import { AllowedUser } from '@common/dto/global/core.dto';
+import { EAllowedUser, EApp, EUser } from '@common/utils/enum';
 
 /*
 TODO,NOTE cache authorized status up to 1 day which mean merchant_user may able to

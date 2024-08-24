@@ -1,9 +1,9 @@
-import { AppConfig, AppConfigSchema } from '../../../../src/app_config/app_config.schema';
-import { getRepositoryProvider } from '@utils/misc';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { TmpController } from './tmp.controller';
 import { TmpService } from './tmp.service';
+import { getRepositoryProvider } from '@common/utils/misc';
+import { AppConfig, AppConfigSchema } from '@app/app_config/app_config.schema';
 
 @Module({
    imports: [MongooseModule.forFeature([{ name: AppConfig.name, schema: AppConfigSchema }])],
