@@ -1,6 +1,6 @@
 import { Inject } from '@nestjs/common';
-import { AddressServiceMethods, CreateAddressDto } from '@shared/address/address.dto';
-import { Address } from './address.schema';
+import { AddressServiceMethods, CreateAddressDto } from '@common/dto/global/address.dto';
+import { Address } from '@common/schema/global/address.schema';
 import { AppService } from '@common/decorator/app_service.decorator';
 import { CoreService } from '@common/core/service/core.service';
 import { ContextService } from '@common/core/context/context.service';

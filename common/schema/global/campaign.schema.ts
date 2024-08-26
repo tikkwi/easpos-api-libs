@@ -1,13 +1,11 @@
-import { Schema, SchemaFactory } from '@nestjs/mongoose';
 import { SchemaTypes } from 'mongoose';
 import { Type } from 'class-transformer';
-import { Category } from '@shared/category/category.schema';
+import { Category } from '@common/schema/global/category.schema';
 import { ValidateIf } from 'class-validator';
 import { BaseSchema } from '@common/schema/global/base.schema';
 import { AppProp } from '@common/decorator/app_prop.decorator';
 import { Status } from '@common/dto/global/entity.dto';
 
-@Schema()
 export class Campaign extends BaseSchema {
    @AppProp({ type: String })
    name: string;
@@ -41,5 +39,3 @@ export class Campaign extends BaseSchema {
    @AppProp({ type: [{ type: SchemaTypes.ObjectId, ref: 'Branch' }] })
    appliedBranches: any[]; //Branch
 }
-
-export const CampaignSchema = SchemaFactory.createForClass(Campaign);

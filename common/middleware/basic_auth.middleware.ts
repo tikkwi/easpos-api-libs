@@ -8,7 +8,7 @@ import {
 import { Request, Response } from 'express';
 import { authenticateBasicAuth, getServiceToken } from '@common/utils/misc';
 import { APP, AUTH_CREDENTIAL } from '@common/constant';
-import { AuthCredentialServiceMethods } from '@common/dto/service/auth_credential.dto';
+import { AuthCredentialServiceMethods } from '@common/dto/shared/auth_credential.dto';
 import { AppBrokerService } from '@common/core/app_broker/app_broker.service';
 import { ConfigService } from '@nestjs/config';
 import { EApp } from '@common/utils/enum';

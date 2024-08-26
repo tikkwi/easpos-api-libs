@@ -1,5 +1,5 @@
 // import { REPOSITORY } from '@constant';
-// import { CoreService } from '@core/service/core.service';
+// import { CoreService } from '@core/shared/core.shared';
 // import { Repository } from '@core/repository';
 // import { MerchantServiceMethods } from '@dto/merchant.dto';
 // import {

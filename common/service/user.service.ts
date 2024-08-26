@@ -12,7 +12,7 @@ import { User } from '@common/schema/global/user.schema';
 import { ContextService } from '@common/core/context/context.service';
 import { AppRedisService } from '@common/core/app_redis/app_redis.service';
 import { responseError } from '@common/utils/misc';
-import { LoginDto } from '@common/shared/user/user.dto';
+import { LoginDto } from '@common/dto/global/user.dto';
 import { EUser, EUserApp } from '@common/utils/enum';
 import { encrypt } from '@common/utils/encrypt';
 

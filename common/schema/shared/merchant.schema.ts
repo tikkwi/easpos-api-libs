@@ -1,5 +1,5 @@
 import { Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Category } from '@shared/category/category.schema';
+import { Category } from '@common/schema/global/category.schema';
 import { IsEmail, IsEnum, IsMongoId, IsPhoneNumber, IsString } from 'class-validator';
 import { SchemaTypes } from 'mongoose';
 import { EStatus, ESubscription, EUserApp } from '@common/utils/enum';

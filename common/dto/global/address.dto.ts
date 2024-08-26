@@ -1,4 +1,4 @@
-import { Address } from '@shared/address/address.schema';
+import { Address } from '@common/schema/global/address.schema';
 import { CoreDto, FindByIdDto } from '@common/dto/global/core.dto';
 
 export class CreateAddressDto extends CoreDto(Address) {}

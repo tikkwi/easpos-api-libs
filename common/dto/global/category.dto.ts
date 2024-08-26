@@ -1,4 +1,4 @@
-import { Category } from '@shared/category/category.schema';
+import { Category } from '@common/schema/global/category.schema';
 import { IsEnum, IsNotEmpty, Matches } from 'class-validator';
 import { regex } from '@common/utils/regex';
 import { ECategory } from '@common/utils/enum';

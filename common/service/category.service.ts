@@ -1,6 +1,6 @@
 import { BadRequestException, Inject } from '@nestjs/common';
-import { CategoryServiceMethods, CreateCategoryDto } from '@shared/category/category.dto';
-import { Category } from './category.schema';
+import { CategoryServiceMethods, CreateCategoryDto } from '@common/dto/global/category.dto';
+import { Category } from '@common/schema/global/category.schema';
 import { AppService } from '@common/decorator/app_service.decorator';
 import { CoreService } from '@common/core/service/core.service';
 import { REPOSITORY } from '@common/constant';

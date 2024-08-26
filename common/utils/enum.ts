@@ -11,7 +11,7 @@ export enum EUserApp {
    Customer = 'Customer',
 }
 
-//service name
+//shared name
 export enum EAuthCredential {
    AdminRpc = 'admin_rpc',
    Swagger = 'swagger',
@@ -22,8 +22,7 @@ export enum EAuthCredential {
 export enum ESubscription {
    Demo = 'Demo',
    Offline = 'Offline',
-   DedicatedServer = 'DedicatedServer',
-   Dedicated = 'Dedicated', //NOTE: dedicated both server & db
+   Dedicated = 'Dedicated', //NOTE: dedicated server & db
    SharedSubscription = 'SharedSubscription',
 }
 

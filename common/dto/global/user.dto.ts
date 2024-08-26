@@ -8,9 +8,9 @@ import {
    ValidateIf,
    ValidateNested,
 } from 'class-validator';
-import { CoreDto, FindDto } from '../../dto/global/core.dto';
+import { CoreDto, FindDto } from './core.dto';
 import { Type } from 'class-transformer';
-import { CreateAddressDto } from '@shared/address/address.dto';
+import { CreateAddressDto } from '@common/dto/global/address.dto';
 import { regex } from '@common/utils/regex';
 import { EUserApp } from '@common/utils/enum';
 import { User } from '@common/schema/global/user.schema';

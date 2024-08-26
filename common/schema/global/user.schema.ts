@@ -11,7 +11,7 @@ import {
 } from 'class-validator';
 import { SchemaTypes } from 'mongoose';
 import { BaseSchema } from './base.schema';
-import { Address } from '@shared/address/address.schema';
+import { Address } from '@common/schema/global/address.schema';
 import { EStatus, ETmpBlock, EUser } from '@common/utils/enum';
 import { AppProp } from '@common/decorator/app_prop.decorator';
 import { MFA, Status } from '@common/dto/global/entity.dto';

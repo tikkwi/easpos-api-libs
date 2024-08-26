@@ -1,4 +1,4 @@
-import { MailServiceMethods, SendMailDto } from '@shared/mail/mail.dto';
+import { MailServiceMethods, SendMailDto } from '@common/dto/global/mail.dto';
 import { AppService } from '@common/decorator/app_service.decorator';
 import { CoreService } from '@common/core/service/core.service';
 import { ContextService } from '@common/core/context/context.service';

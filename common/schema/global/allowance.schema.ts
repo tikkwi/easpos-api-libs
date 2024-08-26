@@ -1,7 +1,6 @@
 import { SchemaTypes } from 'mongoose';
 import { IsBoolean, IsEnum, IsMongoId, IsNumber, IsOptional, ValidateIf } from 'class-validator';
 import { Type } from 'class-transformer';
-import { SchemaFactory } from '@nestjs/mongoose';
 import { EAllowanceTrigger, EAllowanceType } from '@common/utils/enum';
 import { BaseSchema } from '@common/schema/global/base.schema';
 import { AppProp } from '@common/decorator/app_prop.decorator';
@@ -94,13 +93,11 @@ export class Allowance extends BaseSchema {
    @AppProp({ type: [{ type: SchemaTypes.Mixed }] })
    @Type(() => TriggerProduct)
    triggerProducts?: TriggerProduct[];
-
-   //NOTE: only if merchantCampaign
-   @AppProp({ type: [{ type: SchemaTypes.ObjectId, ref: 'Branch' }] })
-   appliedBranches: any[]; //Branch
+   //
+   // //NOTE: only if merchantCampaign & customerAllowance
+   // @AppProp({ type: [{ type: SchemaTypes.ObjectId, ref: 'Branch' }] })
+   // appliedBranches: any[]; //Branch
 
    @AppProp({ type: SchemaTypes.ObjectId, ref: 'Campaign' })
    campaign: Campaign;
 }
-
-export const AllowanceSchema = SchemaFactory.createForClass(Allowance);

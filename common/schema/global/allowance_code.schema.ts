@@ -1,11 +1,9 @@
-import { Schema, SchemaFactory } from '@nestjs/mongoose';
 import { BaseSchema } from '@common/schema/global/base.schema';
 import { AppProp } from '@common/decorator/app_prop.decorator';
 import { SchemaTypes } from 'mongoose';
 import { Allowance } from '@common/schema/global/allowance.schema';
 import { ValidateIf } from 'class-validator';
 
-@Schema()
 export class AllowanceCode extends BaseSchema {
    @AppProp({ type: String, unique: true })
    code: string;
@@ -24,5 +22,3 @@ export class AllowanceCode extends BaseSchema {
    @AppProp({ type: SchemaTypes.ObjectId })
    user: any; //Merchant User / Customer
 }
-
-export const AllowanceCodeSchema = SchemaFactory.createForClass(AllowanceCode);
