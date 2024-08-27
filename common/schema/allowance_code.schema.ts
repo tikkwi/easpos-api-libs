@@ -1,7 +1,7 @@
-import { BaseSchema } from '@common/schema/global/base.schema';
+import { BaseSchema } from '@common/schema/base.schema';
 import { AppProp } from '@common/decorator/app_prop.decorator';
 import { SchemaTypes } from 'mongoose';
-import { Allowance } from '@common/schema/global/allowance.schema';
+import { Allowance } from '@common/schema/allowance.schema';
 import { ValidateIf } from 'class-validator';
 
 export class AllowanceCode extends BaseSchema {

@@ -1,8 +1,8 @@
 import { SchemaTypes } from 'mongoose';
 import { Type } from 'class-transformer';
-import { Category } from '@common/schema/global/category.schema';
+import { Category } from '@common/schema/category.schema';
 import { ValidateIf } from 'class-validator';
-import { BaseSchema } from '@common/schema/global/base.schema';
+import { BaseSchema } from '@common/schema/base.schema';
 import { AppProp } from '@common/decorator/app_prop.decorator';
 import { Status } from '@common/dto/global/entity.dto';
 

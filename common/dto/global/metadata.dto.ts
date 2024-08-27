@@ -6,7 +6,7 @@ import {
    ValidateIf,
    ValidateNested,
 } from 'class-validator';
-import { Metadata as MetadataSchema } from '../../schema/global/metadata.schema';
+import { Metadata as MetadataSchema } from '../../schema/metadata.schema';
 import { FindDto } from '@common/dto/global/core.dto';
 import { EEntityMetadata, EField } from '@common/utils/enum';
 

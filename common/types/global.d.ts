@@ -18,7 +18,7 @@ declare global {
 
    type Merchant = import('@service_schema/merchant.schema').Merchant;
    type AuthCredential = import('@service_schema/auth_credential.schema').AuthCredential;
-   type RequestLog = import('@common/schema/global/audit.schema').RequestLog;
+   type RequestLog = import('@common/schema/audit.schema').RequestLog;
 
    type CreateType<T> = Omit<T, '_id' | 'createdAt' | 'updatedAt'>;
 

@@ -1,12 +1,4 @@
-import { Address } from '@common/schema/global/address.schema';
-import { CoreDto, FindByIdDto } from '@common/dto/global/core.dto';
+import { CoreDto } from '@common/dto/global/core.dto';
+import { Address } from '@common/schema/address.schema';
 
 export class CreateAddressDto extends CoreDto(Address) {}
-
-export type AddressReturn = { data: Address };
-
-export interface AddressServiceMethods {
-   getAddress(dto: FindByIdDto): Promise<AddressReturn>;
-
-   createAddress(dto: CreateAddressDto): Promise<AddressReturn>;
-}

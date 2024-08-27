@@ -8,7 +8,7 @@ import { omit } from 'lodash';
 import { request } from 'express';
 import { CoreService } from '@common/core/service/core.service';
 import { Repository } from '@common/core/repository';
-import { User } from '@common/schema/global/user.schema';
+import { User } from '@common/schema/user.schema';
 import { ContextService } from '@common/core/context/context.service';
 import { AppRedisService } from '@common/core/app_redis/app_redis.service';
 import { responseError } from '@common/utils/misc';

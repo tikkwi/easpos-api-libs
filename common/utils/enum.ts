@@ -11,7 +11,7 @@ export enum EUserApp {
    Customer = 'Customer',
 }
 
-//shared name
+//service name
 export enum EAuthCredential {
    AdminRpc = 'admin_rpc',
    Swagger = 'swagger',

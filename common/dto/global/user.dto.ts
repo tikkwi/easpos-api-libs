@@ -13,7 +13,7 @@ import { Type } from 'class-transformer';
 import { CreateAddressDto } from '@common/dto/global/address.dto';
 import { regex } from '@common/utils/regex';
 import { EUserApp } from '@common/utils/enum';
-import { User } from '@common/schema/global/user.schema';
+import { User } from '@common/schema/user.schema';
 
 export class GetUserDto extends FindDto {
    @IsMongoId()

@@ -1,6 +1,6 @@
 import { Inject } from '@nestjs/common';
 import { AuditServiceMethods } from '@common/dto/global/audit.dto';
-import { Audit } from '@common/schema/global/audit.schema';
+import { Audit } from '@common/schema/audit.schema';
 import { pick } from 'lodash';
 import { AppService } from '@common/decorator/app_service.decorator';
 import { CoreService } from '@common/core/service/core.service';

@@ -1,5 +1,5 @@
 import { OmitType } from '@nestjs/swagger';
-import { Audit } from '@common/schema/global/audit.schema';
+import { Audit } from '@common/schema/audit.schema';
 import { CoreDto } from '@common/dto/global/core.dto';
 
 export class LogRequestDto extends OmitType(CoreDto(Audit), [

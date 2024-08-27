@@ -13,8 +13,8 @@ import { ContextService } from '@common/core/context/context.service';
 import { AppBrokerService } from '@common/core/app_broker/app_broker.service';
 import { authenticateBasicAuth, getServiceToken } from '@common/utils/misc';
 import { APPS, AUTH_CREDENTIAL, MERCHANT, USERS } from '@common/constant';
-import { AuthCredentialServiceMethods } from '@common/dto/shared/auth_credential.dto';
-import { MerchantServiceMethods } from '@common/dto/shared/merchant.dto';
+import { AuthCredentialServiceMethods } from '@common/dto/service/auth_credential.dto';
+import { MerchantServiceMethods } from '@common/dto/service/merchant.dto';
 import { AllowedUser } from '@common/dto/global/core.dto';
 import { EAllowedUser, EApp, EUser } from '@common/utils/enum';
 

@@ -2,9 +2,9 @@ import { SchemaTypes } from 'mongoose';
 import { IsBoolean, IsEnum, IsMongoId, IsNumber, IsOptional, ValidateIf } from 'class-validator';
 import { Type } from 'class-transformer';
 import { EAllowanceTrigger, EAllowanceType } from '@common/utils/enum';
-import { BaseSchema } from '@common/schema/global/base.schema';
+import { BaseSchema } from '@common/schema/base.schema';
 import { AppProp } from '@common/decorator/app_prop.decorator';
-import { Campaign } from '@common/schema/global/campaign.schema';
+import { Campaign } from '@common/schema/campaign.schema';
 
 class TriggerProduct {
    @IsMongoId()

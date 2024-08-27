@@ -1,8 +1,6 @@
-import { Schema, SchemaFactory } from '@nestjs/mongoose';
-import { BaseSchema } from '@common/schema/global/base.schema';
+import { BaseSchema } from '@common/schema/base.schema';
 import { AppProp } from '@common/decorator/app_prop.decorator';
 
-@Schema()
 export class Address extends BaseSchema {
    @AppProp({ type: String }, { swagger: { example: 'Zalun' } })
    locality: string;
@@ -28,5 +26,3 @@ export class Address extends BaseSchema {
    )
    addressDetail?: string;
 }
-
-export const AddressSchema = SchemaFactory.createForClass(Address);

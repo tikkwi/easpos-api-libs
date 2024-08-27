@@ -3,7 +3,7 @@ import { Type } from 'class-transformer';
 import { IsMongoId, IsNotEmpty, ValidateNested } from 'class-validator';
 import { CategoryDto } from '../global/action.dto';
 import { CoreDto, FindByIdDto } from '../global/core.dto';
-import { LoggedInMerchantUser, Merchant } from '@common/schema/shared/merchant.schema';
+import { LoggedInMerchantUser, Merchant } from '@app/merchant/merchant.schema';
 import { IsAppNumberString } from '@common/validator';
 import { MFA } from '@common/dto/global/entity.dto';
 

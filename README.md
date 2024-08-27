@@ -34,15 +34,6 @@
 
 ## NOTE
 
-- ### Difference between ```common/shared``` and ```shared lib```
-    - Both services available through multiple apps
-    - Services in ```shared lib``` don't need to communicate outside world (services not available in ```shared lib```)
-    - Which mean dependency injection won't be the same
-    - If dependency lie within the app, can provide simply with ```import```.
-    - Unless it would be communicate through ```transport layer``` (```grpc```) and providing dependency would be
-      different
-    - ```common/shared``` is the place for shared services that need external communications
-    - External dependencies **must** be abstracted in ```common/shared```
 - ### Cautions about ```Request Scope Service```
     - While ```Request Scope Service``` provide convenient way to maintain request-specific instance, it raise tons of
       challenges

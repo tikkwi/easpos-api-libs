@@ -1,7 +1,7 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { AddressModule } from '@shared/address/address.module';
-import { CategoryModule } from '@shared/category/category.module';
-import { MailModule } from '@shared/mail/mail.module';
+import { AddressModule } from '@service/address/address.module';
+import { CategoryModule } from '@service/category/category.module';
+import { MailModule } from '@service/mail/mail.module';
 import * as cookieParser from 'cookie-parser';
 import { CoreModule } from './core.module';
 import { hours, minutes, ThrottlerModule } from '@nestjs/throttler';
