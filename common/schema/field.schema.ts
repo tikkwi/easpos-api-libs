@@ -1,11 +1,9 @@
-import { Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Matches, ValidateIf } from 'class-validator';
 import { BaseSchema } from '@common/schema/base.schema';
 import { AppProp } from '@common/decorator/app_prop.decorator';
 import { EField } from '@common/utils/enum';
 import { regex } from '@common/utils/regex';
 
-@Schema()
 export class Field extends BaseSchema {
    @AppProp({ type: String })
    name: string;
@@ -27,5 +25,3 @@ export class Field extends BaseSchema {
    @AppProp({ type: String, required: false })
    remark?: string;
 }
-
-export const FieldSchema = SchemaFactory.createForClass(Field);

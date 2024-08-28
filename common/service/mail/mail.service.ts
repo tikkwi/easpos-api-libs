@@ -1,13 +1,9 @@
-import { MailServiceMethods, SendMailDto } from '@common/dto/global/mail.dto';
-import { AppService } from '@common/decorator/app_service.decorator';
+import { SendMailDto } from '@common/dto/global/mail.dto';
 import { CoreService } from '@common/core/service/core.service';
-import { ContextService } from '@common/core/context/context.service';
+import { Mail } from '@common/schema/mail.schema';
 
-@AppService()
-export class MailService extends CoreService implements MailServiceMethods {
-   constructor(protected readonly context: ContextService) {
-      super();
-   }
+export abstract class MailService extends CoreService<Mail> {
+   w;
 
    async sendMail({ mail, type }: SendMailDto) {
       console.log(`Send ${type} to ${mail}`);

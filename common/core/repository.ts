@@ -45,7 +45,7 @@ export class Repository<T> {
          | Pick<FindType<T>, 'filter'>
       )) {
       const $rest = rest as any;
-      const $options = [projection, options];
+      const $options = [projection, { lean: true, ...options }];
       const data = await ($rest.filter
          ? this.model.findOne($rest.filter, ...$options)
          : this.model.findById($rest.id, ...$options));
@@ -66,7 +66,7 @@ export class Repository<T> {
 
       const updateOptions: [UpdateQuery<T>, QueryOptions<T>] = [
          { ...update, updatedAt: new Date() },
-         { ...options, lean: true, new: true, session: this.context.get('session') },
+         { lean: true, new: true, ...options, session: this.context.get('session') },
       ];
       const data = id
          ? await this.model.findByIdAndUpdate(id, ...updateOptions)

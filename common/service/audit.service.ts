@@ -1,22 +1,8 @@
-import { Inject } from '@nestjs/common';
-import { AuditServiceMethods } from '@common/dto/global/audit.dto';
 import { Audit } from '@common/schema/audit.schema';
 import { pick } from 'lodash';
-import { AppService } from '@common/decorator/app_service.decorator';
 import { CoreService } from '@common/core/service/core.service';
-import { ContextService } from '@common/core/context/context.service';
-import { REPOSITORY } from '@common/constant';
-import { Repository } from '@common/core/repository';
 
-@AppService()
-export class AuditService extends CoreService implements AuditServiceMethods {
-   constructor(
-      protected readonly context: ContextService,
-      @Inject(REPOSITORY) private readonly repository: Repository<Audit>,
-   ) {
-      super();
-   }
-
+export abstract class AuditService extends CoreService<Audit> {
    async logRequest() {
       const request = this.context.get('request');
       const user = this.context.get('user');

@@ -1,4 +1,4 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop } from '@nestjs/mongoose';
 import { Type } from 'class-transformer';
 import { IsIP, IsNotEmpty, IsString, ValidateIf } from 'class-validator';
 import { SchemaTypes } from 'mongoose';
@@ -23,7 +23,6 @@ export class RequestLog {
    response?: any;
 }
 
-@Schema()
 export class Audit extends BaseSchema {
    @AppProp({ type: SchemaTypes.Mixed, required: false })
    @Type(() => RequestLog)
@@ -50,5 +49,3 @@ export class Audit extends BaseSchema {
    @Type(() => UserProfile)
    user?: UserProfile;
 }
-
-export const AuditSchema = SchemaFactory.createForClass(Audit);

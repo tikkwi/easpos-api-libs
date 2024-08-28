@@ -1,9 +1,9 @@
-import { IsEnum, IsMongoId, IsOptional, Matches, ValidateIf } from 'class-validator';
+import { IsEnum, IsMongoId, Matches, ValidateIf } from 'class-validator';
 import { regex } from '@common/utils/regex';
 import { ECategory } from '@common/utils/enum';
 
 export class CategoryDto {
-   @IsOptional()
+   @ValidateIf((o) => !!!o.name)
    @IsMongoId()
    id?: string;
 
@@ -11,7 +11,7 @@ export class CategoryDto {
    @Matches(regex.enum)
    name?: string;
 
-   @IsOptional()
+   @ValidateIf((o) => !!!o.id)
    @IsEnum(ECategory)
    type?: ECategory;
 }

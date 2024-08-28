@@ -1,4 +1,3 @@
-import { SchemaFactory } from '@nestjs/mongoose';
 import { hashSync } from 'bcryptjs';
 import { Type } from 'class-transformer';
 import {
@@ -11,10 +10,10 @@ import {
 } from 'class-validator';
 import { SchemaTypes } from 'mongoose';
 import { BaseSchema } from './base.schema';
-import { Address } from '@app/address/address.schema';
 import { EStatus, ETmpBlock, EUser } from '@common/utils/enum';
 import { AppProp } from '@common/decorator/app_prop.decorator';
 import { MFA, Status } from '@common/dto/global/entity.dto';
+import { Address } from '@common/schema/address.schema';
 
 export class TmpBlock {
    @IsDateString()
@@ -70,5 +69,3 @@ export class User extends BaseSchema {
    @AppProp({ type: SchemaTypes.ObjectId, ref: 'Address', required: false })
    address?: Address;
 }
-
-export const UserSchema = SchemaFactory.createForClass(User);

@@ -11,13 +11,13 @@ declare global {
    type QueryOptions<T> = import('mongoose').QueryOptions<T>;
    type UpdateQuery<T> = import('mongoose').UpdateQuery<T>;
 
-   type EUser = import('@utils/enum').EUser;
-   type EApp = import('@utils/enum').EApp;
-   type EStatus = import('@utils/enum').EStatus;
-   type EUserApp = import('@utils/enum').EUserApp;
+   type EUser = import('@common/utils/enum').EUser;
+   type EApp = import('@common/utils/enum').EApp;
+   type EStatus = import('@common/utils/enum').EStatus;
+   type EUserApp = import('@common/utils/enum').EUserApp;
 
-   type Merchant = import('@service_schema/merchant.schema').Merchant;
-   type AuthCredential = import('@service_schema/auth_credential.schema').AuthCredential;
+   type Merchant = import('@common/schema/merchant.schema').Merchant;
+   type AuthCredential = import('@common/schema/auth_credential.schema').AuthCredential;
    type RequestLog = import('@common/schema/audit.schema').RequestLog;
 
    type CreateType<T> = Omit<T, '_id' | 'createdAt' | 'updatedAt'>;

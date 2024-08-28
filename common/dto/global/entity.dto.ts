@@ -122,7 +122,7 @@ export class AuthUser {
    @IsEmail()
    mail: string;
 
-   @IsEnum(Status)
+   @IsEnum(EStatus)
    status: EStatus;
 
    @IsBoolean()

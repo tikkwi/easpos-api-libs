@@ -118,3 +118,16 @@ export enum EAllowanceType {
    Product = 'Product',
    Discount = 'Discount',
 }
+
+export enum EPrice {
+   TimeBased = 'TimeBased',
+   StockLevel = 'StockLevel',
+   VolumeLevel = 'VolumeLevel',
+   TierBased = 'TierBased',
+   Geographic = 'Geographic',
+   Bundle = 'Bundle',
+   SpendBase = 'SpendBase',
+   TotalSpendBase = 'TotalSpendBase',
+   PaymentMethod = 'PaymentMethod',
+   Currency = 'Currency',
+}

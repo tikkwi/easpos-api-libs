@@ -3,7 +3,7 @@ import { Type } from 'class-transformer';
 import { BaseSchema } from './base.schema';
 import { ValidateIf } from 'class-validator';
 import { AppProp } from '@common/decorator/app_prop.decorator';
-import { Payment, Period } from '@common/dto/global/entity.dto';
+import { Payment, Period, Status } from '@common/dto/global/entity.dto';
 
 export class Purchase extends BaseSchema {
    @AppProp({ type: String })
@@ -11,6 +11,10 @@ export class Purchase extends BaseSchema {
 
    @AppProp({ type: Boolean })
    subscription: boolean;
+
+   @AppProp({ type: SchemaTypes.Mixed })
+   @Type(() => Status)
+   status: Status;
 
    @ValidateIf((o) => o.subscription)
    @AppProp({ type: SchemaTypes.Mixed })

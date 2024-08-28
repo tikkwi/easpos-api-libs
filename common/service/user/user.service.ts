@@ -16,7 +16,7 @@ import { LoginDto } from '@common/dto/global/user.dto';
 import { EUser, EUserApp } from '@common/utils/enum';
 import { encrypt } from '@common/utils/encrypt';
 
-export abstract class UserService extends CoreService {
+export abstract class UserService extends CoreService<User> {
    protected abstract repository: Repository<User>;
    protected readonly context: ContextService;
    protected readonly db: AppRedisService;
