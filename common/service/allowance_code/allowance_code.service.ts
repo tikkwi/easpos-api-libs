@@ -3,14 +3,20 @@ import { AllowanceCode } from '@common/schema/allowance_code.schema';
 import { CreateAllowanceCodeDto } from '@common/dto/service/allowance_code.dto';
 import { AllowanceService } from '@common/service/allowance/allowance.service';
 
-export abstract class AllowanceCodeService extends CoreService<AllowanceCode> {
+export abstract class AllowanceCodeService<
+   T extends AllowanceCode = AllowanceCode,
+> extends CoreService<T> {
    protected abstract readonly allowanceService: AllowanceService;
 
-   async create({ allowanceId, ...dto }: CreateAllowanceCodeDto) {
-      const allowance = await this.allowanceService.findById({
+   async createAllowanceCode<C extends CreateAllowanceCodeDto>(
+      { allowanceId, ...dto }: C,
+      tf?: (d: CreateType<AllowanceCode>) => CreateType<T>,
+   ) {
+      const { data: allowance } = await this.allowanceService.findById({
          id: allowanceId,
          errorOnNotFound: true,
       });
-      return await super.create({ ...dto, allowance });
+      const acDto = { ...dto, allowance };
+      return await super.create(tf ? tf(acDto) : (acDto as any));
    }
 }

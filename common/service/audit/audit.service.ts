@@ -1,13 +1,13 @@
 import { Audit } from '@common/schema/audit.schema';
-import { pick } from 'lodash';
 import { CoreService } from '@common/core/service/core.service';
+import { pick } from 'lodash';
 
-export abstract class AuditService extends CoreService<Audit> {
-   async logRequest() {
+export abstract class AuditService<T extends Audit = Audit> extends CoreService<T> {
+   async logRequest(trail?: (d: CreateType<Audit>) => CreateType<T>) {
       const request = this.context.get('request');
       const user = this.context.get('user');
 
-      return await this.repository.create({
+      const auditDto = {
          submittedIP: this.context.get('ip'),
          sessionId: request?.sessionID,
          crossAppRequest: !this.context.get('isHttp'),
@@ -21,6 +21,7 @@ export abstract class AuditService extends CoreService<Audit> {
                  ...pick(user, ['type', 'userName', 'mail']),
               }
             : undefined,
-      });
+      };
+      return await super.create(trail ? trail(auditDto) : (auditDto as CreateType<T>));
    }
 }

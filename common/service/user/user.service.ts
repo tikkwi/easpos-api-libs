@@ -7,19 +7,15 @@ import {
 import { omit } from 'lodash';
 import { request } from 'express';
 import { CoreService } from '@common/core/service/core.service';
-import { Repository } from '@common/core/repository';
 import { User } from '@common/schema/user.schema';
-import { ContextService } from '@common/core/context/context.service';
 import { AppRedisService } from '@common/core/app_redis/app_redis.service';
 import { responseError } from '@common/utils/misc';
 import { LoginDto } from '@common/dto/global/user.dto';
 import { EUser, EUserApp } from '@common/utils/enum';
 import { encrypt } from '@common/utils/encrypt';
 
-export abstract class UserService extends CoreService<User> {
-   protected abstract repository: Repository<User>;
-   protected readonly context: ContextService;
-   protected readonly db: AppRedisService;
+export abstract class UserService<T extends User = User> extends CoreService<T> {
+   protected abstract readonly db: AppRedisService;
 
    async logout() {
       const request = this.context.get('request');

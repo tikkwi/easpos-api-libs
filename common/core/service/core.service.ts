@@ -10,7 +10,7 @@ export abstract class CoreService<T> {
       return this.repository.findOne(dto);
    }
 
-   async create(dto: any) {
+   async create(dto: Omit<T, '_id' | 'createdAt' | 'updatedAt'>) {
       return this.repository.create(dto);
    }
 }

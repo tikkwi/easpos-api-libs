@@ -3,7 +3,7 @@ import 'express';
 declare global {
    type Request = import('express').Request;
    type Response = import('express').Response;
-   type ObjectId = import('mongoose').Schema.Types.ObjectId;
+   type ObjectId = import('mongoose').Types.ObjectId;
    type Session = import('mongoose').ClientSession;
    type Metadata = import('@grpc/grpc-js').Metadata;
    type FilterQuery<T> = import('mongoose').FilterQuery<T>;
