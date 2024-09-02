@@ -96,6 +96,16 @@ export enum ECategory {
    ProductTag = 'ProductTag',
    Campaign = 'Campaign',
    PaymentMethod = 'PaymentMethod',
+   Price = 'Price',
+   Expense = 'Expense',
+}
+
+export enum EExpenseScope {
+   WholeBusiness = 'WholeBusiness',
+   ProductCategory = 'ProductCategory',
+   ProductTag = 'ProductTag',
+   WholeProduct = 'WholeProduct',
+   PerUnitProduct = 'PerUnitProduct',
 }
 
 export enum EEntityMetadata {

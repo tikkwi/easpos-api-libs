@@ -1,5 +1,5 @@
 import { Type } from '@nestjs/common';
-import { OmitType } from '@nestjs/swagger';
+import { OmitType, PartialType } from '@nestjs/swagger';
 import {
    IsBoolean,
    IsDateString,
@@ -42,15 +42,18 @@ export class PaginationDto<T> {
    sort?: Record<keyof T, any>;
 }
 
-// export class BaseDto {
-//   @IsNotEmpty()
-//   request: AppRequest;
-// }
-
 export function CoreDto<T>(classRef: Type<T>): Type<Omit<T, '_id' | 'createdAt' | 'updatedAt'>> {
    class CoreDtoClass extends OmitType(classRef as any, ['_id', 'createdAt', 'updatedAt'] as any) {}
 
    return CoreDtoClass as any;
+}
+
+export function PartialTypeIf<T>(
+   isPartial: (cls: any) => boolean,
+   classRef: Type<T>,
+): Type<Partial<T>> {
+   if (isPartial(classRef)) return PartialType(classRef);
+   return classRef;
 }
 
 export class FindDto {

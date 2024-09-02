@@ -1,17 +1,9 @@
-import { IsEnum, IsMongoId, Matches, ValidateIf } from 'class-validator';
-import { regex } from '@common/utils/regex';
-import { ECategory } from '@common/utils/enum';
+import { IsMongoId, ValidateIf } from 'class-validator';
+import { CoreDto, PartialTypeIf } from '@common/dto/global/core.dto';
+import { Category } from '@common/schema/category.schema';
 
-export class CategoryDto {
+export class CategoryDto extends PartialTypeIf(({ id }) => !!id, CoreDto(Category)) {
    @ValidateIf((o) => !!!o.name)
    @IsMongoId()
    id?: string;
-
-   @ValidateIf((o) => !!!o.id)
-   @Matches(regex.enum)
-   name?: string;
-
-   @ValidateIf((o) => !!!o.id)
-   @IsEnum(ECategory)
-   type?: ECategory;
 }
