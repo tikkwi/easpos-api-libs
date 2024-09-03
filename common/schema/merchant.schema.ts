@@ -68,6 +68,9 @@ export class Merchant extends BaseSchema {
    @AppProp({ type: Boolean, default: false, required: false })
    sentPreSubEndMail?: boolean;
 
+   @AppProp({ type: Number, default: 0 })
+   totalSpend: number;
+
    @AppProp({
       type: [
          {

@@ -41,6 +41,7 @@ import { AppExceptionFilter } from '@common/core/exception.filter';
             new ValidationPipe({
                transform: true,
                forbidNonWhitelisted: true,
+               whitelist: true,
             }),
       },
    ],

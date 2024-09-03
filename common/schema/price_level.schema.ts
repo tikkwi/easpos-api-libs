@@ -7,16 +7,17 @@ import { Max, Min, ValidateIf } from 'class-validator';
 import { SchemaTypes } from 'mongoose';
 import { Type } from 'class-transformer';
 import { Status } from '@common/dto/global/entity.dto';
+import { Price } from '@common/schema/price.schema';
 
 //TODO: validate total price level allowance not to be higher than threshold
 export abstract class PriceLevel extends BaseSchema {
    abstract type: EPrice;
+   abstract applicablePrices: Price[];
+   abstract currency?: Currency;
+   abstract paymentMethod?: Category;
 
-   //NOTE: validate on specific app
-   currency?: Currency;
-
-   //NOTE: validate on specific app
-   paymentMethod?: Category;
+   @AppProp({ type: Boolean })
+   perProduct: boolean;
 
    @AppProp({ type: SchemaTypes.Mixed })
    @Type(() => Status)

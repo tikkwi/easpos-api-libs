@@ -40,7 +40,7 @@ export function AppProp(
       ApiProperty({
          type: pOpt.type,
          enum: pOpt.enum as any,
-         example: pOpt.enum ? Object.keys(pOpt.enum)[0] : userName ? 'easposUser11' : undefined,
+         example: pOpt.enum ? Object.keys(pOpt.enum)[0] : userName ? 'easUser11' : undefined,
          description: userName ? 'Unique username with contain letters & numbers only' : undefined,
          ...swagger,
       })(target, key);
