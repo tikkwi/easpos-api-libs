@@ -98,6 +98,7 @@ export enum ECategory {
    PaymentMethod = 'PaymentMethod',
    Price = 'Price',
    Expense = 'Expense',
+   Unit = 'Unit',
 }
 
 export enum EExpenseScope {
@@ -116,22 +117,23 @@ export enum EEntityMetadata {
    Customer = 'Customer',
 }
 
-export enum EAllowanceTrigger {
-   Point = 'Point',
-   AmountSpend = 'AmountSpend',
-   BuyTogether = 'BuyTogether',
-}
-
-export enum EAllowanceType {
+export enum EAllowanceBenefit {
    Point = 'Point',
    Cash = 'Cash',
    Product = 'Product',
    Discount = 'Discount',
 }
 
-export enum EPrice {
+export enum ETime {
+   Hour = 'Hour',
+   Day = 'Day',
+   Week = 'Week',
+   Month = 'Month',
+}
+
+export enum EAllowance {
    TimeBased = 'TimeBased',
-   StockLevel = 'StockLevel',
+   StockLevel = 'StockLevel', //NOTE: validate if applicable product have
    VolumeLevel = 'VolumeLevel',
    TierBased = 'TierBased',
    Geographic = 'Geographic',

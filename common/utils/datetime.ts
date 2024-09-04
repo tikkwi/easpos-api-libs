@@ -22,3 +22,12 @@ export const isPeriodExceed = (
    if (offset) res.push(until.subtract(offset, unit ?? 'days').isBefore(new Date()));
    return res;
 };
+
+export const normalizeDate = (unit: 'h' | 'd' | 'm', amount: number) => {
+   return $dayjs()
+      .set('months', unit === 'm' ? amount : $dayjs().get('months'))
+      .set('days', unit === 'd' ? amount : unit === 'm' ? 0 : $dayjs().get('days'))
+      .set('hours', unit === 'h' ? amount : 0)
+      .set('minutes', 0)
+      .set('seconds', 0);
+};

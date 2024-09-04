@@ -1,12 +1,30 @@
-import { IntersectionType, OmitType } from '@nestjs/swagger';
-import { CoreDto } from '@common/dto/global/core.dto';
-import { Allowance, AllowanceBenefit } from '@common/schema/allowance.schema';
-import { IsMongoId } from 'class-validator';
+import { IsBoolean, IsMongoId, IsNumber, IsOptional, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
+import { ProductPurchased } from '@common/dto/global/entity.dto';
 
-export class CreateAllowanceDto extends IntersectionType(
-   OmitType(CoreDto(Allowance), ['campaign']),
-   AllowanceBenefit,
-) {
+export class GetApplicableAllowanceDto {
+   @IsNumber()
+   basePrice: number;
+
+   @IsOptional()
    @IsMongoId()
-   campaignId: string;
+   priceId?: string;
+
+   @IsMongoId()
+   currencyId: string;
+
+   @IsMongoId()
+   paymentMethodId: string;
+
+   @IsBoolean()
+   perProduct: boolean;
+
+   @IsOptional()
+   @IsMongoId()
+   addressId?: string;
+
+   @IsOptional()
+   @ValidateNested({ each: true })
+   @Type(() => ProductPurchased)
+   products?: ProductPurchased[];
 }

@@ -52,6 +52,7 @@ declare global {
       status: EStatus;
       isOwner: boolean;
       type: EUser;
+      tier?: string;
       app: EUserApp;
       tmpBlock?: import('@global_schema/user.schema').TmpBlock;
       permissions: Record<string, number>;

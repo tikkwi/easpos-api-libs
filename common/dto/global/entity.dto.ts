@@ -14,7 +14,7 @@ import {
    Min,
    ValidateNested,
 } from 'class-validator';
-import { EStatus, EUser, EUserApp } from '@common/utils/enum';
+import { EStatus, ETime, EUser, EUserApp } from '@common/utils/enum';
 import { regex } from '@common/utils/regex';
 import { IsAppNumberString } from '@common/validator';
 import { TmpBlock } from '@common/schema/user.schema';
@@ -168,4 +168,25 @@ export class Payment {
 
    @IsNumber()
    netPrice: number;
+}
+
+export class TimeRange {
+   @IsEnum(ETime)
+   type: ETime;
+
+   //NOTE: manual validate wrt type
+   @IsNumber()
+   from: number;
+
+   //NOTE: manual validate wrt type
+   @IsNumber()
+   to: number;
+}
+
+export class ProductPurchased {
+   @IsString() //NOTE:qr-code
+   product: string;
+
+   @IsNumber()
+   quantity: number;
 }

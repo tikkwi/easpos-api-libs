@@ -59,13 +59,13 @@ export function PartialTypeIf<T>(
 export class FindDto {
    @IsBoolean()
    lean?: boolean;
+
+   @IsOptional()
+   @IsBoolean()
+   errorOnNotFound?: boolean;
 }
 
 export class FindByIdDto extends FindDto {
    @IsMongoId()
    id: string;
-
-   @IsOptional()
-   @IsBoolean()
-   errorOnNotFound?: boolean;
 }

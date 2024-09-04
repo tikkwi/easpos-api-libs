@@ -6,8 +6,8 @@ export abstract class CoreService<T> {
    protected abstract repository: Repository<T>;
    protected abstract readonly context: ContextService;
 
-   async findById(dto: FindByIdDto) {
-      return this.repository.findOne(dto);
+   async findById({ lean, ...dto }: FindByIdDto) {
+      return this.repository.findOne({ ...dto, options: { lean } });
    }
 
    async create(dto: Omit<T, '_id' | 'createdAt' | 'updatedAt'>) {

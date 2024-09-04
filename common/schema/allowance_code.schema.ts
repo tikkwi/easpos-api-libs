@@ -4,6 +4,9 @@ import { SchemaTypes } from 'mongoose';
 import { Allowance } from '@common/schema/allowance.schema';
 
 export class AllowanceCode extends BaseSchema {
+   @AppProp({ type: Number })
+   numAllowance: number;
+
    @AppProp({ type: String, unique: true })
    code: string;
 
