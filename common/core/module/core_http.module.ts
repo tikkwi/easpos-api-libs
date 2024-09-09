@@ -1,14 +1,11 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { AddressModule } from '@service/address/address.module';
-import { CategoryModule } from '@service/category/category.module';
-import { MailModule } from '@service/mail/mail.module';
 import * as cookieParser from 'cookie-parser';
 import { CoreModule } from './core.module';
 import { hours, minutes, ThrottlerModule } from '@nestjs/throttler';
 import { ConfigService } from '@nestjs/config';
 import { Redis } from 'ioredis';
 import { REDIS_LCL_CLIENT, TRT_TRS_HVY_F, TRT_TRS_HVY_S, TRT_TRS_HVY_T } from '@common/constant';
-import { ThrottlerStorageRedis } from '@common/core/service/redis_throttler_storage.service';
+import { ThrottlerStorageRedis } from '@common/core/redis_throttler_storage.service';
 
 @Module({
    imports: [
@@ -35,9 +32,6 @@ import { ThrottlerStorageRedis } from '@common/core/service/redis_throttler_stor
          },
          inject: [ConfigService, REDIS_LCL_CLIENT],
       }),
-      AddressModule,
-      CategoryModule,
-      MailModule,
    ],
 })
 export class CoreHttpModule implements NestModule {

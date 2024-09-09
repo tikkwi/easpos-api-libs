@@ -1,4 +1,4 @@
-import { CoreService } from '@common/core/service/core.service';
+import { CoreService } from '@common/core/core.service';
 import { AllowanceCode } from '@common/schema/allowance_code.schema';
 import { CreateAllowanceCodeDto } from '@common/dto/service/allowance_code.dto';
 import { AllowanceService } from '@common/service/allowance.service';

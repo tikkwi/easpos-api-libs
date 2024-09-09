@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ContextService } from '@common/core/context/context.service';
+import { ContextService } from '@common/core/context.service';
 
 export function AppService() {
    return function (target: any) {
@@ -11,7 +11,7 @@ export function AppService() {
          if (typeof oriMeth === 'function' && key !== 'constructor') {
             descriptor.value = async function (...args) {
                const res = await oriMeth.apply(this, args);
-               (this.context as ContextService).update('logTrail', (log) => {
+               ContextService.update('logTrail', (log) => {
                   const reqLog = {
                      service: target.name,
                      auxiliaryService: key,

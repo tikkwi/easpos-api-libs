@@ -190,3 +190,11 @@ export class ProductPurchased {
    @IsNumber()
    quantity: number;
 }
+
+export class Cash {
+   @IsNumber()
+   amount: number;
+
+   @IsMongoId()
+   currencyId: string;
+}

@@ -1,12 +1,12 @@
 import { BadRequestException } from '@nestjs/common';
 import { Category } from '@common/schema/category.schema';
-import { CoreService } from '@common/core/service/core.service';
+import { CoreService } from '@common/core/core.service';
 import { CategoryDto } from '@common/dto/global/action.dto';
 
 export abstract class CategoryService extends CoreService<Category> {
    async getCategory({ id, ...dto }: CategoryDto) {
       const existing = await this.repository.findOne({
-         filter: { name: dto.name, type: dto.type },
+         filter: dto,
       });
       if (existing) throw new BadRequestException('Already exist the category');
       return await (id

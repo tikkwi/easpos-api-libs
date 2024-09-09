@@ -1,10 +1,31 @@
-import { Currency } from '@common/schema/currency.schema';
 import { AppProp } from '@common/decorator/app_prop.decorator';
-import { SchemaTypes } from 'mongoose';
+import { BaseSchema } from '@common/schema/base.schema';
 import { UnitCategory } from '@common/schema/unit_category.schema';
 
-//NOTE: only store base unit wherever possible
-export class Unit extends Currency {
-   @AppProp({ type: SchemaTypes.ObjectId, ref: 'UnitCategory' })
-   category: UnitCategory;
+export class Unit extends BaseSchema {
+   category?: UnitCategory; //NOTE: validation for using as unit (kg, viss etc.)
+
+   @AppProp({ type: String })
+   name: string;
+
+   @AppProp({ type: String })
+   nameShort: string;
+
+   @AppProp({ type: String })
+   symbol: string;
+
+   @AppProp({ type: String, required: false })
+   description?: string;
+
+   @AppProp({ type: Boolean, default: false })
+   base: boolean;
+
+   @AppProp({ type: Boolean, default: true })
+   active: boolean;
+
+   @AppProp({ type: Number })
+   baseUnit: number;
+
+   @AppProp({ type: String, required: false })
+   remark?: string;
 }

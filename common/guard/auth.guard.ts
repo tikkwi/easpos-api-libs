@@ -9,7 +9,7 @@ import { Reflector } from '@nestjs/core';
 import { intersection } from 'lodash';
 import { Request } from 'express';
 import { ServerUnaryCall } from '@grpc/grpc-js';
-import { ContextService } from '@common/core/context/context.service';
+import { ContextService } from '@common/core/context.service';
 import { AppBrokerService } from '@common/core/app_broker/app_broker.service';
 import { authenticateBasicAuth, getServiceToken } from '@common/utils/misc';
 import { APPS, AUTH_CREDENTIAL, MERCHANT, USERS } from '@common/constant';
@@ -26,7 +26,6 @@ authorized 1 day max even if subscription is expired..
 export class AuthGuard implements CanActivate {
    constructor(
       private readonly reflector: Reflector,
-      private readonly context: ContextService,
       private readonly broker: AppBrokerService,
       @Inject(getServiceToken(AUTH_CREDENTIAL))
       private readonly credService: AuthCredentialServiceMethods,
@@ -38,7 +37,7 @@ export class AuthGuard implements CanActivate {
       if (isHttp) {
          const allowedUsers = this.reflector.get<AllowedUser[]>(USERS, context.getHandler());
          const allowedApps = this.reflector.get(APPS, context.getHandler());
-         const user = this.context.get('user');
+         const user = ContextService.get('user');
          const request: Request = context.switchToHttp().getRequest();
 
          if (!allowedUsers.length || allowedUsers.includes(EAllowedUser.Any)) return true;
@@ -58,9 +57,9 @@ export class AuthGuard implements CanActivate {
             )
                return false;
 
-            const gotPermission = this.context
-               .get('user')
-               .permissions.hasOwnProperty(request.originalUrl);
+            const gotPermission = ContextService.get('user').permissions.hasOwnProperty(
+               request.originalUrl,
+            );
 
             if (user.type === EUser.Merchant) {
                const authMerchant = await this.broker.request<AppMerchant>({

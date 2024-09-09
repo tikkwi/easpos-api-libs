@@ -1,4 +1,4 @@
-import { CoreService } from '@common/core/service/core.service';
+import { CoreService } from '@common/core/core.service';
 import { ProductUnit } from '@common/schema/product_unit.schema';
 import { ProductService } from '@common/service/product.service';
 import { GetProductDto } from '@common/dto/service/product.dto';

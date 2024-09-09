@@ -6,20 +6,21 @@ import {
 } from '@nestjs/common';
 import { omit } from 'lodash';
 import { request } from 'express';
-import { CoreService } from '@common/core/service/core.service';
+import { CoreService } from '@common/core/core.service';
 import { User } from '@common/schema/user.schema';
 import { AppRedisService } from '@common/core/app_redis/app_redis.service';
 import { responseError } from '@common/utils/misc';
 import { LoginDto } from '@common/dto/global/user.dto';
 import { EUser, EUserApp } from '@common/utils/enum';
 import { encrypt } from '@common/utils/encrypt';
+import { ContextService } from '@common/core/context.service';
 
 export abstract class UserService<T extends User = User> extends CoreService<T> {
    protected abstract readonly db: AppRedisService;
 
    async logout() {
-      const request = this.context.get('request');
-      const response = this.context.get('response');
+      const request = ContextService.get('request');
+      const response = ContextService.get('response');
       await this.db.logout();
       request.session.destroy((err) => responseError(request, response, err));
    }

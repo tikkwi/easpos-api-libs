@@ -1,6 +1,7 @@
 import dayjs, { Dayjs, ManipulateType } from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import { Period } from '@common/dto/global/entity.dto';
+import { ETime } from '@common/utils/enum';
 
 export const $dayjs = dayjs;
 
@@ -23,11 +24,11 @@ export const isPeriodExceed = (
    return res;
 };
 
-export const normalizeDate = (unit: 'h' | 'd' | 'm', amount: number) => {
+export const normalizeDate = (unit: ETime, amount: number) => {
    return $dayjs()
-      .set('months', unit === 'm' ? amount : $dayjs().get('months'))
-      .set('days', unit === 'd' ? amount : unit === 'm' ? 0 : $dayjs().get('days'))
-      .set('hours', unit === 'h' ? amount : 0)
+      .set('months', unit === ETime.Month ? amount : $dayjs().get('months'))
+      .set('days', unit === ETime.Day ? amount : unit === ETime.Month ? 0 : $dayjs().get('days'))
+      .set('hours', unit === ETime.Hour ? amount : 0)
       .set('minutes', 0)
       .set('seconds', 0);
 };

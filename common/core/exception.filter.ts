@@ -1,11 +1,4 @@
-import {
-   ArgumentsHost,
-   Catch,
-   ExceptionFilter,
-   HttpException,
-   HttpStatus,
-   Logger,
-} from '@nestjs/common';
+import { ArgumentsHost, Catch, ExceptionFilter, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Request, Response } from 'express';
 import { APP } from '@common/constant';
@@ -27,22 +20,6 @@ export class AppExceptionFilter implements ExceptionFilter {
          const ctx = host.switchToHttp();
          const response = ctx.getResponse<Response>();
          const request = ctx.getRequest<Request>();
-         const status =
-            err instanceof HttpException ? err.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
-
-         // const responseErr = () =>
-         //    response.status(status).json({
-         //       statusCode: status,
-         //       timestamp: new Date().toISOString(),
-         //       path: request.originalUrl,
-         //       message: err.message || 'Internal server error',
-         //    });
-         //
-         // if (status === 401) {
-         //    await this.db.logout();
-         //    request.session.destroy(() => responseErr());
-         // }
-
          responseError(request, response, err);
       }
       return {

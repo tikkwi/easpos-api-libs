@@ -1,19 +1,20 @@
 import { Audit } from '@common/schema/audit.schema';
-import { CoreService } from '@common/core/service/core.service';
+import { CoreService } from '@common/core/core.service';
 import { pick } from 'lodash';
+import { ContextService } from '@common/core/context.service';
 
 export abstract class AuditService<T extends Audit = Audit> extends CoreService<T> {
    async logRequest(trail?: (d: CreateType<Audit>) => CreateType<T>) {
-      const request = this.context.get('request');
-      const user = this.context.get('user');
+      const request = ContextService.get('request');
+      const user = ContextService.get('user');
 
       const auditDto = {
-         submittedIP: this.context.get('ip'),
+         submittedIP: ContextService.get('ip'),
          sessionId: request?.sessionID,
-         crossAppRequest: !this.context.get('isHttp'),
-         requestedFrom: this.context.get('requestedApp'),
-         userAgent: this.context.get('userAgent') as any,
-         logTrail: this.context.get('logTrail'),
+         crossAppRequest: !ContextService.get('isHttp'),
+         requestedFrom: ContextService.get('requestedApp'),
+         userAgent: ContextService.get('userAgent') as any,
+         logTrail: ContextService.get('logTrail'),
          user: user
             ? {
                  id: user.id,

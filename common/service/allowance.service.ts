@@ -1,12 +1,16 @@
-import { CoreService } from '@common/core/service/core.service';
+import { CoreService } from '@common/core/core.service';
 import { Allowance } from '@common/schema/allowance.schema';
-import { EAllowance, EStatus, ETime } from '@common/utils/enum';
+import { EAllowance, EStatus } from '@common/utils/enum';
 import { GetApplicableAllowanceDto } from '@common/dto/service/allowance.dto';
-import { $dayjs, normalizeDate } from '@common/utils/datetime';
 import { BadRequestException } from '@nestjs/common';
+import { UnitService } from '@common/service/unit/unit.service';
+import { ProductService } from '@common/service/product.service';
+import { ContextService } from '@common/core/context.service';
+import { $dayjs, normalizeDate } from '@common/utils/datetime';
 
 export abstract class AllowanceService<T extends Allowance = Allowance> extends CoreService<T> {
-   protected abstract readonly productService: any; //ProductService | ProductUnitService
+   protected abstract readonly productService: ProductService; //NOTE:ProductService | ProductUnitService
+   protected abstract readonly currencyService: UnitService;
 
    async getApplicableAllowances({
       basePrice,
@@ -17,125 +21,237 @@ export abstract class AllowanceService<T extends Allowance = Allowance> extends 
       addressId,
       products,
    }: GetApplicableAllowanceDto) {
-      const totalSpend = basePrice + (this.context.get('merchant')?.merchant.totalSpend ?? 0);
       if (perProduct && products.length > 1)
          throw new BadRequestException('Expect single purchased product for per product allowance');
-      const tier = this.context.get('user').tier;
+      const tier = ContextService.get('user').tier;
       const { data: product } =
          perProduct &&
          products &&
          (await this.productService.getProduct({ code: products[0].product }));
       const stockLeft = product ? product.numUnit - products[0].quantity : undefined;
 
-      const allowances: Allowance[] = await this.repository.custom((model) =>
+      const getTargetAmount = async (id?: string, total?: boolean) => {
+         const current = [basePrice];
+         const prevSpend = ContextService.get('merchant')?.merchant.totalSpend;
+         if (total && prevSpend) current.splice(1, 0, ...prevSpend);
+         return await this.currencyService.exchangeUnit({ current, targetId: id });
+      };
+
+      const $allowances = await this.repository.custom((model) =>
          model.aggregate([
+            {
+               $addFields: {
+                  products,
+                  perProduct,
+               },
+            },
             {
                $match: {
                   autoTrigger: true,
                   perProduct,
                   'status.status': EStatus.Active,
-                  $where: function () {
-                     if (
-                        this.applicablePrices &&
-                        (!priceId ||
-                           !this.applicablePrices.some((oId: ObjectId) => oId.equals(priceId)))
-                     )
-                        return false;
-                     switch (this.type) {
-                        case EAllowance.PaymentMethod:
-                           return this.paymentMethodTrigger.some((oId: ObjectId) =>
-                              oId.equals(paymentMethodId),
-                           );
-                        case EAllowance.Currency:
-                           return this.currencyTrigger.some((oId: ObjectId) =>
-                              oId.equals(currencyId),
-                           );
-                        case EAllowance.Geographic:
-                           return (
-                              addressId &&
-                              this.addressTrigger?.some((oId: ObjectId) => oId.equals(addressId))
-                           );
-                        case EAllowance.Bundle:
-                           const bundle = [...products];
-
-                           for (const bdl of this.bundleTrigger) {
-                              for (let i = 0; i < bundle.length; i++) {
-                                 if (
-                                    bundle.some(
-                                       ({ quantity, product }) =>
-                                          product === bdl.product && quantity >= bdl.quantity,
-                                    )
-                                 ) {
-                                    bundle.splice(i, 1);
-                                 } else return false;
-                              }
-                           }
-                           return true;
-                        case EAllowance.TimeBased:
-                           const unit =
-                              this.timeTrigger.type === ETime.Month
-                                 ? 'm'
-                                 : this.timeTrigger.type === ETime.Day
-                                   ? 'd'
-                                   : 'h';
-                           return (
-                              $dayjs().isAfter(normalizeDate(unit, this.timeTrigger.from)) &&
-                              $dayjs().isBefore(normalizeDate(unit, this.timeTrigger.to))
-                           );
-                        case EAllowance.TierBased:
-                           return (
-                              tier && this.tierTrigger?.some((oId: ObjectId) => oId.equals(tier))
-                           );
-                        case EAllowance.StockLevel:
-                           return perProduct && stockLeft >= 0 && this.levelLowerTrigger
-                              ? stockLeft <= this.levelTrigger
-                              : stockLeft >= this.levelTrigger;
-                        case EAllowance.VolumeLevel:
-                           return perProduct && products[0].quantity >= this.levelTrigger;
-                        case EAllowance.SpendBase:
-                           return basePrice >= this.spendTrigger;
-                        case EAllowance.TotalSpendBase:
-                           return (totalSpend ?? 0) + basePrice >= this.spendTrigger;
-                     }
-                  },
                },
             },
             {
-               $group: {
-                  _id: null,
-                  minAmount: { $min: '$spendTrigger' },
-                  doc: { $first: '$$ROOT' },
-               },
-            },
-            {
-               $match: {
-                  $expr: {
-                     $or: [
+               $redact: {
+                  $switch: {
+                     branches: [
                         {
-                           $and: [
-                              { $eq: ['$type', EAllowance.SpendBase] },
-                              { $eq: ['$doc.amount', '$minAmount'] },
-                           ],
-                        },
-                        {
-                           $and: [
-                              { $eq: ['$type', EAllowance.TotalSpendBase] },
-                              { $eq: ['$doc.amount', '$minAmount'] },
-                           ],
-                        },
-                        {
-                           $not: {
-                              $in: ['$type', [EAllowance.SpendBase, EAllowance.TotalSpendBase]],
+                           case: {
+                              $and: [
+                                 { $ne: ['$applicablePrices', null] },
+                                 { $in: [priceId, '$applicablePrices'] },
+                              ],
+                              then: '$$KEEP',
                            },
+                        },
+                        {
+                           case: {
+                              $and: [
+                                 { $eq: ['$type', EAllowance.PaymentMethod] },
+                                 { $in: [paymentMethodId, '$paymentMethodTrigger'] },
+                              ],
+                           },
+                           then: '$$KEEP',
+                        },
+                        {
+                           case: {
+                              $and: [
+                                 { $eq: ['$type', EAllowance.Currency] },
+                                 { $in: [currencyId, '$currencyTrigger'] },
+                              ],
+                           },
+                           then: '$$KEEP',
+                        },
+                        {
+                           case: {
+                              $and: [
+                                 { $eq: ['$type', EAllowance.Geographic] },
+                                 { $in: [addressId, '$addressTrigger'] },
+                              ],
+                           },
+                           then: '$$KEEP',
+                        },
+                        {
+                           case: {
+                              $and: [
+                                 { $eq: ['$type', EAllowance.Bundle] },
+                                 {
+                                    $eq: [
+                                       {
+                                          $size: {
+                                             $filter: {
+                                                input: '$bundleTrigger',
+                                                as: 'product',
+                                                cond: {
+                                                   $and: [
+                                                      {
+                                                         $in: [
+                                                            '$$product.id',
+                                                            {
+                                                               $map: {
+                                                                  input: '$products',
+                                                                  as: 'pd',
+                                                                  in: '$$pd.id',
+                                                               },
+                                                            },
+                                                         ],
+                                                         $gte: [
+                                                            '$$product.quantity',
+                                                            {
+                                                               $arrayElemAt: [
+                                                                  {
+                                                                     $map: {
+                                                                        input: '$products',
+                                                                        as: 'pd',
+                                                                        in: '$$pd.quantity',
+                                                                     },
+                                                                  },
+                                                                  0,
+                                                               ],
+                                                            },
+                                                         ],
+                                                      },
+                                                   ],
+                                                },
+                                             },
+                                          },
+                                       },
+                                       1,
+                                    ],
+                                 },
+                              ],
+                           },
+                           then: '$$KEEP',
+                        },
+                        {
+                           case: {
+                              $and: [
+                                 { $eq: ['$type', EAllowance.TierBased] },
+                                 { $in: [tier, '$tierTrigger'] },
+                              ],
+                           },
+                           then: '$$KEEP',
+                        },
+                        {
+                           case: {
+                              $and: [
+                                 { $eq: ['$type', EAllowance.StockLevel] },
+                                 { $eq: ['$perProduct', true] },
+                                 {
+                                    $cond: {
+                                       if: { $eq: ['$levelLowerTrigger', true] },
+                                       then: { $lte: ['$levelTrigger', stockLeft] },
+                                       else: { $gte: ['$levelTrigger', stockLeft] },
+                                    },
+                                 },
+                              ],
+                           },
+                           then: '$$KEEP',
+                        },
+                        {
+                           case: {
+                              $and: [
+                                 { $eq: ['$type', EAllowance.VolumeLevel] },
+                                 { $eq: ['$perProduct', true] },
+                                 { $gte: ['$levelTrigger', products[0].quantity] },
+                              ],
+                           },
+                           then: '$$KEEP',
+                        },
+                        {
+                           case: {
+                              $in: [
+                                 '$type',
+                                 [
+                                    EAllowance.TimeBased,
+                                    EAllowance.SpendBase,
+                                    EAllowance.TotalSpendBase,
+                                 ],
+                              ],
+                           },
+                           then: '$$KEEP',
                         },
                      ],
                   },
                },
             },
-            { $replaceRoot: { newRoot: '$doc' } },
+            {
+               $facet: {
+                  filtered: [
+                     {
+                        $match: {
+                           type: {
+                              $nin: [
+                                 EAllowance.TimeBased,
+                                 EAllowance.SpendBase,
+                                 EAllowance.TotalSpendBase,
+                              ],
+                           },
+                        },
+                     },
+                  ],
+                  unfiltered: [
+                     {
+                        $match: {
+                           type: {
+                              $in: [
+                                 EAllowance.TimeBased,
+                                 EAllowance.SpendBase,
+                                 EAllowance.TotalSpendBase,
+                              ],
+                           },
+                        },
+                     },
+                  ],
+               },
+            },
          ]),
       );
 
+      const allowances = [];
+      if ($allowances.length) {
+         allowances.splice(0, 0, ...allowances[0].filtered);
+         for (const allowance of allowances[0].unfiltered) {
+            if (allowance.type === EAllowance.TimeBased) {
+               if (
+                  $dayjs().isAfter(
+                     normalizeDate(allowance.timeTrigger.type, allowance.timeTrigger.from),
+                  ) &&
+                  $dayjs().isBefore(
+                     normalizeDate(allowance.timeTrigger.type, allowance.timeTrigger.to),
+                  )
+               )
+                  allowances.push(allowance);
+            } else {
+               const spend = await getTargetAmount(
+                  allowance.spendTrigger.currencyId,
+                  allowance.type === EAllowance.TotalSpendBase,
+               );
+               if (spend <= allowance.spendTrigger.amount) allowances.push(allowance);
+            }
+         }
+      }
       return { data: allowances };
    }
 }

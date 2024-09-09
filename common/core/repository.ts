@@ -1,18 +1,15 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Document, Model } from 'mongoose';
-import { ContextService } from './context/context.service';
 import { PAGE_SIZE } from '@common/constant';
+import { ContextService } from '@common/core/context.service';
 
 export class Repository<T> {
-   constructor(
-      private readonly model: Model<T>,
-      private readonly context: ContextService,
-   ) {}
+   constructor(private readonly model: Model<T>) {}
 
    async create(dto: CreateType<T>) {
       return {
          data: (await new this.model(dto).save({
-            session: this.context.get('session'),
+            session: ContextService.get('session'),
          })) as Document<unknown, unknown, T> & T,
       };
    }
@@ -66,7 +63,7 @@ export class Repository<T> {
 
       const updateOptions: [UpdateQuery<T>, QueryOptions<T>] = [
          { ...update, updatedAt: new Date() },
-         { lean: true, new: true, ...options, session: this.context.get('session') },
+         { lean: true, new: true, ...options, session: ContextService.get('session') },
       ];
       const data = id
          ? await this.model.findByIdAndUpdate(id, ...updateOptions)
@@ -82,7 +79,7 @@ export class Repository<T> {
       await this.model.updateMany(
          { _id: { $in: ids } },
          { ...update, updatedAt: new Date() },
-         { session: this.context.get('session') },
+         { session: ContextService.get('session') },
       );
 
       const data = await this.model.find({ _id: { $in: ids } }, null, {
@@ -94,7 +91,7 @@ export class Repository<T> {
 
    async delete(id: string) {
       return {
-         data: await this.model.findByIdAndDelete(id, { session: this.context.get('session') }),
+         data: await this.model.findByIdAndDelete(id, { session: ContextService.get('session') }),
       };
    }
 

@@ -1,5 +1,5 @@
 import { Get, Param } from '@nestjs/common';
-import { CoreService } from '@common/core/service/core.service';
+import { CoreService } from '@common/core/core.service';
 
 export abstract class CoreController {
    protected abstract service: CoreService<any>;

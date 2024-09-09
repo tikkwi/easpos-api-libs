@@ -1,16 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Redis } from 'ioredis';
-import { ContextService } from '@common/core/context/context.service';
+import { ContextService } from '@common/core/context.service';
 import { REDIS_LCL_CLIENT } from '@common/constant';
 import { decrypt, encrypt } from '@common/utils/encrypt';
 import { $dayjs, isPeriodExceed } from '@common/utils/datetime';
 
 @Injectable()
 export class AppRedisService {
-   constructor(
-      private readonly context: ContextService,
-      @Inject(REDIS_LCL_CLIENT) private readonly db: Redis,
-   ) {}
+   constructor(@Inject(REDIS_LCL_CLIENT) private readonly db: Redis) {}
 
    async set<K extends keyof AppCache>(key: K, value: AppCache[K]) {
       await this.db.set(
@@ -22,7 +19,7 @@ export class AppRedisService {
             }),
          ),
       );
-      this.context.set({ [key]: value });
+      ContextService.set({ [key]: value });
    }
 
    async get<K extends keyof AppCache>(

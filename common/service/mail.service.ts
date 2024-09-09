@@ -1,5 +1,5 @@
 import { SendMailDto } from '@common/dto/global/mail.dto';
-import { CoreService } from '@common/core/service/core.service';
+import { CoreService } from '@common/core/core.service';
 import { Mail } from '@common/schema/mail.schema';
 
 export abstract class MailService<T extends Mail = Mail> extends CoreService<T> {

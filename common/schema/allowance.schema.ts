@@ -4,7 +4,7 @@ import { BaseSchema } from '@common/schema/base.schema';
 import { AppProp } from '@common/decorator/app_prop.decorator';
 import { Campaign } from '@common/schema/campaign.schema';
 import { Type } from 'class-transformer';
-import { ProductPurchased, Status, TimeRange } from '@common/dto/global/entity.dto';
+import { Cash, ProductPurchased, Status, TimeRange } from '@common/dto/global/entity.dto';
 import { EAllowance } from '@common/utils/enum';
 import { Price } from '@common/schema/price.schema';
 import { Currency } from '@common/schema/currency.schema';
@@ -17,11 +17,6 @@ export class AllowanceBenefit {
 
    @IsNumber()
    amount: number;
-}
-
-export class AllowanceTrigger {
-   @IsNumber()
-   spend: number;
 }
 
 export abstract class Allowance extends BaseSchema {
@@ -57,8 +52,9 @@ export abstract class Allowance extends BaseSchema {
    stackable: boolean;
 
    @ValidateIf((o) => [EAllowance.SpendBase, EAllowance.TotalSpendBase].includes(o.type))
-   @AppProp({ type: Number })
-   spendTrigger?: number;
+   @AppProp({ type: SchemaTypes.Mixed })
+   @Type(() => Cash)
+   spendTrigger?: Cash;
 
    @ValidateIf((o) => o.type === EAllowance.TierBased)
    @AppProp({ type: SchemaTypes.Mixed })

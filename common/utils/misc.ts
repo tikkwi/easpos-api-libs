@@ -13,7 +13,7 @@ import { firstUpperCase } from './regex';
 import { EAuthCredential } from './enum';
 import { Request, Response } from 'express';
 import { compare } from 'bcryptjs';
-import { ContextService } from '@common/core/context/context.service';
+import { ContextService } from '@common/core/context.service';
 import { ADMIN_URL, REPOSITORY } from '@common/constant';
 import { Repository } from '@common/core/repository';
 

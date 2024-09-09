@@ -6,14 +6,12 @@ import {
    InternalServerErrorException,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { ContextService } from '@common/core/context/context.service';
 import { decrypt } from '@common/utils/encrypt';
 import { isPeriodExceed } from '@common/utils/datetime';
+import { ContextService } from '@common/core/context.service';
 
 @Injectable()
 export class TransformGuard implements CanActivate {
-   constructor(private readonly context: ContextService) {}
-
    async canActivate(context: ExecutionContext) {
       if (context.getType() === 'http') {
          const ctx = context.switchToHttp();
@@ -37,7 +35,7 @@ export class TransformGuard implements CanActivate {
                });
          }
 
-         this.context.set({
+         ContextService.set({
             ip: request.ip,
             userAgent: request.headers['user-agent'],
             isHttp: true,
@@ -48,7 +46,7 @@ export class TransformGuard implements CanActivate {
       } else {
          const ctx: ServerUnaryCall<any, any> = (context.switchToRpc() as any).args[2];
          const meta = ctx.metadata.getMap();
-         this.context.set({
+         ContextService.set({
             ip: ctx.getPath(),
             userAgent: meta['user-agent'],
             requestedApp: meta.app,

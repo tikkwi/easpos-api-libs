@@ -6,7 +6,7 @@ import { EStatus, ESubscription, EUserApp } from '@common/utils/enum';
 import { BaseSchema } from '@common/schema/base.schema';
 import { AppProp } from '@common/decorator/app_prop.decorator';
 import { Type } from 'class-transformer';
-import { MFA, Status } from '@common/dto/global/entity.dto';
+import { Cash, MFA, Status } from '@common/dto/global/entity.dto';
 import { AppPurchase } from '@app/purchase/purchase.schema';
 
 export class LoggedInMerchantUser {
@@ -68,8 +68,9 @@ export class Merchant extends BaseSchema {
    @AppProp({ type: Boolean, default: false, required: false })
    sentPreSubEndMail?: boolean;
 
-   @AppProp({ type: Number, default: 0 })
-   totalSpend: number;
+   @AppProp({ type: [SchemaTypes.Mixed], default: 0 })
+   @Type(() => Cash)
+   totalSpend: Cash[];
 
    @AppProp({
       type: [

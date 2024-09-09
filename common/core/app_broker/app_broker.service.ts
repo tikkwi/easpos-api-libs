@@ -1,17 +1,16 @@
 import { Metadata } from '@grpc/grpc-js';
 import { ConfigService } from '@nestjs/config';
-import { ContextService } from '../context/context.service';
 import { lastValueFrom } from 'rxjs';
 import { Injectable } from '@nestjs/common';
 import { AppRedisService } from '@common/core/app_redis/app_redis.service';
 import { ADM_MRO_PWD, ADM_MRO_USR, APP } from '@common/constant';
 import { base64 } from '@common/utils/misc';
 import { decrypt } from '@common/utils/encrypt';
+import { ContextService } from '@common/core/context.service';
 
 @Injectable()
 export class AppBrokerService {
    constructor(
-      private readonly context: ContextService,
       private readonly config: ConfigService,
       private readonly db: AppRedisService,
    ) {}
@@ -22,7 +21,7 @@ export class AppBrokerService {
       const $action = isCrossApp ? (meta) => lastValueFrom(action(meta)) : action;
 
       const crossRequest = async () => {
-         const res = this.context.get('response');
+         const res = ContextService.get('response');
          const meta = new Metadata();
          meta.add('app', this.config.get(APP));
          meta.add(

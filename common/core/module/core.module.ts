@@ -3,11 +3,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { MongooseModule, MongooseModuleOptions } from '@nestjs/mongoose';
 import { join } from 'path';
-import { ContextModule } from '../context/context.module';
 import { MONGO_URI } from '@common/constant';
 import { AppRedisModule } from '@common/core/app_redis/app_redis.module';
 import { AppBrokerModule } from '@common/core/app_broker/app_broker.module';
-import { TransactionModule } from '@common/core/transaction/transaction.module';
 import { TransformGuard } from '@common/guard/transform.guard';
 import { TransactionInterceptor } from '@common/interceptor/transaction.interceptor';
 import { AppExceptionFilter } from '@common/core/exception.filter';
@@ -27,9 +25,7 @@ import { AppExceptionFilter } from '@common/core/exception.filter';
          inject: [ConfigService],
       }),
       AppRedisModule,
-      ContextModule,
       AppBrokerModule,
-      TransactionModule,
    ],
    providers: [
       { provide: APP_GUARD, useClass: TransformGuard },

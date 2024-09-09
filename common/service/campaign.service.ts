@@ -1,4 +1,4 @@
-import { CoreService } from '@common/core/service/core.service';
+import { CoreService } from '@common/core/core.service';
 import { Campaign } from '@common/schema/campaign.schema';
 import { CreateCampaignDto } from '@common/dto/service/campaign.dto';
 import { CategoryService } from '@common/service/category/category.service';

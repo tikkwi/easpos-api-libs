@@ -1,4 +1,4 @@
-import { CoreService } from '@common/core/service/core.service';
+import { CoreService } from '@common/core/core.service';
 import { CategoryService } from '@common/service/category/category.service';
 import { ProductService } from '@common/service/product.service';
 import { Price } from '@common/schema/price.schema';

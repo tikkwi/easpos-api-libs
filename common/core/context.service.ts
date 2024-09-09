@@ -1,18 +1,15 @@
-import { Injectable } from '@nestjs/common';
-
-@Injectable()
 export class ContextService {
-   private data: AppContext = {};
+   private static data: AppContext = {};
 
-   set(data: Partial<Record<keyof AppContext, any>>) {
+   static set(data: Partial<Record<keyof AppContext, any>>) {
       Object.entries(data).forEach(([k, v]) => (this.data[k] = v));
    }
 
-   get<K extends keyof AppContext>(key: K): AppContext[K] {
+   static get<K extends keyof AppContext>(key: K): AppContext[K] {
       return this.data[key];
    }
 
-   update<K extends keyof AppContext>(
+   static update<K extends keyof AppContext>(
       key: K,
       updFun: (val: AppContext[K]) => void | AppContext[K],
    ) {
@@ -20,7 +17,7 @@ export class ContextService {
       if (updated) this.data[key] = updated;
    }
 
-   reset() {
+   static reset() {
       this.data = {};
    }
 }
