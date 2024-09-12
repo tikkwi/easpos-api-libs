@@ -35,6 +35,7 @@ export enum EStatus {
    Rejected = 'Rejected',
    Suspended = 'Suspended',
    Stale = 'Stale',
+   Queuing = 'Queuing',
 }
 
 export enum ETmpBlock {
@@ -88,16 +89,18 @@ export enum EField {
 }
 
 export enum ECategory {
-   Option = 'Option',
    Merchant = 'Merchant',
-   MerchantUserRole = 'MerchantUserRole',
-   Admin = 'Admin',
+   UserRole = 'UserRole',
    Product = 'Product',
    ProductTag = 'ProductTag',
    Campaign = 'Campaign',
    PaymentMethod = 'PaymentMethod',
    Price = 'Price',
    Expense = 'Expense',
+   Locality = 'Locality',
+   AdministrativeArea = 'AdministrativeArea',
+   StateProvince = 'StateProvince',
+   Country = 'Country',
    Unit = 'Unit',
 }
 
@@ -142,4 +145,8 @@ export enum EAllowance {
    TotalSpendBase = 'TotalSpendBase',
    PaymentMethod = 'PaymentMethod',
    Currency = 'Currency',
+}
+
+export enum EPurchase {
+   MerchantSubscription = 'MerchantSubscription',
 }

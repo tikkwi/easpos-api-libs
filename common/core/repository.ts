@@ -1,14 +1,14 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Document, Model } from 'mongoose';
 import { PAGE_SIZE } from '@common/constant';
-import { ContextService } from '@common/core/context.service';
+import ContextService from './context.service';
 
-export class Repository<T> {
+export default class Repository<T> {
    constructor(private readonly model: Model<T>) {}
 
-   async create(dto: CreateType<T>) {
+   async create(dto: Omit<CreateType<T>, 'category'>) {
       return {
-         data: (await new this.model(dto).save({
+         data: (await new this.model({ ...dto, app: ContextService.get('d_app') }).save({
             session: ContextService.get('session'),
          })) as Document<unknown, unknown, T> & T,
       };
@@ -24,9 +24,7 @@ export class Repository<T> {
          ...pag,
       });
 
-      const response = { data: docs, total: await this.model.countDocuments() };
-
-      return response;
+      return { data: docs, total: await this.model.countDocuments() };
    }
 
    async findOne({

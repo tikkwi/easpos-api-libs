@@ -20,7 +20,7 @@ type Options = {
    swagger?: Omit<ApiPropertyOptions, 'type'>;
 };
 
-export function AppProp(
+export default function AppProp(
    propOptions?: PropOptions,
    options?: Options | (Options & { nested: any }),
 ) {

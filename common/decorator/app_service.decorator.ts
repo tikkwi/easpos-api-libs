@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { ContextService } from '@common/core/context.service';
+import ContextService from '../core/context.service';
 
-export function AppService() {
+export default function AppService() {
    return function (target: any) {
       Injectable(target);
 

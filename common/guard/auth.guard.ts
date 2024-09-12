@@ -9,21 +9,21 @@ import { Reflector } from '@nestjs/core';
 import { intersection } from 'lodash';
 import { Request } from 'express';
 import { ServerUnaryCall } from '@grpc/grpc-js';
-import { ContextService } from '@common/core/context.service';
-import { AppBrokerService } from '@common/core/app_broker/app_broker.service';
 import { authenticateBasicAuth, getServiceToken } from '@common/utils/misc';
 import { APPS, AUTH_CREDENTIAL, MERCHANT, USERS } from '@common/constant';
-import { AuthCredentialServiceMethods } from '@common/dto/shared/auth_credential.dto';
-import { MerchantServiceMethods } from '@common/dto/shared/merchant.dto';
-import { AllowedUser } from '@common/dto/global/core.dto';
+import { AuthCredentialServiceMethods } from '@common/dto/auth_credential.dto';
+import { MerchantServiceMethods } from '@common/dto/merchant.dto';
+import { AllowedUser } from '@common/dto/core.dto';
 import { EAllowedUser, EApp, EUser } from '@common/utils/enum';
+import AppBrokerService from '../core/app_broker/app_broker.service';
+import ContextService from '../core/context.service';
 
 /*
 TODO,NOTE cache authorized status up to 1 day which mean merchant_user may able to
 authorized 1 day max even if subscription is expired..
 */
 @Injectable()
-export class AuthGuard implements CanActivate {
+export default class AuthGuard implements CanActivate {
    constructor(
       private readonly reflector: Reflector,
       private readonly broker: AppBrokerService,

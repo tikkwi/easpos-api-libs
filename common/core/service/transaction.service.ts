@@ -1,5 +1,5 @@
 import { InjectConnection } from '@nestjs/mongoose';
-import { AuditService } from '@common/service/audit.service';
+import { AuditService } from '@common/service/audit/audit.service';
 import { Connection } from 'mongoose';
 import { ContextService } from '@common/core/context.service';
 

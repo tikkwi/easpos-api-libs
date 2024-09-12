@@ -2,14 +2,14 @@ import { Metadata } from '@grpc/grpc-js';
 import { ConfigService } from '@nestjs/config';
 import { lastValueFrom } from 'rxjs';
 import { Injectable } from '@nestjs/common';
-import { AppRedisService } from '@common/core/app_redis/app_redis.service';
 import { ADM_MRO_PWD, ADM_MRO_USR, APP } from '@common/constant';
 import { base64 } from '@common/utils/misc';
 import { decrypt } from '@common/utils/encrypt';
-import { ContextService } from '@common/core/context.service';
+import AppRedisService from '../app_redis/app_redis.service';
+import ContextService from '../context.service';
 
 @Injectable()
-export class AppBrokerService {
+export default class AppBrokerService {
    constructor(
       private readonly config: ConfigService,
       private readonly db: AppRedisService,

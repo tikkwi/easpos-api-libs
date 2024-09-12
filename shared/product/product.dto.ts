@@ -1,0 +1,26 @@
+import { IsMongoId, IsOptional, IsString, ValidateNested } from 'class-validator';
+import { CoreDto, FindDto } from '@common/dto/core.dto';
+import { OmitType } from '@nestjs/swagger';
+import Product from './product.schema';
+import { CategoryDto, CreateCategoryDto } from '@common/dto/action.dto';
+import { Type } from 'class-transformer';
+
+export class GetProductDto extends FindDto {
+   @IsString()
+   code: string;
+}
+
+export class CreateProductDto extends OmitType(CoreDto(Product), ['type', 'tags', 'unit']) {
+   @IsOptional()
+   @ValidateNested({ each: true })
+   @Type(() => CategoryDto)
+   tags?: CategoryDto[];
+
+   @ValidateNested({ each: true })
+   @Type(() => OmitType(CreateCategoryDto, ['type']))
+   type: any;
+
+   @IsOptional()
+   @IsMongoId()
+   unitId: string;
+}

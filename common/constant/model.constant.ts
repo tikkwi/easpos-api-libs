@@ -1,4 +1,6 @@
 export const REPOSITORY = 'REPOSITORY';
+export const ALLOWANCE = 'ALLOWANCE';
+export const PRODUCT = 'PRODUCT';
 export const ADMIN_APP = 'ADMIN_APP';
 export const USER_APP = 'USER_APP';
 export const MERCHANT = 'MERCHANT';

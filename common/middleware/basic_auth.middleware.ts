@@ -8,13 +8,13 @@ import {
 import { Request, Response } from 'express';
 import { authenticateBasicAuth, getServiceToken } from '@common/utils/misc';
 import { APP, AUTH_CREDENTIAL } from '@common/constant';
-import { AuthCredentialServiceMethods } from '@common/dto/shared/auth_credential.dto';
-import { AppBrokerService } from '@common/core/app_broker/app_broker.service';
+import { AuthCredentialServiceMethods } from '@common/dto/auth_credential.dto';
 import { ConfigService } from '@nestjs/config';
 import { EApp } from '@common/utils/enum';
+import AppBrokerService from '../core/app_broker/app_broker.service';
 
 @Injectable()
-export class BasicAuthMiddleware implements NestMiddleware {
+export default class BasicAuthMiddleware implements NestMiddleware {
    constructor(
       @Inject(getServiceToken(AUTH_CREDENTIAL))
       private readonly credService: AuthCredentialServiceMethods,

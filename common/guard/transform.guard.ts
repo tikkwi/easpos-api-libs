@@ -8,10 +8,10 @@ import {
 import { Request } from 'express';
 import { decrypt } from '@common/utils/encrypt';
 import { isPeriodExceed } from '@common/utils/datetime';
-import { ContextService } from '@common/core/context.service';
+import ContextService from '../core/context.service';
 
 @Injectable()
-export class TransformGuard implements CanActivate {
+export default class TransformGuard implements CanActivate {
    async canActivate(context: ExecutionContext) {
       if (context.getType() === 'http') {
          const ctx = context.switchToHttp();

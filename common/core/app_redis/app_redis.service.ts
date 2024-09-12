@@ -1,12 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Redis } from 'ioredis';
-import { ContextService } from '@common/core/context.service';
 import { REDIS_LCL_CLIENT } from '@common/constant';
 import { decrypt, encrypt } from '@common/utils/encrypt';
 import { $dayjs, isPeriodExceed } from '@common/utils/datetime';
+import ContextService from '../context.service';
 
 @Injectable()
-export class AppRedisService {
+export default class AppRedisService {
    constructor(@Inject(REDIS_LCL_CLIENT) private readonly db: Redis) {}
 
    async set<K extends keyof AppCache>(key: K, value: AppCache[K]) {

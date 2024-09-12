@@ -1,13 +1,13 @@
 import { Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Category } from '@common/schema/category.schema';
 import { IsEmail, IsEnum, IsMongoId, IsPhoneNumber, IsString } from 'class-validator';
 import { SchemaTypes } from 'mongoose';
 import { EStatus, ESubscription, EUserApp } from '@common/utils/enum';
-import { BaseSchema } from '@common/schema/base.schema';
-import { AppProp } from '@common/decorator/app_prop.decorator';
 import { Type } from 'class-transformer';
-import { Cash, MFA, Status } from '@common/dto/global/entity.dto';
-import { AppPurchase } from '@app/purchase/purchase.schema';
+import { Cash, MFA, Status } from '@common/dto/entity.dto';
+import BaseSchema from '../core/base.schema';
+import AppProp from '../decorator/app_prop.decorator';
+import Category from '@shared/category/category.schema';
+import Purchase from '@shared/purchase/purchase.schema';
 
 export class LoggedInMerchantUser {
    @IsMongoId()
@@ -21,7 +21,7 @@ export class LoggedInMerchantUser {
 }
 
 @Schema()
-export class Merchant extends BaseSchema {
+export default class Merchant extends BaseSchema {
    @AppProp({ type: String })
    name: string;
 
@@ -76,13 +76,13 @@ export class Merchant extends BaseSchema {
       type: [
          {
             type: SchemaTypes.ObjectId,
-            ref: 'MerchantPurchase',
+            ref: 'Purchase',
          },
       ],
       immutable: false,
       required: false,
    })
-   activePurchases?: AppPurchase[];
+   activePurchases?: Purchase[];
 }
 
 export const MerchantSchema = SchemaFactory.createForClass(Merchant);

@@ -1,8 +1,11 @@
-export class ContextService {
+export default class ContextService {
    private static data: AppContext = {};
 
    static set(data: Partial<Record<keyof AppContext, any>>) {
-      Object.entries(data).forEach(([k, v]) => (this.data[k] = v));
+      for (const [k, v] of Object.entries(data)) {
+         if (this.data[k] && k.includes('d_')) continue;
+         this.data[k] = v;
+      }
    }
 
    static get<K extends keyof AppContext>(key: K): AppContext[K] {
@@ -18,6 +21,9 @@ export class ContextService {
    }
 
    static reset() {
-      this.data = {};
+      for (const k in Object.entries(this.data)) {
+         if (k.includes('d_')) continue;
+         delete this.data[k];
+      }
    }
 }

@@ -2,12 +2,12 @@ import { ArgumentsHost, Catch, ExceptionFilter, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Request, Response } from 'express';
 import { APP } from '@common/constant';
-import { AppRedisService } from '@common/core/app_redis/app_redis.service';
 import { responseError } from '@common/utils/misc';
 import { firstUpperCase } from '@common/utils/regex';
+import AppRedisService from './app_redis/app_redis.service';
 
 @Catch()
-export class AppExceptionFilter implements ExceptionFilter {
+export default class AppExceptionFilter implements ExceptionFilter {
    constructor(
       private readonly config: ConfigService,
       private readonly db: AppRedisService,

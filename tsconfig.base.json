@@ -20,7 +20,8 @@
       "typeRoots": ["../types", "common/types"],
       "paths": {
          "@app/*": ["../src/*"],
-         "@common/*": ["common/*"]
+         "@common/*": ["common/*"],
+         "@shared/*": ["shared/*"]
       }
    },
    "include": ["../libs/**/*", "../src/**/*", "../type/*"]

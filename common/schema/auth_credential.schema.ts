@@ -1,11 +1,11 @@
 import { Schema, SchemaFactory } from '@nestjs/mongoose';
 import { hashSync } from 'bcryptjs';
-import { BaseSchema } from '@common/schema/base.schema';
 import { IsNotEmpty, IsOptional, IsString, IsUrl, ValidateIf } from 'class-validator';
 import { SchemaTypes } from 'mongoose';
 import { Type } from 'class-transformer';
-import { AppProp } from '@common/decorator/app_prop.decorator';
 import { EAuthCredential } from '@common/utils/enum';
+import BaseSchema from '../core/base.schema';
+import AppProp from '../decorator/app_prop.decorator';
 
 class AllowedService {
    @IsString()
@@ -19,7 +19,7 @@ class AllowedService {
 }
 
 @Schema()
-export class AuthCredential extends BaseSchema {
+export default class AuthCredential extends BaseSchema {
    @AppProp({ type: String, enum: EAuthCredential })
    type: EAuthCredential;
 

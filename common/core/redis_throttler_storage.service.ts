@@ -5,7 +5,7 @@ import { Cluster, Redis, RedisOptions } from 'ioredis';
 
 // Credits to kkoomen
 // https://github.com/kkoomen/nestjs-throttler-storage-redis/blob/master/src/throttler-storage-redis.service.ts
-export class ThrottlerStorageRedis implements ThrottlerStorage, OnModuleDestroy {
+export default class ThrottlerStorageRedis implements ThrottlerStorage, OnModuleDestroy {
    scriptSrc: string;
    redis: Redis | Cluster;
    prefix: string;

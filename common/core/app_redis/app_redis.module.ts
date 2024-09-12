@@ -1,7 +1,6 @@
 import { Global, InternalServerErrorException, Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Redis } from 'ioredis';
-import { AppRedisService } from '@common/core/app_redis/app_redis.service';
 import {
    ENV,
    REDIS_CLIENT,
@@ -13,6 +12,7 @@ import {
    REDIS_PORT,
    REDIS_USR,
 } from '@common/constant';
+import AppRedisService from './app_redis.service';
 
 @Global()
 @Module({
@@ -48,4 +48,4 @@ import {
    ],
    exports: [AppRedisService, REDIS_CLIENT, REDIS_LCL_CLIENT],
 })
-export class AppRedisModule {}
+export default class AppRedisModule {}

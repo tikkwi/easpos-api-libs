@@ -1,15 +1,21 @@
-import { Repository } from '@common/core/repository';
-import { FindByIdDto } from '@common/dto/global/core.dto';
-import { BaseSchema } from '@common/schema/base.schema';
+import { FindByIdDto } from '@common/dto/core.dto';
+import BaseSchema from './base.schema';
+import ContextService from './context.service';
+import Repository from './repository';
+import { CreateCategoryDto } from '../dto/action.dto';
 
-export abstract class CoreService<T extends BaseSchema = BaseSchema> {
+export default abstract class CoreService<T = BaseSchema> {
    protected abstract repository: Repository<T>;
 
    async findById({ lean, ...dto }: FindByIdDto) {
       return this.repository.findOne({ ...dto, options: { lean } });
    }
 
-   async create(dto?: any, tf?: () => Promise<CreateType<T>>) {
-      return this.repository.create(tf ? tf() : dto);
+   async create({ category: $category, ...dto }: CreateType<T>, catName?: string) {
+      const categoryDto: CreateCategoryDto = $category ?? dto[catName];
+      const category = categoryDto
+         ? await ContextService.get('d_categoryService').getCategory(categoryDto)
+         : undefined;
+      return this.repository.create({ ...dto, [catName ?? 'category']: category });
    }
 }

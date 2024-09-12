@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
 
-export function GrpcHandler() {
+export default function GrpcHandler() {
    return function (target: any) {
       Controller()(target);
 
