@@ -1,10 +1,10 @@
 import { SchemaTypes } from 'mongoose';
-import { Type } from 'class-transformer';
 import { Status } from '@common/dto/entity.dto';
 import { Schema, SchemaFactory } from '@nestjs/mongoose';
 import BaseSchema from '@common/core/base.schema';
 import AppProp from '@common/decorator/app_prop.decorator';
 import Category from '../category/category.schema';
+import { EStatus } from '@common/utils/enum';
 
 @Schema()
 export default class Campaign extends BaseSchema {
@@ -17,8 +17,10 @@ export default class Campaign extends BaseSchema {
    @AppProp({ type: Date })
    endDate: Date;
 
-   @AppProp({ type: SchemaTypes.Mixed })
-   @Type(() => Status)
+   @AppProp(
+      { type: SchemaTypes.Mixed, immutable: false, default: { status: EStatus.Pending } },
+      { type: Status },
+   )
    status: Status;
 
    @AppProp({ type: String, required: false })

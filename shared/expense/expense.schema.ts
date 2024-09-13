@@ -1,7 +1,6 @@
 import { SchemaTypes } from 'mongoose';
-import { Type } from 'class-transformer';
 import { Status } from '@common/dto/entity.dto';
-import { EExpenseScope } from '@common/utils/enum';
+import { EExpenseScope, EStatus } from '@common/utils/enum';
 import { ValidateIf } from 'class-validator';
 import BaseSchema from '@common/core/base.schema';
 import AppProp from '@common/decorator/app_prop.decorator';
@@ -24,8 +23,10 @@ export default class Expense extends BaseSchema {
    @AppProp({ type: Boolean })
    isTax: boolean;
 
-   @AppProp({ type: SchemaTypes.Mixed })
-   @Type(() => Status)
+   @AppProp(
+      { type: SchemaTypes.Mixed, immutable: false, default: { status: EStatus.Pending } },
+      { type: Status },
+   )
    status: Status;
 
    @AppProp({ type: String, required: false })

@@ -198,3 +198,14 @@ export class Cash {
    @IsMongoId()
    currencyId: string;
 }
+
+export class Price {
+   @IsMongoId()
+   typeId: string;
+
+   @IsBoolean()
+   basePrice: number;
+
+   @IsMongoId()
+   currencyId: string;
+}

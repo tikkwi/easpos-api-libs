@@ -7,7 +7,7 @@ export const $dayjs = dayjs;
 
 $dayjs.extend(duration);
 
-export const getPeriodDate = (period: Period, date: Date | Dayjs) => {
+export const getPeriodDate = (period: Period, date?: Date | Dayjs) => {
    const { days, hours, minutes, seconds } = period;
    return $dayjs(date).add($dayjs.duration({ days, hours, minutes, seconds })).toDate();
 };

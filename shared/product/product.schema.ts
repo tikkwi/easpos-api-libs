@@ -1,12 +1,13 @@
 import { ValidateIf } from 'class-validator';
-import { Schema, SchemaFactory } from '@nestjs/mongoose';
 import { SchemaTypes } from 'mongoose';
 import BaseSchema from '@common/core/base.schema';
 import AppProp from '@common/decorator/app_prop.decorator';
 import Category from '../category/category.schema';
+import { EProduct } from '@common/utils/enum';
+import { Price } from '@common/dto/entity.dto';
+import { Schema, SchemaFactory } from '@nestjs/mongoose';
 
-@Schema()
-export default class Product extends BaseSchema {
+export class BaseProduct extends BaseSchema {
    @AppProp({ type: String })
    name: string;
 
@@ -19,6 +20,12 @@ export default class Product extends BaseSchema {
    @AppProp({ type: [String], required: false })
    attachments: string[];
 
+   @AppProp({ type: [SchemaTypes.Mixed] }, { type: Price })
+   prices: Price[];
+}
+
+@Schema()
+export default class Product extends BaseProduct {
    @AppProp({ type: Boolean, required: false })
    nonDepleting: boolean;
 
@@ -26,14 +33,29 @@ export default class Product extends BaseSchema {
    @AppProp({ type: Number, required: false })
    numUnit?: number;
 
+   @AppProp({ type: String, enum: EProduct })
+   type: EProduct;
+
    @AppProp({ type: SchemaTypes.ObjectId, ref: 'Category' })
-   type: Category;
+   category: Category;
 
    @AppProp({ type: [{ type: SchemaTypes.ObjectId, ref: 'Category' }], required: false })
    tags?: Category[];
 
    @AppProp({ type: SchemaTypes.ObjectId, ref: 'Category', required: false })
    unit?: Category;
+
+   @AppProp({ type: SchemaTypes.ObjectId, ref: 'Category' })
+   subType: Category;
+
+   @AppProp({ type: Number, default: 1 })
+   allowanceCount: number;
+
+   @AppProp({ type: [SchemaTypes.Mixed] }, { type: Price })
+   extraAllowancePrices: Price[];
+
+   @AppProp({ type: [SchemaTypes.Mixed], required: false }, { type: BaseProduct })
+   plugins?: BaseProduct[];
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

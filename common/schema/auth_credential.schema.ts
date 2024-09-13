@@ -2,7 +2,6 @@ import { Schema, SchemaFactory } from '@nestjs/mongoose';
 import { hashSync } from 'bcryptjs';
 import { IsNotEmpty, IsOptional, IsString, IsUrl, ValidateIf } from 'class-validator';
 import { SchemaTypes } from 'mongoose';
-import { Type } from 'class-transformer';
 import { EAuthCredential } from '@common/utils/enum';
 import BaseSchema from '../core/base.schema';
 import AppProp from '../decorator/app_prop.decorator';
@@ -34,8 +33,7 @@ export default class AuthCredential extends BaseSchema {
    allowedPeers: string[];
 
    @ValidateIf((o) => !!o.type.includes('rpc'))
-   @AppProp({ type: [{ type: SchemaTypes.Mixed }] })
-   @Type(() => AllowedService)
+   @AppProp({ type: [{ type: SchemaTypes.Mixed }] }, { type: AllowedService })
    authServices: AllowedService[];
 
    @ValidateIf((o) => !!!o.type.includes('rpc'))

@@ -1,5 +1,4 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Type } from 'class-transformer';
 import { IsIP, IsNotEmpty, IsString, ValidateIf } from 'class-validator';
 import { SchemaTypes } from 'mongoose';
 import { EApp } from '@common/utils/enum';
@@ -25,8 +24,7 @@ export class RequestLog {
 
 @Schema()
 export default class Audit extends BaseSchema {
-   @AppProp({ type: SchemaTypes.Mixed, required: false })
-   @Type(() => RequestLog)
+   @AppProp({ type: SchemaTypes.Mixed, required: false }, { type: RequestLog })
    logTrail: RequestLog[];
 
    @AppProp({ type: Boolean })
@@ -46,8 +44,7 @@ export default class Audit extends BaseSchema {
    @AppProp({ type: SchemaTypes.String })
    userAgent: string;
 
-   @AppProp({ type: SchemaTypes.Mixed, required: false })
-   @Type(() => UserProfile)
+   @AppProp({ type: SchemaTypes.Mixed, required: false }, { type: UserProfile })
    user?: UserProfile;
 }
 

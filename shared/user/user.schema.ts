@@ -1,5 +1,4 @@
 import { hashSync } from 'bcryptjs';
-import { Type } from 'class-transformer';
 import {
    IsDateString,
    IsEmail,
@@ -27,6 +26,7 @@ export class TmpBlock {
    remark?: string;
 }
 
+//TODO: guest user for customer
 export default class User extends BaseSchema {
    @AppProp({ type: String, unique: true }, { userName: true })
    userName: string;
@@ -34,16 +34,16 @@ export default class User extends BaseSchema {
    @AppProp({ type: String, enum: EUser, default: EUser.Merchant, required: false })
    type: EUser;
 
-   @AppProp({ type: SchemaTypes.Mixed, immutable: false, default: { status: EStatus.Pending } })
-   @Type(() => Status)
+   @AppProp(
+      { type: SchemaTypes.Mixed, immutable: false, default: { status: EStatus.Pending } },
+      { type: Status },
+   )
    status?: Status;
 
-   @AppProp({ type: SchemaTypes.Mixed, required: false })
-   @Type(() => TmpBlock)
+   @AppProp({ type: SchemaTypes.Mixed, required: false }, { type: TmpBlock })
    tmpBlock?: TmpBlock;
 
-   @AppProp({ type: SchemaTypes.Mixed, required: false })
-   @Type(() => MFA)
+   @AppProp({ type: SchemaTypes.Mixed, required: false }, { type: MFA })
    mfa?: MFA;
 
    @AppProp({ type: String })

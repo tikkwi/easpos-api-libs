@@ -1,13 +1,11 @@
 import { SchemaTypes } from 'mongoose';
 import { ValidateIf } from 'class-validator';
-import { Type } from 'class-transformer';
 import { Cash, ProductPurchased, Status, TimeRange } from '@common/dto/entity.dto';
-import { EAllowance } from '@common/utils/enum';
+import { EAllowance, EStatus } from '@common/utils/enum';
 import BaseSchema from '@common/core/base.schema';
 import AppProp from '@common/decorator/app_prop.decorator';
 import Address from '../address/address.schema';
 import Campaign from '../campaign/campaign.schema';
-import Price from '../price/price.schema';
 import Category from '../category/category.schema';
 import Currency from '../currency/currency.schema';
 
@@ -31,24 +29,24 @@ export default abstract class Allowance extends BaseSchema {
    @AppProp({ type: Boolean })
    perProduct: boolean;
 
-   @AppProp({ type: SchemaTypes.Mixed })
-   @Type(() => Status)
+   @AppProp(
+      { type: SchemaTypes.Mixed, immutable: false, default: { status: EStatus.Pending } },
+      { type: Status },
+   )
    status: Status;
 
    @AppProp({ type: Boolean, default: false })
    stackable: boolean;
 
-   @AppProp({ type: [{ type: SchemaTypes.ObjectId, ref: 'Price' }] })
-   applicablePrices: Price[];
+   @AppProp({ type: [{ type: SchemaTypes.ObjectId, ref: 'Category' }] })
+   applicablePrices: Category[];
 
    @ValidateIf((o) => [EAllowance.SpendBase, EAllowance.TotalSpendBase].includes(o.type))
-   @AppProp({ type: SchemaTypes.Mixed })
-   @Type(() => Cash)
+   @AppProp({ type: SchemaTypes.Mixed }, { type: Cash })
    spendTrigger?: Cash;
 
    @ValidateIf((o) => o.type === EAllowance.TierBased)
-   @AppProp({ type: SchemaTypes.Mixed })
-   @Type(() => TimeRange)
+   @AppProp({ type: SchemaTypes.Mixed }, { type: TimeRange })
    timeTrigger?: TimeRange;
 
    @ValidateIf((o) => [EAllowance.StockLevel, EAllowance.VolumeLevel].includes(o.type))
@@ -68,13 +66,11 @@ export default abstract class Allowance extends BaseSchema {
    currencyTrigger?: Currency[];
 
    @ValidateIf((o) => o.type === EAllowance.StockLevel)
-   @AppProp({ type: [SchemaTypes.Mixed] })
-   @Type(() => ProductPurchased)
+   @AppProp({ type: [SchemaTypes.Mixed] }, { type: ProductPurchased })
    bundleTrigger?: ProductPurchased[];
 
    @ValidateIf((o) => o.type === EAllowance.Bundle)
-   @AppProp({ type: [SchemaTypes.Mixed] })
-   @Type(() => ProductPurchased)
+   @AppProp({ type: Boolean })
    levelLowerTrigger?: boolean;
 
    @AppProp({ type: Date, required: false })

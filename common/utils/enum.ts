@@ -19,12 +19,12 @@ export enum EAuthCredential {
    Merchant = 'merchant',
 }
 
-export enum ESubscription {
-   Demo = 'Demo',
-   Offline = 'Offline',
-   Dedicated = 'Dedicated', //NOTE: dedicated server & db
-   SharedSubscription = 'SharedSubscription',
-}
+// export enum ESubscription {
+//    Demo = 'Demo',
+//    Offline = 'Offline',
+//    Dedicated = 'Dedicated', //NOTE: dedicated server & db
+//    SharedSubscription = 'SharedSubscription',
+// }
 
 export enum EStatus {
    Pending = 'Pending',
@@ -80,7 +80,6 @@ export enum EField {
    URL = 'URL',
    Image = 'Image',
    User = 'User',
-   Merchant = 'Merchant',
    Datetime = 'Datetime',
    Address = 'Address',
    Number = 'Number',
@@ -147,6 +146,8 @@ export enum EAllowance {
    Currency = 'Currency',
 }
 
-export enum EPurchase {
-   MerchantSubscription = 'MerchantSubscription',
+export enum EProduct {
+   Subscription = 'Subscription',
+   Depleting = 'Depleting',
+   NonDepleting = 'NonDepleting',
 }

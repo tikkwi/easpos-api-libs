@@ -10,7 +10,7 @@ export class GetProductDto extends FindDto {
    code: string;
 }
 
-export class CreateProductDto extends OmitType(CoreDto(Product), ['type', 'tags', 'unit']) {
+export class CreateProductDto extends OmitType(CoreDto(Product), ['category', 'tags', 'unit']) {
    @IsOptional()
    @ValidateNested({ each: true })
    @Type(() => CategoryDto)
@@ -18,7 +18,7 @@ export class CreateProductDto extends OmitType(CoreDto(Product), ['type', 'tags'
 
    @ValidateNested({ each: true })
    @Type(() => OmitType(CreateCategoryDto, ['type']))
-   type: any;
+   category: CategoryDto;
 
    @IsOptional()
    @IsMongoId()

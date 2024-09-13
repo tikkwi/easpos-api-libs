@@ -12,12 +12,14 @@ import {
    ValidateNested,
 } from 'class-validator';
 import { regex } from '@common/utils/regex';
+import { Type } from 'class-transformer';
 
 type Options = {
    userName?: boolean;
    validateString?: boolean;
    prop?: boolean;
    swagger?: Omit<ApiPropertyOptions, 'type'>;
+   type?: any;
 };
 
 export default function AppProp(
@@ -48,8 +50,10 @@ export default function AppProp(
       if (
          pOpt.type.name === 'SchemaMixed' ||
          (Array.isArray(pOpt.type) && pOpt.type[0].type?.name === 'SchemaMixed')
-      )
+      ) {
          ValidateNested({ each: Array.isArray(pOpt.type) ? true : undefined })(target, key);
+         if (options.type) Type(() => options.type)(target, key);
+      }
       if (!pOpt.required) IsOptional()(target, key);
       if (pOpt.enum) IsEnum(pOpt.enum as any)(target, key);
 
