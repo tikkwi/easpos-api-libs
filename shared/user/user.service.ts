@@ -1,9 +1,5 @@
 import { compareSync } from 'bcryptjs';
-import {
-   BadRequestException,
-   ForbiddenException,
-   InternalServerErrorException,
-} from '@nestjs/common';
+import { BadRequestException, ForbiddenException } from '@nestjs/common';
 import { omit } from 'lodash';
 import { request } from 'express';
 import { responseError } from '@common/utils/misc';
@@ -14,9 +10,13 @@ import CoreService from '@common/core/core.service';
 import AppRedisService from '@common/core/app_redis/app_redis.service';
 import ContextService from '@common/core/context.service';
 import { LoginDto } from './user.dto';
+import AppBrokerService from '@common/core/app_broker/app_broker.service';
+import { MerchantServiceMethods } from '@common/dto/merchant.dto';
 
 export abstract class UserService<T extends User = User> extends CoreService<T> {
    protected abstract readonly db: AppRedisService;
+   protected abstract readonly appBroker: AppBrokerService;
+   protected abstract readonly merchantService: MerchantServiceMethods;
 
    async logout() {
       const request = ContextService.get('request');
@@ -25,10 +25,7 @@ export abstract class UserService<T extends User = User> extends CoreService<T> 
       request.session.destroy((err) => responseError(request, response, err));
    }
 
-   protected async login(
-      { email, userName, password, app }: LoginDto,
-      loginMerchant?: (id: string, app: EUserApp) => Promise<AppMerchant>,
-   ) {
+   protected async login({ email, userName, password, app }: LoginDto) {
       const { data: user }: any = await this.repository.findOne({
          filter: {
             email,
@@ -55,8 +52,23 @@ export abstract class UserService<T extends User = User> extends CoreService<T> 
             if (app !== EUserApp.Customer) throw new ForbiddenException(appForbiddenMsg);
             break;
       }
-      if (user.merchant && !loginMerchant) throw new InternalServerErrorException();
-      const merchant = loginMerchant ? await loginMerchant(user.merchant, app) : undefined;
+
+      const merchant = user.merchant
+         ? await this.appBroker.request<AppMerchant>({
+              action: (meta) =>
+                 this.merchantService.loginUser(
+                    {
+                       id: user.merchant,
+                       userId: user._id,
+                       name: `${user.firstName} ${user.lastName}`,
+                       app,
+                    },
+                    meta,
+                 ),
+              cache: true,
+              key: 'merchant',
+           })
+         : undefined;
       if (user.role) {
          authUser.isOwner = user.role.isOwner;
          authUser.permissions = user.role.role?.permissions?.reduce((a, c) => {
@@ -65,6 +77,5 @@ export abstract class UserService<T extends User = User> extends CoreService<T> 
          }, {});
       }
       request.session.user = await encrypt(JSON.stringify(authUser));
-      if (merchant) await this.db.set('merchant', merchant);
    }
 }

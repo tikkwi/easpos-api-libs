@@ -28,15 +28,8 @@ export class MerchantVerifyDto extends OmitType(FindByIdDto, ['errorOnNotFound']
    code: string;
 }
 
-type MerchantWithAuthReturn = {
-   data: {
-      merchant: Merchant;
-      isSubActive: boolean;
-   };
-};
-
 export interface MerchantServiceMethods {
-   merchantWithAuth(dto: FindByIdDto, meta: Metadata): Promise<MerchantWithAuthReturn>;
+   loginUser(dto: MerchantUserLoginDto, meta: Metadata): Promise<AppMerchant>;
 
    tmpTst(meta: Metadata): { data: string };
 }
