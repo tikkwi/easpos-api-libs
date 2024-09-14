@@ -7,6 +7,7 @@ import {
    IsNumber,
    IsObject,
    IsOptional,
+   IsString,
    Min,
 } from 'class-validator';
 import { EAllowedUser, EUserApp } from '@common/utils/enum';
@@ -68,9 +69,13 @@ export class FindDto {
    @IsOptional()
    @IsBoolean()
    errorOnNotFound?: boolean;
+
+   @IsOptional()
+   @IsString({ each: true })
+   populate?: string[];
 }
 
 export class FindByIdDto extends FindDto {
    @IsMongoId()
-   id: string;
+   id: string | ObjectId;
 }

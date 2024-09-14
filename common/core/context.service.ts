@@ -1,11 +1,16 @@
+type SetType = Partial<Record<keyof AppContext, any>>;
+
 export default class ContextService {
    private static data: AppContext = {};
 
-   static set(data: Partial<Record<keyof AppContext, any>>) {
-      for (const [k, v] of Object.entries(data)) {
-         if (this.data[k] && k.includes('d_')) continue;
-         this.data[k] = v;
-      }
+   static set(data: ((ctx: AppContext) => SetType) | SetType) {
+      const updCtx = (d: SetType) => {
+         for (const [k, v] of Object.entries(d)) {
+            if (this.data[k] && k.includes('d_')) continue;
+            this.data[k] = v;
+         }
+      };
+      updCtx(typeof data === 'function' ? data(this.data) : data);
    }
 
    static get<K extends keyof AppContext>(key: K): AppContext[K] {

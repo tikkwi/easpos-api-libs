@@ -20,9 +20,11 @@ export default function AppController(
       Controller(prefix)(target);
       const reflector = new Reflector();
       const clsUsers = [];
-      if (allowedUsers.default) clsUsers.splice(0, 0, ...allowedUsers.default);
-      if (allowedUsers[ContextService.get('d_app')])
-         clsUsers.splice(0, 0, ...allowedUsers[ContextService.get('d_app')]);
+      if (allowedUsers) {
+         if (allowedUsers.default) clsUsers.splice(0, 0, ...allowedUsers.default);
+         if (allowedUsers[ContextService.get('d_app')])
+            clsUsers.splice(0, 0, ...allowedUsers[ContextService.get('d_app')]);
+      }
 
       for (const key of Object.getOwnPropertyNames(target.prototype)) {
          const descriptor = Object.getOwnPropertyDescriptor(target.prototype, key);

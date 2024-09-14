@@ -35,7 +35,7 @@ export default class Repository<T> {
    }: Omit<FindType<T>, 'filter' | 'pagination'> &
       (
          | {
-              id: string;
+              id: string | ObjectId;
            }
          | Pick<FindType<T>, 'filter'>
       )) {

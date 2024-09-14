@@ -5,6 +5,7 @@ import { APP } from '@common/constant';
 import { responseError } from '@common/utils/misc';
 import { firstUpperCase } from '@common/utils/regex';
 import AppRedisService from './app_redis/app_redis.service';
+import ContextService from './context.service';
 
 @Catch()
 export default class AppExceptionFilter implements ExceptionFilter {
@@ -16,6 +17,9 @@ export default class AppExceptionFilter implements ExceptionFilter {
    async catch(err: any, host: ArgumentsHost) {
       const logger = new Logger(firstUpperCase(this.config.get(APP)));
       logger.error(err);
+      const session = ContextService.get('session');
+      session.abortTransaction();
+      session.endSession();
       if (host.getType() === 'http') {
          const ctx = host.switchToHttp();
          const response = ctx.getResponse<Response>();

@@ -17,7 +17,7 @@ class IsNumberStringConstraint implements ValidatorConstraintInterface {
    }
 }
 
-export default function IsAppNumberString(length?: number, options?: ValidationOptions) {
+export function IsAppNumberString(length?: number, options?: ValidationOptions) {
    return function ({ constructor }: any, propertyName: string) {
       registerDecorator({
          target: constructor,

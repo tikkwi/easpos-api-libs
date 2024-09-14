@@ -17,7 +17,7 @@ import {
 import { EStatus, ETime, EUser, EUserApp } from '@common/utils/enum';
 import { regex } from '@common/utils/regex';
 import { TmpBlock } from '@shared/user/user.schema';
-import IsAppNumberString from '../validator/is_number_string.validator';
+import { IsAppNumberString } from '../validator';
 
 class UserPermissions {
    @IsString({ each: true })

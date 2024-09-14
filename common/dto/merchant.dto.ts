@@ -3,11 +3,12 @@ import { Type } from 'class-transformer';
 import { IsMongoId, IsNotEmpty, ValidateNested } from 'class-validator';
 import { CreateCategoryDto } from './action.dto';
 import { CoreDto, FindByIdDto } from './core.dto';
-import { LoggedInMerchantUser, Merchant } from '@common/schema/merchant.schema';
+import Merchant, { LoggedInMerchantUser } from '@common/schema/merchant.schema';
 import { IsAppNumberString } from '@common/validator';
 
 export class CreateMerchantDto extends OmitType(CoreDto(Merchant), [
-   'activePurchases',
+   'offlinePurchase',
+   'subscriptionPurchase',
    'status',
    'type',
 ]) {

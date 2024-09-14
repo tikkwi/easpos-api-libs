@@ -13,9 +13,8 @@ import { firstUpperCase } from './regex';
 import { EAuthCredential } from './enum';
 import { Request, Response } from 'express';
 import { compare } from 'bcryptjs';
-import { ContextService } from '@common/core/context.service';
 import { ADMIN_URL, REPOSITORY } from '@common/constant';
-import { Repository } from '@common/core/repository';
+import Repository from '../core/repository';
 
 type RepositoryProviderType = { name: string; provide?: string };
 
@@ -51,10 +50,10 @@ const getGrpcClientOptions = (pkgs: string[], url: string): ClientsModuleOptions
 
 const repositoryProvider = ({ provide, name }: RepositoryProviderType) => ({
    provide: provide ?? REPOSITORY,
-   useFactory: (model, context) => {
-      return new Repository(model, context);
+   useFactory: (model) => {
+      return new Repository(model);
    },
-   inject: [getModelToken(name), ContextService],
+   inject: [getModelToken(name)],
 });
 
 export const getGrpcClient = (

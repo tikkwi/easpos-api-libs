@@ -22,7 +22,7 @@ class IsAppEnumConstraint implements ValidatorConstraintInterface {
    }
 }
 
-export default function IsAppEnum<E>(
+export function IsAppEnum<E>(
    e: E,
    filter?: { omit?: (keyof E)[]; pick?: (keyof E)[] },
    options?: ValidationOptions,

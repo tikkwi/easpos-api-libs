@@ -4,11 +4,11 @@ import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { MongooseModule, MongooseModuleOptions } from '@nestjs/mongoose';
 import { join } from 'path';
 import { MONGO_URI } from '@common/constant';
-import { AppExceptionFilter } from '@common/core/exception.filter';
 import AppBrokerModule from '../app_broker/app_broker.module';
 import AppRedisModule from '../app_redis/app_redis.module';
 import TransformGuard from '../../guard/transform.guard';
 import TransactionInterceptor from '../../interceptor/transaction.interceptor';
+import AppExceptionFilter from '../exception.filter';
 
 @Module({
    imports: [

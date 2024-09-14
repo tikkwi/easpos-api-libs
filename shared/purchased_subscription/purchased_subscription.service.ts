@@ -7,12 +7,12 @@ import Repository from '@common/core/repository';
 import { $dayjs, getPeriodDate } from '@common/utils/datetime';
 import { ConfigService } from '@nestjs/config';
 import MailService from '../mail/mail.service';
-import { EMail } from '@common/utils/enum';
+import { EMail, EStatus } from '@common/utils/enum';
 import { SubMonitorDto } from './purhased_subscription.dto';
 import ContextService from '@common/core/context.service';
 
 @AppService()
-export class PurchasedSubscriptionService extends CoreService<PurchasedSubscription> {
+export default class PurchasedSubscriptionService extends CoreService<PurchasedSubscription> {
    constructor(
       @Inject(REPOSITORY) protected readonly repository: Repository<PurchasedSubscription>,
       private readonly configService: ConfigService,
@@ -22,30 +22,47 @@ export class PurchasedSubscriptionService extends CoreService<PurchasedSubscript
    }
 
    async subMonitor({ id, mail }: SubMonitorDto) {
-      const purSub = await this.findById({
+      const { data: purSub } = await this.findById({
          id,
          errorOnNotFound: true,
          lean: false,
-      }).then(({ data }) => data.populate(['activePurchase', 'queuingPurchases', 'subscription']));
+         populate: ['activePurchase', 'queuingPurchases', 'subscription'],
+      });
       const isExpire = $dayjs().isAfter(purSub.expireDate);
       const isPreExpire = $dayjs().isAfter(
          $dayjs(purSub.expireDate).add(this.configService.get(PRE_END_SUB_MAIL)),
       );
 
-      if (!purSub.queuingPurchases.length && (isExpire || isPreExpire)) {
+      if (isExpire) {
+         purSub.activePurchase = null;
+         if (purSub.queuingPurchases.length) {
+            let updInd = 0;
+            const updActivePurchase = purSub.queuingPurchases.find(
+               ({ status: { status } }, ind) => {
+                  const found = status === EStatus.Approved;
+                  if (found) updInd = ind;
+                  return found;
+               },
+            );
+            if (updActivePurchase) {
+               purSub.queuingPurchases.splice(updInd, 1);
+               updActivePurchase.status.status = EStatus.Active;
+               purSub.expireDate = getPeriodDate(updActivePurchase.subscriptionPeriod);
+               purSub.activePurchase = updActivePurchase;
+            }
+         }
+         await purSub.save({ session: ContextService.get('session') });
+      }
+
+      if (!purSub.activePurchase || isPreExpire) {
          this.mailService.sendMail({
             mail,
-            type: isExpire ? EMail.MerchantSubscriptionExpire : EMail.MerchantPreSubscriptionExpire,
-            expirePayload: isExpire ? { expireDate: purSub.expireDate } : undefined,
-            preExpirePayload: isExpire ? undefined : { expireDate: purSub.expireDate },
+            type: isPreExpire
+               ? EMail.MerchantPreSubscriptionExpire
+               : EMail.MerchantSubscriptionExpire,
+            expirePayload: isPreExpire ? undefined : { expireDate: purSub.expireDate },
+            preExpirePayload: isPreExpire ? { expireDate: purSub.expireDate } : undefined,
          });
-      }
-      if (purSub.queuingPurchases.length && isExpire) {
-         const updActivePurchase = purSub.queuingPurchases[0];
-         purSub.queuingPurchases.splice(0, 1);
-         purSub.expireDate = getPeriodDate(updActivePurchase.subscriptionPeriod);
-         purSub.activePurchase = updActivePurchase;
-         await purSub.save({ session: ContextService.get('session') });
       }
       return { data: purSub };
    }
