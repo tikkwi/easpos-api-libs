@@ -1,26 +1,22 @@
 import { EAllowance, EStatus } from '@common/utils/enum';
-import { BadRequestException, Inject } from '@nestjs/common';
+import { BadRequestException } from '@nestjs/common';
 import { $dayjs, normalizeDate } from '@common/utils/datetime';
-import { getServiceToken } from '@common/utils/misc';
-import { ALLOWANCE, PRODUCT } from '@common/constant';
 import { GetApplicableAllowanceDto } from './allowance.dto';
-import AppService from '@common/decorator/app_service.decorator';
 import Allowance from './allowance.schema';
 import CoreService from '@common/core/core.service';
-import Repository from '@common/core/repository';
-import ContextService from '@common/core/context.service';
+import ContextService from '@common/core/context';
 import ProductService from '../product/product.service';
 import UnitService from '../unit/unit.service';
+import AllowanceCodeService from '../allowance_code/allowance_code.service';
+import AppRedisService from '@common/core/app_redis/app_redis.service';
 
-@AppService()
-export default class AllowanceService<T extends Allowance = Allowance> extends CoreService<T> {
-   constructor(
-      @Inject(getServiceToken(ALLOWANCE)) protected readonly repository: Repository<T>,
-      @Inject(getServiceToken(PRODUCT)) private readonly productService: ProductService, //NOTE:ProductService | ProductUnitService
-      private readonly currencyService: UnitService,
-   ) {
-      super();
-   }
+export default abstract class AllowanceService<
+   T extends Allowance = Allowance,
+> extends CoreService<T> {
+   protected abstract productService: ProductService;
+   protected abstract unitService: UnitService;
+   protected abstract allowanceCodeService: AllowanceCodeService;
+   protected abstract db: AppRedisService;
 
    async getApplicableAllowances({
       basePrice,
@@ -30,7 +26,8 @@ export default class AllowanceService<T extends Allowance = Allowance> extends C
       paymentMethodId,
       addressId,
       products,
-   }: GetApplicableAllowanceDto) {
+      coupon,
+   }: GetApplicableAllowanceDto): Promise<{ data: T[] }> {
       if (perProduct && products.length > 1)
          throw new BadRequestException('Expect single purchased product for per product allowance');
       const tier = ContextService.get('user').tier;
@@ -39,12 +36,15 @@ export default class AllowanceService<T extends Allowance = Allowance> extends C
          products &&
          (await this.productService.getProduct({ code: products[0].product }));
       const stockLeft = product ? product.numUnit - products[0].quantity : undefined;
+      const { data: mAllowance } = coupon
+         ? await this.allowanceCodeService.getAllowanceByCoupon({ code: coupon })
+         : null;
 
       const getTargetAmount = async (id?: string, total?: boolean) => {
          const current = [basePrice];
          const prevSpend = ContextService.get('merchant')?.merchant.totalSpend;
          if (total && prevSpend) current.splice(1, 0, ...prevSpend);
-         return await this.currencyService.exchangeUnit({ current, targetId: id });
+         return await this.unitService.exchangeUnit({ current, targetId: id, currency: true });
       };
 
       const $allowances = await this.repository.custom((model) =>
@@ -57,7 +57,18 @@ export default class AllowanceService<T extends Allowance = Allowance> extends C
             },
             {
                $match: {
-                  autoTrigger: true,
+                  $expr: {
+                     $cond: [
+                        { $eq: [mAllowance, null] },
+                        { $eq: ['$autoTrigger', true] },
+                        {
+                           $or: [
+                              { $eq: ['$autoTrigger', true] },
+                              { $eq: ['$_id', mAllowance._id] },
+                           ],
+                        },
+                     ],
+                  },
                   perProduct,
                   'status.status': EStatus.Active,
                },
@@ -262,6 +273,9 @@ export default class AllowanceService<T extends Allowance = Allowance> extends C
             }
          }
       }
+
       return { data: allowances };
    }
+
+   abstract getPurchasedAllowance(dto: GetApplicableAllowanceDto): Promise<any>;
 }

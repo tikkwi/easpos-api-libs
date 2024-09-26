@@ -6,7 +6,7 @@ import { ADM_MRO_PWD, ADM_MRO_USR, APP } from '@common/constant';
 import { base64 } from '@common/utils/misc';
 import { decrypt } from '@common/utils/encrypt';
 import AppRedisService from '../app_redis/app_redis.service';
-import ContextService from '../context.service';
+import ContextService from '../context';
 
 @Injectable()
 export default class AppBrokerService {

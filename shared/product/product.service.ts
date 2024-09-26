@@ -1,12 +1,13 @@
 import CoreService from '@common/core/core.service';
-import { CreateProductDto, GetProductDto } from './product.dto';
+import { CreateProductDto } from './product.dto';
 import Product from './product.schema';
-import ContextService from '@common/core/context.service';
+import ContextService from '@common/core/context';
 import { ECategory } from '@common/utils/enum';
 import AppService from '@common/decorator/app_service.decorator';
 import { Inject } from '@nestjs/common';
 import { REPOSITORY } from '@common/constant';
 import Repository from '@common/core/repository';
+import { FindByCodeDto } from '@common/dto/core.dto';
 
 @AppService()
 export default class ProductService extends CoreService<Product> {
@@ -14,7 +15,7 @@ export default class ProductService extends CoreService<Product> {
       super();
    }
 
-   async getProduct({ code }: GetProductDto) {
+   async getProduct({ code }: FindByCodeDto) {
       return this.repository.findOne({
          filter: { qrCode: code },
          errorOnNotFound: true,

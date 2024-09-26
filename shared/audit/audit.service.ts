@@ -4,7 +4,7 @@ import { REPOSITORY } from '@common/constant';
 import CoreService from '@common/core/core.service';
 import Audit from './audit.schema';
 import Repository from '@common/core/repository';
-import ContextService from '@common/core/context.service';
+import ContextService from '@common/core/context';
 
 export default class AuditService extends CoreService<Audit> {
    constructor(@Inject(REPOSITORY) protected readonly repository: Repository<Audit>) {

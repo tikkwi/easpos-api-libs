@@ -5,7 +5,7 @@ import { APP } from '@common/constant';
 import { responseError } from '@common/utils/misc';
 import { firstUpperCase } from '@common/utils/regex';
 import AppRedisService from './app_redis/app_redis.service';
-import ContextService from './context.service';
+import ContextService from './context';
 
 @Catch()
 export default class AppExceptionFilter implements ExceptionFilter {

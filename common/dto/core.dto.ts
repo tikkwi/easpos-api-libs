@@ -17,6 +17,10 @@ export type AllowedUser = keyof typeof EAllowedUser;
 
 export type AllowedApp = keyof typeof EUserApp | 'Any';
 
+export class BaseDto {
+   req_id: string;
+}
+
 //classes
 export class UpdateDto {
    @IsBoolean()
@@ -78,4 +82,9 @@ export class FindDto {
 export class FindByIdDto extends FindDto {
    @IsMongoId()
    id: string | ObjectId;
+}
+
+export class FindByCodeDto extends FindDto {
+   @IsString()
+   code: string;
 }

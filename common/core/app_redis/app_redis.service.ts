@@ -2,23 +2,16 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Redis } from 'ioredis';
 import { REDIS_LCL_CLIENT } from '@common/constant';
 import { decrypt, encrypt } from '@common/utils/encrypt';
-import { $dayjs, isPeriodExceed } from '@common/utils/datetime';
-import ContextService from '../context.service';
+import ContextService from '../context';
+import { days } from '@nestjs/throttler';
 
 @Injectable()
 export default class AppRedisService {
    constructor(@Inject(REDIS_LCL_CLIENT) private readonly db: Redis) {}
 
-   async set<K extends keyof AppCache>(key: K, value: AppCache[K]) {
-      await this.db.set(
-         key,
-         await encrypt(
-            JSON.stringify({
-               data: value,
-               expireIn: $dayjs().add(1, 'days').toDate().getTime(),
-            }),
-         ),
-      );
+   async set<K extends keyof AppCache>(key: K, value: AppCache[K], expire?: number) {
+      await this.db.set(key, await encrypt(JSON.stringify({ data: value })));
+      await this.db.expire(key, expire ?? days(1));
       ContextService.set({ [key]: value });
    }
 
@@ -27,17 +20,13 @@ export default class AppRedisService {
       getFnc?: () => Promise<AppCache[K]> | AppCache[K],
    ): Promise<AppCache[K] | undefined> {
       const d: any = await this.db.get(key).then((res) => decrypt(res));
+      if (d) return d.data;
 
       if (getFnc) {
-         const [isExpire] = d ? isPeriodExceed(new Date(d.expireIn)) : [];
-         if (isExpire || !d) {
-            const data = await getFnc();
-            if (data) await this.set(key, data);
-            return data;
-         }
+         const data = await getFnc();
+         if (data) await this.set(key, data);
+         return data;
       }
-
-      return d?.data;
    }
 
    async update<K extends keyof AppCache>(

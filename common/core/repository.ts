@@ -1,7 +1,7 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Document, Model } from 'mongoose';
 import { PAGE_SIZE } from '@common/constant';
-import ContextService from './context.service';
+import ContextService from './context';
 
 export default class Repository<T> {
    constructor(private readonly model: Model<T>) {}

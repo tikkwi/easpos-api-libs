@@ -1,6 +1,6 @@
 import { FindByIdDto } from '@common/dto/core.dto';
 import BaseSchema from './base.schema';
-import ContextService from './context.service';
+import ContextService from './context';
 import Repository from './repository';
 import { CreateCategoryDto } from '../dto/action.dto';
 

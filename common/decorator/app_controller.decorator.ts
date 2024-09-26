@@ -4,7 +4,7 @@ import { Reflector } from '@nestjs/core';
 import { pull } from 'lodash';
 import { AllowedApp, AllowedUser } from '@common/dto/core.dto';
 import { APPS, SKIP_APPS, SKIP_USERS, USERS } from '@common/constant';
-import ContextService from '../core/context.service';
+import ContextService from '../core/context';
 import { Apps, Users } from './allowance.decorator';
 
 type TAllowedUser = {
@@ -13,7 +13,7 @@ type TAllowedUser = {
 
 export default function AppController(
    prefix?: string,
-   allowedUsers?: TAllowedUser,
+   allowedUsers?: TAllowedUser | AllowedUser[],
    allowedApps?: AllowedApp[],
 ) {
    return function (target: any) {
@@ -21,9 +21,12 @@ export default function AppController(
       const reflector = new Reflector();
       const clsUsers = [];
       if (allowedUsers) {
-         if (allowedUsers.default) clsUsers.splice(0, 0, ...allowedUsers.default);
-         if (allowedUsers[ContextService.get('d_app')])
-            clsUsers.splice(0, 0, ...allowedUsers[ContextService.get('d_app')]);
+         if (Array.isArray(allowedUsers)) clsUsers.splice(0, 0, ...allowedUsers);
+         else {
+            if (allowedUsers.default) clsUsers.splice(0, 0, ...allowedUsers.default);
+            if (allowedUsers[ContextService.get('d_app')])
+               clsUsers.splice(0, 0, ...allowedUsers[ContextService.get('d_app')]);
+         }
       }
 
       for (const key of Object.getOwnPropertyNames(target.prototype)) {

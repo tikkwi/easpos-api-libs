@@ -1,4 +1,3 @@
-import { ServerUnaryCall } from '@grpc/grpc-js';
 import {
    CanActivate,
    ExecutionContext,
@@ -6,13 +5,16 @@ import {
    InternalServerErrorException,
 } from '@nestjs/common';
 import { Request } from 'express';
+import { v4 } from 'uuid';
 import { decrypt } from '@common/utils/encrypt';
 import { isPeriodExceed } from '@common/utils/datetime';
-import ContextService from '../core/context.service';
+import ContextService from '../core/context';
+import { ServerUnaryCall } from '@grpc/grpc-js';
 
 @Injectable()
 export default class TransformGuard implements CanActivate {
    async canActivate(context: ExecutionContext) {
+      const id = v4();
       if (context.getType() === 'http') {
          const ctx = context.switchToHttp();
          const request: Request = ctx.getRequest();
@@ -36,20 +38,27 @@ export default class TransformGuard implements CanActivate {
          }
 
          ContextService.set({
-            ip: request.ip,
-            userAgent: request.headers['user-agent'],
-            isHttp: true,
-            request,
-            response,
-            user,
+            data: {
+               ip: request.ip,
+               userAgent: request.headers['user-agent'],
+               isHttp: true,
+               request,
+               response,
+               user,
+            },
+            id,
          });
       } else {
          const ctx: ServerUnaryCall<any, any> = (context.switchToRpc() as any).args[2];
          const meta = ctx.metadata.getMap();
+         // const meta: Metadata = context.switchToRpc().getContext();
          ContextService.set({
-            ip: ctx.getPath(),
-            userAgent: meta['user-agent'],
-            requestedApp: meta.app,
+            data: {
+               ip: ctx.getPath(),
+               userAgent: meta['user-agent'] as string,
+               requestedApp: meta['app'] as string,
+            },
+            id,
          });
       }
 

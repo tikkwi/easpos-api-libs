@@ -16,7 +16,7 @@ import { MerchantServiceMethods } from '@common/dto/merchant.dto';
 import { AllowedUser } from '@common/dto/core.dto';
 import { EAllowedUser, EApp, EUser } from '@common/utils/enum';
 import AppBrokerService from '../core/app_broker/app_broker.service';
-import ContextService from '../core/context.service';
+import ContextService from '../core/context';
 
 /*
 TODO,NOTE cache authorized status up to 1 day which mean merchant_user may able to

@@ -17,27 +17,30 @@ export default class UnitService extends CoreService<Unit> {
       return await this.repository.findOne({ filter: { base: true } });
    }
 
-   async createUnit({ category, ...dto }: CreateUnitDto) {
+   async createUnit({ category, ...dto }: CreateUnitDto, currency = false) {
       if (dto.base) {
          const base = await this.getBase();
          if (base) throw new BadRequestException('There is already a base unit');
       }
-      return super.create({ ...dto, category: { ...category, type: ECategory.Unit } });
+      return super.create({ ...dto, currency, category: { ...category, type: ECategory.Unit } });
    }
 
-   async exchangeUnit({ current, targetId }: ExchangeUnitDto) {
+   async exchangeUnit({ current, targetId, currency, categoryId }: ExchangeUnitDto) {
       let exchanged = 0;
       let target = 1;
       if (targetId) {
          ({
             data: { baseUnit: target },
-         } = await this.findById({ id: targetId, errorOnNotFound: true }));
+         } = await this.repository.findOne({
+            filter: { _id: targetId, currency, category: categoryId },
+            errorOnNotFound: true,
+         }));
       }
       for (const { amount, currencyId } of current) {
          const {
             data: { baseUnit },
-         } = await this.findById({
-            id: currencyId,
+         } = await this.repository.findOne({
+            filter: { _id: currencyId, currency, category: categoryId },
             errorOnNotFound: true,
          });
          exchanged += baseUnit * amount;

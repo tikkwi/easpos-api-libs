@@ -19,13 +19,6 @@ export enum EAuthCredential {
    Merchant = 'merchant',
 }
 
-// export enum ESubscription {
-//    Demo = 'Demo',
-//    Offline = 'Offline',
-//    Dedicated = 'Dedicated', //NOTE: dedicated server & db
-//    SharedSubscription = 'SharedSubscription',
-// }
-
 export enum EStatus {
    Pending = 'Pending',
    Active = 'Active',
@@ -146,7 +139,20 @@ export enum EAllowance {
    Currency = 'Currency',
 }
 
+export enum EMerchantAllowanceBenefit {
+   Product = 'Product',
+   Point = 'Point',
+   Cash = 'Cash',
+   Discount = 'Discount',
+}
+
 export enum EProduct {
+   Subscription = 'Subscription',
+   Depleting = 'Depleting',
+   NonDepleting = 'NonDepleting',
+}
+
+export enum EAccumulatedAllowance {
    Subscription = 'Subscription',
    Depleting = 'Depleting',
    NonDepleting = 'NonDepleting',

@@ -1,7 +1,7 @@
 import { Body, Get, Param, Post } from '@nestjs/common';
 import CoreController from '@common/core/core.controller';
 import UnitService from './unit.service';
-import { CreateUnitDto } from './unit.dto';
+import { CreateCurrencyDto, CreateUnitDto } from './unit.dto';
 import AppController from '@common/decorator/app_controller.decorator';
 import { EAllowedUser } from '@common/utils/enum';
 
@@ -22,7 +22,12 @@ export default class UnitController extends CoreController {
    }
 
    @Post('create')
-   async createCurrency(@Body() dto: CreateUnitDto) {
+   async createUnit(@Body() dto: CreateUnitDto) {
       return this.service.createUnit(dto);
+   }
+
+   @Post('create-currency')
+   async createCurrency(@Body() dto: CreateCurrencyDto) {
+      return this.service.createUnit(dto, true);
    }
 }

@@ -9,7 +9,7 @@ import { ConfigService } from '@nestjs/config';
 import MailService from '../mail/mail.service';
 import { EMail, EStatus } from '@common/utils/enum';
 import { SubMonitorDto } from './purhased_subscription.dto';
-import ContextService from '@common/core/context.service';
+import ContextService from '@common/core/context';
 
 @AppService()
 export default class PurchasedSubscriptionService extends CoreService<PurchasedSubscription> {

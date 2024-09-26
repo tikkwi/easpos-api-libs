@@ -7,8 +7,9 @@ import AppProp from '@common/decorator/app_prop.decorator';
 import Address from '../address/address.schema';
 import Campaign from '../campaign/campaign.schema';
 import Category from '../category/category.schema';
-import Currency from '../currency/currency.schema';
+import Unit from '../unit/unit.schema';
 
+//TODO: validate not to exceed 100% discount
 export default abstract class Allowance extends BaseSchema {
    abstract benefit: any;
    abstract type: EAllowance;
@@ -19,6 +20,10 @@ export default abstract class Allowance extends BaseSchema {
 
    @AppProp({ type: Boolean })
    autoTrigger: boolean;
+
+   @ValidateIf((o) => o.autoTrigger)
+   @AppProp({ type: Boolean, default: false })
+   canKeep: boolean;
 
    @AppProp({ type: String })
    name: string;
@@ -63,7 +68,7 @@ export default abstract class Allowance extends BaseSchema {
 
    @ValidateIf((o) => o.type === EAllowance.Currency)
    @AppProp({ type: [{ type: SchemaTypes.ObjectId, ref: 'Currency' }] })
-   currencyTrigger?: Currency[];
+   currencyTrigger?: Unit[];
 
    @ValidateIf((o) => o.type === EAllowance.StockLevel)
    @AppProp({ type: [SchemaTypes.Mixed] }, { type: ProductPurchased })

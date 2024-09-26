@@ -1,4 +1,4 @@
-import { IsBoolean, IsMongoId, IsOptional, ValidateNested } from 'class-validator';
+import { IsBoolean, IsMongoId, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { Cash, ProductPurchased } from '@common/dto/entity.dto';
 
@@ -10,6 +10,10 @@ export class GetApplicableAllowanceDto {
    @IsOptional()
    @IsMongoId()
    priceId?: string;
+
+   @IsOptional()
+   @IsString()
+   coupon?: string;
 
    @IsMongoId()
    currencyId: string;

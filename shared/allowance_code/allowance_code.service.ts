@@ -6,6 +6,7 @@ import AppService from '@common/decorator/app_service.decorator';
 import { Inject } from '@nestjs/common';
 import { REPOSITORY } from '@common/constant';
 import Repository from '@common/core/repository';
+import { FindByCodeDto } from '@common/dto/core.dto';
 
 @AppService()
 export default class AllowanceCodeService extends CoreService<AllowanceCode> {
@@ -14,6 +15,18 @@ export default class AllowanceCodeService extends CoreService<AllowanceCode> {
       private readonly allowanceService: AllowanceService,
    ) {
       super();
+   }
+
+   async getAllowanceByCoupon({ code }: FindByCodeDto) {
+      return {
+         data: (
+            await this.repository.findOne({
+               filter: { code },
+               errorOnNotFound: true,
+               options: { populate: ['allowance'] },
+            })
+         ).data.allowance,
+      };
    }
 
    async createAllowanceCode({ allowanceId, ...dto }: CreateAllowanceCodeDto) {

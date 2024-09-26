@@ -8,7 +8,7 @@ import { encrypt } from '@common/utils/encrypt';
 import User from './user.schema';
 import CoreService from '@common/core/core.service';
 import AppRedisService from '@common/core/app_redis/app_redis.service';
-import ContextService from '@common/core/context.service';
+import ContextService from '@common/core/context';
 import { LoginDto } from './user.dto';
 import AppBrokerService from '@common/core/app_broker/app_broker.service';
 import { MerchantServiceMethods } from '@common/dto/merchant.dto';
@@ -25,7 +25,7 @@ export abstract class UserService<T extends User = User> extends CoreService<T> 
       request.session.destroy((err) => responseError(request, response, err));
    }
 
-   protected async login({ email, userName, password, app }: LoginDto) {
+   async login({ email, userName, password, app }: LoginDto) {
       const { data: user }: any = await this.repository.findOne({
          filter: {
             email,
@@ -53,22 +53,21 @@ export abstract class UserService<T extends User = User> extends CoreService<T> 
             break;
       }
 
-      const merchant = user.merchant
-         ? await this.appBroker.request<AppMerchant>({
-              action: (meta) =>
-                 this.merchantService.loginUser(
-                    {
-                       id: user.merchant,
-                       userId: user._id,
-                       name: `${user.firstName} ${user.lastName}`,
-                       app,
-                    },
-                    meta,
-                 ),
-              cache: true,
-              key: 'merchant',
-           })
-         : undefined;
+      if (user.merchant)
+         await this.appBroker.request<AppMerchant>({
+            action: (meta) =>
+               this.merchantService.loginUser(
+                  {
+                     id: user.merchant,
+                     userId: user._id,
+                     name: `${user.firstName} ${user.lastName}`,
+                     app,
+                  },
+                  meta,
+               ),
+            cache: true,
+            key: 'merchant',
+         });
       if (user.role) {
          authUser.isOwner = user.role.isOwner;
          authUser.permissions = user.role.role?.permissions?.reduce((a, c) => {

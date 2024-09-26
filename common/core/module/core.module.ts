@@ -9,6 +9,7 @@ import AppRedisModule from '../app_redis/app_redis.module';
 import TransformGuard from '../../guard/transform.guard';
 import TransactionInterceptor from '../../interceptor/transaction.interceptor';
 import AppExceptionFilter from '../exception.filter';
+import { TransformPayloadPipe } from '../../pipe/transform_payload.pipe';
 
 @Module({
    imports: [
@@ -31,6 +32,7 @@ import AppExceptionFilter from '../exception.filter';
       { provide: APP_GUARD, useClass: TransformGuard },
       { provide: APP_INTERCEPTOR, useClass: TransactionInterceptor },
       { provide: APP_FILTER, useClass: AppExceptionFilter },
+      { provide: APP_PIPE, useClass: TransformPayloadPipe },
       {
          provide: APP_PIPE,
          useFactory: () =>

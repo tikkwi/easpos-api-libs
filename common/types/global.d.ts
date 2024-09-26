@@ -74,6 +74,14 @@ declare global {
    type AppCache = {
       merchant?: AppMerchant;
       adm_auth_cred?: AuthCredential;
+      applicable_alw?: import('@shared/allowance/allowance.schema').default[];
+   };
+
+   type AppGlobalContext = {
+      d_connection?: Connection;
+      d_app?: EApp;
+      d_auditService?: AuditService;
+      d_categoryService?: CategoryService;
    };
 
    type AppContext = AppCache & {
@@ -87,15 +95,18 @@ declare global {
       response?: Response;
       user?: AuthUser;
       isSubActive?: boolean;
-      d_connection?: Connection;
-      d_app?: EApp;
-      d_auditService?: AuditService;
-      d_categoryService?: CategoryService;
    };
+}
+
+declare module 'express' {
+   interface Request {
+      id: string;
+   }
 }
 
 declare module 'express-session' {
    interface SessionData {
       user?: string;
+      merchant?: string;
    }
 }

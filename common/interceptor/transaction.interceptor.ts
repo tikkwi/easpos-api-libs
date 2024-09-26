@@ -1,6 +1,6 @@
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
 import { map, Observable, tap } from 'rxjs';
-import ContextService from '../core/context.service';
+import ContextService from '../core/context';
 import { encrypt } from '../utils/encrypt';
 
 @Injectable()
