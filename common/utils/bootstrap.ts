@@ -8,9 +8,6 @@ import * as session from 'express-session';
 import helmet from 'helmet';
 import { RedisClientType } from 'redis';
 import { APP, COOKIE_SECRET, REDIS_CLIENT } from '@common/constant';
-import { getConnectionToken } from '@nestjs/mongoose';
-import AuditService from '@shared/audit/audit.service';
-import ContextService from '../core/context';
 
 export default async function appBootstrap(
    module: any,
@@ -18,18 +15,7 @@ export default async function appBootstrap(
    ms?: { packages: string[]; module: any },
 ) {
    const app = await NestFactory.create<NestExpressApplication>(module);
-
    const config = app.get<ConfigService>(ConfigService);
-   const connection = app.get(getConnectionToken());
-   const auditService = app.get<AuditService>(AuditService);
-   ContextService.set({
-      data: {
-         d_connection: connection,
-         d_app: config.get(APP),
-         d_auditService: auditService,
-      },
-   });
-
    const currentApp = config.get<string>(APP);
    const documentConfig = new DocumentBuilder().setTitle(currentApp).setVersion('1.0').build();
 

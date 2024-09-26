@@ -1,9 +1,12 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
-import { v4 } from 'uuid';
+import { ModuleRef } from '@nestjs/core';
+import ContextService from '../core/context/context.service';
 
 @Injectable()
 export class TransformPayloadPipe implements PipeTransform {
-   transform(value: any) {
-      return { ...(value ?? {}), req_id: v4() };
+   constructor(private readonly moduleRef: ModuleRef) {}
+
+   async transform(value: any) {
+      return { ...(value ?? {}), context: await this.moduleRef.resolve(ContextService) };
    }
 }

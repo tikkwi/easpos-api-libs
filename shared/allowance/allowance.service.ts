@@ -4,7 +4,6 @@ import { $dayjs, normalizeDate } from '@common/utils/datetime';
 import { GetApplicableAllowanceDto } from './allowance.dto';
 import Allowance from './allowance.schema';
 import CoreService from '@common/core/core.service';
-import ContextService from '@common/core/context';
 import ProductService from '../product/product.service';
 import UnitService from '../unit/unit.service';
 import AllowanceCodeService from '../allowance_code/allowance_code.service';
@@ -27,10 +26,11 @@ export default abstract class AllowanceService<
       addressId,
       products,
       coupon,
+      context,
    }: GetApplicableAllowanceDto): Promise<{ data: T[] }> {
       if (perProduct && products.length > 1)
          throw new BadRequestException('Expect single purchased product for per product allowance');
-      const tier = ContextService.get('user').tier;
+      const tier = context.get('user').tier;
       const { data: product } =
          perProduct &&
          products &&
@@ -42,7 +42,7 @@ export default abstract class AllowanceService<
 
       const getTargetAmount = async (id?: string, total?: boolean) => {
          const current = [basePrice];
-         const prevSpend = ContextService.get('merchant')?.merchant.totalSpend;
+         const prevSpend = (await this.db.get('merchant')).merchant.totalSpend;
          if (total && prevSpend) current.splice(1, 0, ...prevSpend);
          return await this.unitService.exchangeUnit({ current, targetId: id, currency: true });
       };

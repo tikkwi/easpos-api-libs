@@ -1,8 +1,7 @@
 import { Module, ValidationPipe } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { MongooseModule, MongooseModuleOptions } from '@nestjs/mongoose';
-import { join } from 'path';
 import { MONGO_URI } from '@common/constant';
 import AppBrokerModule from '../app_broker/app_broker.module';
 import AppRedisModule from '../app_redis/app_redis.module';
@@ -13,10 +12,6 @@ import { TransformPayloadPipe } from '../../pipe/transform_payload.pipe';
 
 @Module({
    imports: [
-      ConfigModule.forRoot({
-         envFilePath: join(process.cwd(), '.env'),
-         isGlobal: true,
-      }),
       MongooseModule.forRootAsync({
          useFactory: (config: ConfigService): MongooseModuleOptions => {
             return {

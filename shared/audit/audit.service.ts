@@ -4,24 +4,23 @@ import { REPOSITORY } from '@common/constant';
 import CoreService from '@common/core/core.service';
 import Audit from './audit.schema';
 import Repository from '@common/core/repository';
-import ContextService from '@common/core/context';
+import { BaseDto } from '@common/dto/core.dto';
 
 export default class AuditService extends CoreService<Audit> {
    constructor(@Inject(REPOSITORY) protected readonly repository: Repository<Audit>) {
       super();
    }
 
-   async logRequest() {
-      const request = ContextService.get('request');
-      const user = ContextService.get('user');
+   async logRequest({ context }: BaseDto) {
+      const user = context.get('user');
 
       return await super.create({
-         submittedIP: ContextService.get('ip'),
-         sessionId: request?.sessionID,
-         crossAppRequest: !ContextService.get('isHttp'),
-         requestedFrom: ContextService.get('requestedApp'),
-         userAgent: ContextService.get('userAgent') as any,
-         logTrail: ContextService.get('logTrail'),
+         submittedIP: context.get('ip'),
+         sessionId: context.get('request')?.sessionID,
+         crossAppRequest: !context.get('request'),
+         requestedFrom: context.get('requestedApp'),
+         userAgent: context.get('userAgent') as any,
+         logTrail: context.get('logTrail'),
          user: user
             ? {
                  id: user.id,

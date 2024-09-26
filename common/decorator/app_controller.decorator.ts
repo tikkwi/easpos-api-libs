@@ -3,9 +3,9 @@ import { Controller } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { pull } from 'lodash';
 import { AllowedApp, AllowedUser } from '@common/dto/core.dto';
-import { APPS, SKIP_APPS, SKIP_USERS, USERS } from '@common/constant';
-import ContextService from '../core/context';
+import { APP, APPS, SKIP_APPS, SKIP_USERS, USERS } from '@common/constant';
 import { Apps, Users } from './allowance.decorator';
+import * as process from 'node:process';
 
 type TAllowedUser = {
    [key in EApp | 'default']?: AllowedUser[];
@@ -24,8 +24,8 @@ export default function AppController(
          if (Array.isArray(allowedUsers)) clsUsers.splice(0, 0, ...allowedUsers);
          else {
             if (allowedUsers.default) clsUsers.splice(0, 0, ...allowedUsers.default);
-            if (allowedUsers[ContextService.get('d_app')])
-               clsUsers.splice(0, 0, ...allowedUsers[ContextService.get('d_app')]);
+            if (allowedUsers[process.env[APP]])
+               clsUsers.splice(0, 0, ...allowedUsers[process.env[APP]]);
          }
       }
 

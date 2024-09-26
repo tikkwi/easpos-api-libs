@@ -1,12 +1,11 @@
 import { Metadata } from '@grpc/grpc-js';
 import { ConfigService } from '@nestjs/config';
 import { lastValueFrom } from 'rxjs';
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ADM_MRO_PWD, ADM_MRO_USR, APP } from '@common/constant';
 import { base64 } from '@common/utils/misc';
 import { decrypt } from '@common/utils/encrypt';
 import AppRedisService from '../app_redis/app_redis.service';
-import ContextService from '../context';
 
 @Injectable()
 export default class AppBrokerService {
@@ -15,13 +14,12 @@ export default class AppBrokerService {
       private readonly db: AppRedisService,
    ) {}
 
-   async request<T>({ action, app, cache, ...rest }: BrokerRequest): Promise<T> {
+   async request<T>({ action, app, cache = true, ...rest }: BrokerRequest): Promise<T> {
       const { key } = rest as any;
       const isCrossApp = !app || app !== this.config.get(APP);
       const $action = isCrossApp ? (meta) => lastValueFrom(action(meta)) : action;
 
       const crossRequest = async () => {
-         const res = ContextService.get('response');
          const meta = new Metadata();
          meta.add('app', this.config.get(APP));
          meta.add(
@@ -29,7 +27,7 @@ export default class AppBrokerService {
             `Basic ${base64(`${this.config.get(ADM_MRO_USR)}:${this.config.get(ADM_MRO_PWD)}`)}`,
          );
          const { data, code, message } = await $action(meta);
-         if (code) return res.status(code).send({ message }) as T;
+         if (code) throw new InternalServerErrorException(message);
          return (await decrypt(data)) as T;
       };
 

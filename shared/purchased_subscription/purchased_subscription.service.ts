@@ -9,7 +9,6 @@ import { ConfigService } from '@nestjs/config';
 import MailService from '../mail/mail.service';
 import { EMail, EStatus } from '@common/utils/enum';
 import { SubMonitorDto } from './purhased_subscription.dto';
-import ContextService from '@common/core/context';
 
 @AppService()
 export default class PurchasedSubscriptionService extends CoreService<PurchasedSubscription> {
@@ -21,7 +20,7 @@ export default class PurchasedSubscriptionService extends CoreService<PurchasedS
       super();
    }
 
-   async subMonitor({ id, mail }: SubMonitorDto) {
+   async subMonitor({ context, id, mail }: SubMonitorDto) {
       const { data: purSub } = await this.findById({
          id,
          errorOnNotFound: true,
@@ -51,7 +50,7 @@ export default class PurchasedSubscriptionService extends CoreService<PurchasedS
                purSub.activePurchase = updActivePurchase;
             }
          }
-         await purSub.save({ session: ContextService.get('session') });
+         await purSub.save({ session: context.get('session') });
       }
 
       if (!purSub.activePurchase || isPreExpire) {

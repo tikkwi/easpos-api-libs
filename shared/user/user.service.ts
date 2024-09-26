@@ -1,14 +1,13 @@
 import { compareSync } from 'bcryptjs';
 import { BadRequestException, ForbiddenException } from '@nestjs/common';
 import { omit } from 'lodash';
-import { request } from 'express';
+import { request, Request, Response } from 'express';
 import { responseError } from '@common/utils/misc';
 import { EUser, EUserApp } from '@common/utils/enum';
 import { encrypt } from '@common/utils/encrypt';
 import User from './user.schema';
 import CoreService from '@common/core/core.service';
 import AppRedisService from '@common/core/app_redis/app_redis.service';
-import ContextService from '@common/core/context';
 import { LoginDto } from './user.dto';
 import AppBrokerService from '@common/core/app_broker/app_broker.service';
 import { MerchantServiceMethods } from '@common/dto/merchant.dto';
@@ -18,11 +17,8 @@ export abstract class UserService<T extends User = User> extends CoreService<T> 
    protected abstract readonly appBroker: AppBrokerService;
    protected abstract readonly merchantService: MerchantServiceMethods;
 
-   async logout() {
-      const request = ContextService.get('request');
-      const response = ContextService.get('response');
-      await this.db.logout();
-      request.session.destroy((err) => responseError(request, response, err));
+   async logout(req: Request, res: Response) {
+      req.session.destroy((err) => responseError(req, res, err));
    }
 
    async login({ email, userName, password, app }: LoginDto) {
@@ -54,7 +50,7 @@ export abstract class UserService<T extends User = User> extends CoreService<T> 
       }
 
       if (user.merchant)
-         await this.appBroker.request<AppMerchant>({
+         await this.appBroker.request<AuthMerchant>({
             action: (meta) =>
                this.merchantService.loginUser(
                   {

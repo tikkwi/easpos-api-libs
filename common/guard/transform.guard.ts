@@ -5,20 +5,23 @@ import {
    InternalServerErrorException,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { v4 } from 'uuid';
 import { decrypt } from '@common/utils/encrypt';
 import { isPeriodExceed } from '@common/utils/datetime';
-import ContextService from '../core/context';
+import { ModuleRef } from '@nestjs/core';
+import ContextService from '../core/context/context.service';
+import * as process from 'node:process';
+import { APP } from '../constant';
 import { ServerUnaryCall } from '@grpc/grpc-js';
 
 @Injectable()
 export default class TransformGuard implements CanActivate {
+   constructor(private readonly moduleRef: ModuleRef) {}
+
    async canActivate(context: ExecutionContext) {
-      const id = v4();
+      const contextService = await this.moduleRef.resolve(ContextService);
+      await contextService.initialize();
       if (context.getType() === 'http') {
-         const ctx = context.switchToHttp();
-         const request: Request = ctx.getRequest();
-         const response = ctx.getResponse();
+         const request: Request = context.switchToHttp().getRequest();
 
          let user;
          if (request.session.user) {
@@ -37,28 +40,19 @@ export default class TransformGuard implements CanActivate {
                });
          }
 
-         ContextService.set({
-            data: {
-               ip: request.ip,
-               userAgent: request.headers['user-agent'],
-               isHttp: true,
-               request,
-               response,
-               user,
-            },
-            id,
+         contextService.set({
+            user,
+            ip: request.ip,
+            requestedApp: process.env[APP],
+            userAgent: request.headers['user-agent'],
          });
       } else {
          const ctx: ServerUnaryCall<any, any> = (context.switchToRpc() as any).args[2];
          const meta = ctx.metadata.getMap();
-         // const meta: Metadata = context.switchToRpc().getContext();
-         ContextService.set({
-            data: {
-               ip: ctx.getPath(),
-               userAgent: meta['user-agent'] as string,
-               requestedApp: meta['app'] as string,
-            },
-            id,
+         contextService.set({
+            ip: ctx.getPath(),
+            userAgent: meta['user-agent'] as string,
+            requestedApp: meta.app as EApp,
          });
       }
 

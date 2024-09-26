@@ -2,31 +2,53 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Redis } from 'ioredis';
 import { REDIS_LCL_CLIENT } from '@common/constant';
 import { decrypt, encrypt } from '@common/utils/encrypt';
-import ContextService from '../context';
 import { days } from '@nestjs/throttler';
+import { ModuleRef } from '@nestjs/core';
+import ContextService from '../context/context.service';
 
+/*
+NOTE: cache authorized status up to 1 day which mean merchant_user may able to
+authorized 1 day max even if subscription is expired..
+*/
 @Injectable()
 export default class AppRedisService {
-   constructor(@Inject(REDIS_LCL_CLIENT) private readonly db: Redis) {}
+   constructor(
+      @Inject(REDIS_LCL_CLIENT) private readonly db: Redis,
+      private readonly moduleRef: ModuleRef,
+   ) {}
+
+   async getKey<K extends keyof AppCache>(key: K) {
+      const context = await this.moduleRef.resolve(ContextService);
+      return key.startsWith('a_') ? key : `${key}_${context.get('user').merchant}`;
+   }
 
    async set<K extends keyof AppCache>(key: K, value: AppCache[K], expire?: number) {
-      await this.db.set(key, await encrypt(JSON.stringify({ data: value })));
-      await this.db.expire(key, expire ?? days(1));
-      ContextService.set({ [key]: value });
+      await this.db.set(
+         await this.getKey(key),
+         await encrypt(JSON.stringify({ data: value })),
+         'EX',
+         expire ?? days(key.startsWith('a_') ? 30 : 1) / 60,
+      );
    }
 
    async get<K extends keyof AppCache>(
       key: K,
       getFnc?: () => Promise<AppCache[K]> | AppCache[K],
+      expire?: number,
+      del?: boolean,
    ): Promise<AppCache[K] | undefined> {
-      const d: any = await this.db.get(key).then((res) => decrypt(res));
-      if (d) return d.data;
+      const k = await this.getKey(key);
+      let d: any = await this.db.get(k).then((res) => decrypt(res));
 
       if (getFnc) {
          const data = await getFnc();
-         if (data) await this.set(key, data);
-         return data;
+         if (data) await this.set(key, data, expire);
+         d = { data };
       }
+
+      if (del) this.db.del(k);
+
+      return d;
    }
 
    async update<K extends keyof AppCache>(
@@ -36,9 +58,5 @@ export default class AppRedisService {
       const updated = await updFnc(await this.get(key));
       await this.set(key, updated);
       return updated;
-   }
-
-   async logout() {
-      await this.db.del(...['merchant']);
    }
 }

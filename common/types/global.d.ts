@@ -26,6 +26,7 @@ declare global {
 
    type CreateType<T> = Omit<T, '_id' | 'createdAt' | 'updatedAt' | 'app' | 'category'> & {
       category?: import('@common/dto/action.dto').CreateCategoryDto;
+      context?: import('@common/core/context/context.service').default;
    };
 
    type PaginationType<T> = Partial<{
@@ -62,39 +63,21 @@ declare global {
       app: EUserApp;
       tmpBlock?: import('@global_schema/user.schema').TmpBlock;
       permissions: Record<string, number>;
+      merchant?: string;
    };
 
-   type AppMerchant = {
+   type AuthMerchant = {
       merchant?: Merchant;
       isSubActive: boolean;
    };
 
    type BasicAuth = { userName: string; password: string };
 
+   //NOTE: append a_ for global caches
    type AppCache = {
-      merchant?: AppMerchant;
-      adm_auth_cred?: AuthCredential;
+      a_adm_auth_cred?: AuthCredential;
+      merchant?: AuthMerchant;
       applicable_alw?: import('@shared/allowance/allowance.schema').default[];
-   };
-
-   type AppGlobalContext = {
-      d_connection?: Connection;
-      d_app?: EApp;
-      d_auditService?: AuditService;
-      d_categoryService?: CategoryService;
-   };
-
-   type AppContext = AppCache & {
-      isHttp?: boolean;
-      ip?: string;
-      userAgent?: string;
-      logTrail?: Array<RequestLog>;
-      requestedApp?: EApp;
-      session?: Session;
-      request?: Request;
-      response?: Response;
-      user?: AuthUser;
-      isSubActive?: boolean;
    };
 }
 

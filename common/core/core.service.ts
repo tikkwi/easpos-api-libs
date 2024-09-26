@@ -1,6 +1,5 @@
 import { FindByIdDto } from '@common/dto/core.dto';
 import BaseSchema from './base.schema';
-import ContextService from './context';
 import Repository from './repository';
 import { CreateCategoryDto } from '../dto/action.dto';
 
@@ -11,10 +10,11 @@ export default abstract class CoreService<T = BaseSchema> {
       return this.repository.findOne({ id, options: { lean, populate } });
    }
 
-   async create({ category: $category, ...dto }: CreateType<T>, catName?: string) {
+   async create({ category: $category, context, ...dto }: CreateType<T>, catName?: string) {
       const categoryDto: CreateCategoryDto = $category ?? dto[catName];
+
       const category = categoryDto
-         ? await ContextService.get('d_categoryService').getCategory(categoryDto)
+         ? await context.get('categoryService').getCategory(categoryDto)
          : undefined;
       return this.repository.create({ ...dto, [catName ?? 'category']: category });
    }

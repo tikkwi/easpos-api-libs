@@ -1,7 +1,6 @@
 import CoreService from '@common/core/core.service';
 import { CreateProductDto } from './product.dto';
 import Product from './product.schema';
-import ContextService from '@common/core/context';
 import { ECategory } from '@common/utils/enum';
 import AppService from '@common/decorator/app_service.decorator';
 import { Inject } from '@nestjs/common';
@@ -11,7 +10,10 @@ import { FindByCodeDto } from '@common/dto/core.dto';
 
 @AppService()
 export default class ProductService extends CoreService<Product> {
-   constructor(@Inject(REPOSITORY) protected readonly repository: Repository<Product>) {
+   constructor(
+      @Inject(REPOSITORY) protected readonly repository: Repository<Product>,
+      private readonly category: CategoryService,
+   ) {
       super();
    }
 
@@ -22,13 +24,13 @@ export default class ProductService extends CoreService<Product> {
       });
    }
 
-   async createProduct({ tags: tagDto, unitId, category, ...dto }: CreateProductDto) {
+   async createProduct({ tags: tagDto, unitId, category, context, ...dto }: CreateProductDto) {
       const tags = [];
       if (tagDto) {
          for (const tag of tagDto) {
             tags.push(
                (
-                  await ContextService.get('d_categoryService').getCategory({
+                  await context.get('categoryService').getCategory({
                      ...tag,
                      type: ECategory.ProductTag,
                   })
@@ -38,7 +40,7 @@ export default class ProductService extends CoreService<Product> {
       }
       const unit = unitId
          ? (
-              await ContextService.get('d_categoryService').findById({
+              await context.get('categoryService').findById({
                  id: unitId,
                  errorOnNotFound: true,
               })

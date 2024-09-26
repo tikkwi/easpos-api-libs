@@ -1,5 +1,5 @@
 import { Type } from '@nestjs/common';
-import { OmitType, PartialType } from '@nestjs/swagger';
+import { IntersectionType, OmitType, PartialType } from '@nestjs/swagger';
 import {
    IsBoolean,
    IsDateString,
@@ -11,6 +11,7 @@ import {
    Min,
 } from 'class-validator';
 import { EAllowedUser, EUserApp } from '@common/utils/enum';
+import ContextService from '../core/context/context.service';
 
 //types
 export type AllowedUser = keyof typeof EAllowedUser;
@@ -18,13 +19,7 @@ export type AllowedUser = keyof typeof EAllowedUser;
 export type AllowedApp = keyof typeof EUserApp | 'Any';
 
 export class BaseDto {
-   req_id: string;
-}
-
-//classes
-export class UpdateDto {
-   @IsBoolean()
-   isFailed: boolean;
+   context: ContextService;
 }
 
 export class PaginationDto<T> {
@@ -49,10 +44,10 @@ export class PaginationDto<T> {
 
 export function CoreDto<T>(
    classRef: Type<T>,
-): Type<Omit<T, '_id' | 'createdAt' | 'updatedAt' | 'app'>> {
-   class CoreDtoClass extends OmitType(
-      classRef as any,
-      ['_id', 'createdAt', 'updatedAt', 'app'] as any,
+): Type<BaseDto & Omit<T, '_id' | 'createdAt' | 'updatedAt' | 'app'>> {
+   class CoreDtoClass extends IntersectionType(
+      BaseDto,
+      OmitType(classRef as any, ['_id', 'createdAt', 'updatedAt', 'app'] as any),
    ) {}
 
    return CoreDtoClass as any;
@@ -66,7 +61,7 @@ export function PartialTypeIf<T>(
    return classRef;
 }
 
-export class FindDto {
+export class FindDto extends PartialType(BaseDto) {
    @IsBoolean()
    lean?: boolean;
 

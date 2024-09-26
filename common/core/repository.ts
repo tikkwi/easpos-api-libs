@@ -1,15 +1,22 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Document, Model } from 'mongoose';
-import { PAGE_SIZE } from '@common/constant';
-import ContextService from './context';
+import { APP, PAGE_SIZE } from '@common/constant';
+import { ModuleRef } from '@nestjs/core';
+import { ConfigService } from '@nestjs/config';
+import ContextService from './context/context.service';
 
 export default class Repository<T> {
-   constructor(private readonly model: Model<T>) {}
+   constructor(
+      private readonly model: Model<T>,
+      private readonly moduleRef: ModuleRef,
+      private readonly config: ConfigService,
+   ) {}
 
-   async create(dto: Omit<CreateType<T>, 'category'>) {
+   async create(dto: Omit<CreateType<T>, 'category' | 'context'>) {
+      const context = await this.moduleRef.resolve(ContextService);
       return {
-         data: (await new this.model({ ...dto, app: ContextService.get('d_app') }).save({
-            session: ContextService.get('session'),
+         data: (await new this.model({ ...dto, app: this.config.get(APP) }).save({
+            session: context.get('session'),
          })) as Document<unknown, unknown, T> & T,
       };
    }
@@ -52,6 +59,7 @@ export default class Repository<T> {
 
    async findAndUpdate({ id, filter, options, update }: UpdateType<T>) {
       if (!id && !filter) throw new BadRequestException('Require filter to update');
+      const context = await this.moduleRef.resolve(ContextService);
 
       const prev = id
          ? await this.model.findById(id, null)
@@ -61,7 +69,7 @@ export default class Repository<T> {
 
       const updateOptions: [UpdateQuery<T>, QueryOptions<T>] = [
          { ...update, updatedAt: new Date() },
-         { lean: true, new: true, ...options, session: ContextService.get('session') },
+         { lean: true, new: true, ...options, session: context.get('session') },
       ];
       const data = id
          ? await this.model.findByIdAndUpdate(id, ...updateOptions)
@@ -71,13 +79,14 @@ export default class Repository<T> {
    }
 
    async updateMany({ ids, update }: Omit<UpdateType<T>, 'id' | 'filter'> & { ids: string[] }) {
+      const context = await this.moduleRef.resolve(ContextService);
       const prev = await this.model.find({ _id: { $in: ids } }, null);
       if (!prev || !prev.length) throw new NotFoundException('Not Found');
 
       await this.model.updateMany(
          { _id: { $in: ids } },
          { ...update, updatedAt: new Date() },
-         { session: ContextService.get('session') },
+         { session: context.get('session') },
       );
 
       const data = await this.model.find({ _id: { $in: ids } }, null, {
@@ -88,8 +97,9 @@ export default class Repository<T> {
    }
 
    async delete(id: string) {
+      const context = await this.moduleRef.resolve(ContextService);
       return {
-         data: await this.model.findByIdAndDelete(id, { session: ContextService.get('session') }),
+         data: await this.model.findByIdAndDelete(id, { session: context.get('session') }),
       };
    }
 
