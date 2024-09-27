@@ -40,17 +40,17 @@ export default class Expense extends BaseSchema {
 
    @ValidateIf((o) => o.scope === EExpenseScope.ProductCategory)
    @AppProp({ type: [{ type: SchemaTypes.ObjectId, ref: 'Category' }] })
-   eftProdCategories: Category[];
+   eftProdCategories: AppSchema<Category>[];
 
    @ValidateIf((o) => o.scope === EExpenseScope.ProductTag)
    @AppProp({ type: [{ type: SchemaTypes.ObjectId, ref: 'Category' }] })
-   eftProdTags: Category[];
+   eftProdTags: AppSchema<Category>[];
 
    @ValidateIf((o) => o.scope === EExpenseScope.WholeProduct)
    @AppProp({ type: [{ type: SchemaTypes.ObjectId, ref: 'Product' }] })
-   eftWhlProds: Product[];
+   eftWhlProds: AppSchema<Product>[];
 
    @ValidateIf((o) => o.scope === EExpenseScope.WholeProduct)
    @AppProp({ type: [{ type: SchemaTypes.ObjectId, ref: 'Product' }] })
-   eftPerUntProds: Product[];
+   eftPerUntProds: AppSchema<Product>[];
 }

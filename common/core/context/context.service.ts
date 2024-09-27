@@ -5,12 +5,14 @@ import { ClientSession } from 'mongoose';
 import { InjectConnection } from '@nestjs/mongoose';
 import { RequestLog } from '@shared/audit/audit.schema';
 import CategoryService from '@shared/category/category.service';
+import MerchantConfig from '@app/merchant_config/merchant_config.schema';
 
 type UpdateContextType = { logTrail: Array<RequestLog> };
 
 type SetContextType = UpdateContextType & {
    user: AuthUser;
    merchant: AuthMerchant;
+   merchantConfig: AppSchema<MerchantConfig>;
    ip: string;
    requestedApp: EApp;
    userAgent: string;
@@ -27,6 +29,7 @@ export default class ContextService {
    #session: ClientSession;
    #initialized = false;
    #user: AuthUser;
+   #merchantConfig: AppSchema<MerchantConfig>;
    #ip: string;
    #requestedApp: string;
    #userAgent: EApp;

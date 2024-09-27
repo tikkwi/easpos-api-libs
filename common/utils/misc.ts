@@ -15,6 +15,7 @@ import { Request, Response } from 'express';
 import { compare } from 'bcryptjs';
 import { ADMIN_URL, REPOSITORY } from '@common/constant';
 import Repository from '../core/repository';
+import { ModuleRef } from '@nestjs/core';
 
 type RepositoryProviderType = { name: string; provide?: string };
 
@@ -50,10 +51,10 @@ const getGrpcClientOptions = (pkgs: string[], url: string): ClientsModuleOptions
 
 const repositoryProvider = ({ provide, name }: RepositoryProviderType) => ({
    provide: provide ?? REPOSITORY,
-   useFactory: (model) => {
-      return new Repository(model);
+   useFactory: (model, moduleRef: ModuleRef) => {
+      return new Repository(model, moduleRef);
    },
-   inject: [getModelToken(name)],
+   inject: [getModelToken(name), ModuleRef],
 });
 
 export const getGrpcClient = (

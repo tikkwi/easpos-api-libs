@@ -1,17 +1,13 @@
-import {
-   CanActivate,
-   ExecutionContext,
-   Injectable,
-   InternalServerErrorException,
-} from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Request } from 'express';
 import { decrypt } from '@common/utils/encrypt';
-import { isPeriodExceed } from '@common/utils/datetime';
 import { ModuleRef } from '@nestjs/core';
 import ContextService from '../core/context/context.service';
 import * as process from 'node:process';
 import { APP } from '../constant';
 import { ServerUnaryCall } from '@grpc/grpc-js';
+import { AuthUser } from '../dto/entity.dto';
+import MerchantConfig from '@app/merchant_config/merchant_config.schema';
 
 @Injectable()
 export default class TransformGuard implements CanActivate {
@@ -23,25 +19,14 @@ export default class TransformGuard implements CanActivate {
       if (context.getType() === 'http') {
          const request: Request = context.switchToHttp().getRequest();
 
-         let user;
-         if (request.session.user) {
-            ({ user } = await decrypt<any>(request.session.user));
-
-            const isExpireSoon = isPeriodExceed(
-               request.session.cookie.expires,
-               undefined,
-               12,
-               'hours',
-            )[2];
-
-            if (isExpireSoon)
-               request.session.regenerate((err) => {
-                  throw new InternalServerErrorException(err);
-               });
-         }
+         let user: AuthUser, merchantConfig: MerchantConfig;
+         if (request.session.user) user = await decrypt<AuthUser>(request.session.user);
+         if (request.session.merchantConfig)
+            merchantConfig = await decrypt<MerchantConfig>(request.session.merchantConfig);
 
          contextService.set({
             user,
+            merchantConfig,
             ip: request.ip,
             requestedApp: process.env[APP],
             userAgent: request.headers['user-agent'],

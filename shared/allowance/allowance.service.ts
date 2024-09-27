@@ -1,13 +1,14 @@
 import { EAllowance, EStatus } from '@common/utils/enum';
 import { BadRequestException } from '@nestjs/common';
-import { $dayjs, normalizeDate } from '@common/utils/datetime';
-import { GetApplicableAllowanceDto } from './allowance.dto';
+import { $dayjs, isPeriodExceed, normalizeDate } from '@common/utils/datetime';
+import { GetAllowanceUsageDto, GetApplicableAllowanceDto } from './allowance.dto';
 import Allowance from './allowance.schema';
 import CoreService from '@common/core/core.service';
 import ProductService from '../product/product.service';
 import UnitService from '../unit/unit.service';
 import AllowanceCodeService from '../allowance_code/allowance_code.service';
 import AppRedisService from '@common/core/app_redis/app_redis.service';
+import { FindByIdDto } from '@common/dto/core.dto';
 
 export default abstract class AllowanceService<
    T extends Allowance = Allowance,
@@ -53,6 +54,7 @@ export default abstract class AllowanceService<
                $addFields: {
                   products,
                   perProduct,
+                  id: { $toString: '$_id' },
                },
             },
             {
@@ -218,6 +220,11 @@ export default abstract class AllowanceService<
                },
             },
             {
+               $project: {
+                  _id: 0,
+               },
+            },
+            {
                $facet: {
                   filtered: [
                      {
@@ -252,8 +259,12 @@ export default abstract class AllowanceService<
 
       const allowances = [];
       if ($allowances.length) {
-         allowances.splice(0, 0, ...allowances[0].filtered);
+         for (const alw of allowances[0].filtered) {
+            const mAlw = await this.monitorExpire({ id: alw.id });
+            if (mAlw.status.status === EStatus.Active) allowances.push(mAlw);
+         }
          for (const allowance of allowances[0].unfiltered) {
+            let applicable;
             if (allowance.type === EAllowance.TimeBased) {
                if (
                   $dayjs().isAfter(
@@ -263,19 +274,56 @@ export default abstract class AllowanceService<
                      normalizeDate(allowance.timeTrigger.type, allowance.timeTrigger.to),
                   )
                )
-                  allowances.push(allowance);
+                  applicable = allowance;
             } else {
                const spend = await getTargetAmount(
                   allowance.spendTrigger.currencyId,
                   allowance.type === EAllowance.TotalSpendBase,
                );
-               if (spend <= allowance.spendTrigger.amount) allowances.push(allowance);
+               if (spend <= allowance.spendTrigger.amount) applicable = allowance;
+            }
+            if (applicable) {
+               const mAlw = await this.monitorExpire({ id: applicable.id });
+               if (mAlw.status.status === EStatus.Active) allowances.push(mAlw);
             }
          }
       }
 
+      await this.db.set('t_applicable_alw', allowances);
       return { data: allowances };
    }
 
+   async getAllowanceUsage({ usages }: GetAllowanceUsageDto) {
+      const a_usage = [];
+      const allowances = await this.db.get('t_applicable_alw');
+      if (!allowances) throw new BadRequestException('Refresh application allowances');
+      allowances.forEach((alw) => {
+         let usgInd;
+         for (let i = 0; i < usages.length; i++) {
+            if (usages[i].allowanceId === alw.id) {
+               usgInd = i;
+               break;
+            }
+         }
+         if (usgInd !== undefined && usages[usgInd].keep && alw.canKeep) {
+         } else a_usage.push(alw);
+         if (usgInd !== undefined) usages.splice(usgInd, 1);
+      });
+      return a_usage;
+   }
+
    abstract getPurchasedAllowance(dto: GetApplicableAllowanceDto): Promise<any>;
+
+   async monitorExpire({ id }: FindByIdDto, errorOnExpire?: boolean) {
+      let { data: allowance } = await this.findById({ id, errorOnNotFound: true });
+      const [isExpire] = allowance.expireAt ? isPeriodExceed(allowance.expireAt) : [false];
+      if (isExpire) {
+         ({ data: allowance } = await this.repository.findAndUpdate({
+            id,
+            update: { status: { status: EStatus.Expired } },
+         }));
+         if (errorOnExpire) throw new BadRequestException('Allowance is expired');
+      }
+      return allowance;
+   }
 }

@@ -7,16 +7,16 @@ import AppProp from '@common/decorator/app_prop.decorator';
 @Schema()
 export default class Address extends BaseSchema {
    @AppProp({ type: SchemaTypes.ObjectId, ref: 'Category' })
-   locality: Category;
+   locality: AppSchema<Category>;
 
    @AppProp({ type: SchemaTypes.ObjectId, ref: 'Category' })
-   administrativeArea: Category;
+   administrativeArea: AppSchema<Category>;
 
    @AppProp({ type: SchemaTypes.ObjectId, ref: 'Category' })
-   stateProvince: Category;
+   stateProvince: AppSchema<Category>;
 
    @AppProp({ type: SchemaTypes.ObjectId, ref: 'Category' })
-   country: Category;
+   country: AppSchema<Category>;
 
    @AppProp({ type: Number }, { swagger: { example: 16.8661 } })
    latitude: number;

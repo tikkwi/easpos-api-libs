@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Redis } from 'ioredis';
 import { REDIS_LCL_CLIENT } from '@common/constant';
 import { decrypt, encrypt } from '@common/utils/encrypt';
-import { days } from '@nestjs/throttler';
+import { days, minutes } from '@nestjs/throttler';
 import { ModuleRef } from '@nestjs/core';
 import ContextService from '../context/context.service';
 
@@ -26,8 +26,8 @@ export default class AppRedisService {
       await this.db.set(
          await this.getKey(key),
          await encrypt(JSON.stringify({ data: value })),
-         'EX',
-         expire ?? days(key.startsWith('a_') ? 30 : 1) / 60,
+         'PX',
+         expire ?? key.startsWith('t_') ? minutes(5) : days(key.startsWith('a_') ? 30 : 1),
       );
    }
 
@@ -38,17 +38,16 @@ export default class AppRedisService {
       del?: boolean,
    ): Promise<AppCache[K] | undefined> {
       const k = await this.getKey(key);
-      let d: any = await this.db.get(k).then((res) => decrypt(res));
+      let { data }: any = await this.db.get(k).then((res) => decrypt(res));
 
       if (getFnc) {
-         const data = await getFnc();
+         data = await getFnc();
          if (data) await this.set(key, data, expire);
-         d = { data };
       }
 
       if (del) this.db.del(k);
 
-      return d;
+      return data;
    }
 
    async update<K extends keyof AppCache>(

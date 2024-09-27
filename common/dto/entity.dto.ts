@@ -209,3 +209,11 @@ export class Price {
    @IsMongoId()
    currencyId: string;
 }
+
+export class TimedCredit {
+   @IsDateString()
+   expireAt: string;
+
+   @IsNumber()
+   amount: number;
+}

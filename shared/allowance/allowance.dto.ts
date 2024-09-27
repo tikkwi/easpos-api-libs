@@ -34,3 +34,17 @@ export class GetApplicableAllowanceDto extends BaseDto {
    @Type(() => ProductPurchased)
    products?: ProductPurchased[];
 }
+
+export class AllowanceUsage {
+   @IsMongoId()
+   allowanceId: string;
+
+   @IsBoolean()
+   keep: boolean;
+}
+
+export class GetAllowanceUsageDto {
+   @ValidateNested({ each: true })
+   @Type(() => AllowanceUsage)
+   usages: AllowanceUsage[];
+}

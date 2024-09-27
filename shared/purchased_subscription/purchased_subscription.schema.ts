@@ -11,7 +11,7 @@ export default class PurchasedSubscription {
    subActiveDate: Date;
 
    @AppProp({ type: Date })
-   expireDate: Date;
+   expireAt: Date;
 
    @AppProp({ type: Boolean, default: false })
    sentExpiredMail: boolean;
@@ -20,13 +20,13 @@ export default class PurchasedSubscription {
    sentPreExpireMail: boolean;
 
    @AppProp({ type: SchemaTypes.ObjectId, ref: 'Purchase' })
-   activePurchase: Purchase;
+   activePurchase: AppSchema<Purchase>;
 
    @AppProp({ type: [{ type: SchemaTypes.ObjectId, ref: 'Purchase' }] })
-   queuingPurchases: Purchase[];
+   queuingPurchases: AppSchema<Purchase>[];
 
    @AppProp({ type: SchemaTypes.ObjectId, ref: 'Product' })
-   product: Product;
+   product: AppSchema<Product>;
 }
 
 export const PurchasedSubscriptionSchema = SchemaFactory.createForClass(PurchasedSubscription);

@@ -27,9 +27,9 @@ export default class PurchasedSubscriptionService extends CoreService<PurchasedS
          lean: false,
          populate: ['activePurchase', 'queuingPurchases', 'subscription'],
       });
-      const isExpire = $dayjs().isAfter(purSub.expireDate);
+      const isExpire = $dayjs().isAfter(purSub.expireAt);
       const isPreExpire = $dayjs().isAfter(
-         $dayjs(purSub.expireDate).add(this.configService.get(PRE_END_SUB_MAIL)),
+         $dayjs(purSub.expireAt).add(this.configService.get(PRE_END_SUB_MAIL)),
       );
 
       if (isExpire) {
@@ -46,7 +46,7 @@ export default class PurchasedSubscriptionService extends CoreService<PurchasedS
             if (updActivePurchase) {
                purSub.queuingPurchases.splice(updInd, 1);
                updActivePurchase.status.status = EStatus.Active;
-               purSub.expireDate = getPeriodDate(updActivePurchase.subscriptionPeriod);
+               purSub.expireAt = getPeriodDate(updActivePurchase.subscriptionPeriod);
                purSub.activePurchase = updActivePurchase;
             }
          }
@@ -59,8 +59,8 @@ export default class PurchasedSubscriptionService extends CoreService<PurchasedS
             type: isPreExpire
                ? EMail.MerchantPreSubscriptionExpire
                : EMail.MerchantSubscriptionExpire,
-            expirePayload: isPreExpire ? undefined : { expireDate: purSub.expireDate },
-            preExpirePayload: isPreExpire ? { expireDate: purSub.expireDate } : undefined,
+            expirePayload: isPreExpire ? undefined : { expireAt: purSub.expireAt },
+            preExpirePayload: isPreExpire ? { expireAt: purSub.expireAt } : undefined,
          });
       }
       return { data: purSub };

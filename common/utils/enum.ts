@@ -157,3 +157,9 @@ export enum EAccumulatedAllowance {
    Depleting = 'Depleting',
    NonDepleting = 'NonDepleting',
 }
+
+export enum ECustomerAllowance {
+   Point = 'Point',
+   Cash = 'Cash',
+   Allowance = 'Allowance',
+}

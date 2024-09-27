@@ -43,7 +43,7 @@ export default class Merchant extends BaseSchema {
    demoClaimed: boolean;
 
    @AppProp({ type: SchemaTypes.ObjectId, ref: 'Category' })
-   type: Category;
+   type: AppSchema<Category>;
 
    @AppProp({ type: [{ type: SchemaTypes.Mixed }], default: [] }, { type: LoggedInMerchantUser })
    loggedInUsers: LoggedInMerchantUser[];
@@ -64,10 +64,10 @@ export default class Merchant extends BaseSchema {
    totalSpend: Cash[];
 
    @AppProp({ type: SchemaTypes.ObjectId, ref: 'Purchase', required: false })
-   offlinePurchase?: Purchase;
+   offlinePurchase?: AppSchema<Purchase>;
 
    @AppProp({ type: SchemaTypes.ObjectId, ref: 'PurchasedSubscription' })
-   subscriptionPurchase?: PurchasedSubscription;
+   subscriptionPurchase?: AppSchema<PurchasedSubscription>;
 }
 
 export const MerchantSchema = SchemaFactory.createForClass(Merchant);

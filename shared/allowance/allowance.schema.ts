@@ -44,7 +44,7 @@ export default abstract class Allowance extends BaseSchema {
    stackable: boolean;
 
    @AppProp({ type: [{ type: SchemaTypes.ObjectId, ref: 'Category' }] })
-   applicablePrices: Category[];
+   applicablePrices: AppSchema<Category>[];
 
    @ValidateIf((o) => [EAllowance.SpendBase, EAllowance.TotalSpendBase].includes(o.type))
    @AppProp({ type: SchemaTypes.Mixed }, { type: Cash })
@@ -60,15 +60,15 @@ export default abstract class Allowance extends BaseSchema {
 
    @ValidateIf((o) => o.type === EAllowance.Geographic)
    @AppProp({ type: [{ type: SchemaTypes.ObjectId, ref: 'Address' }] })
-   addressTrigger?: Address[];
+   addressTrigger?: AppSchema<Address>[];
 
    @ValidateIf((o) => o.type === EAllowance.PaymentMethod)
    @AppProp({ type: [{ type: SchemaTypes.ObjectId, ref: 'Category' }] })
-   paymentMethodTrigger?: Category[];
+   paymentMethodTrigger?: AppSchema<Category>[];
 
    @ValidateIf((o) => o.type === EAllowance.Currency)
    @AppProp({ type: [{ type: SchemaTypes.ObjectId, ref: 'Currency' }] })
-   currencyTrigger?: Unit[];
+   currencyTrigger?: AppSchema<Unit>[];
 
    @ValidateIf((o) => o.type === EAllowance.StockLevel)
    @AppProp({ type: [SchemaTypes.Mixed] }, { type: ProductPurchased })
@@ -79,8 +79,8 @@ export default abstract class Allowance extends BaseSchema {
    levelLowerTrigger?: boolean;
 
    @AppProp({ type: Date, required: false })
-   endDate: Date;
+   expireAt?: Date;
 
    @AppProp({ type: SchemaTypes.ObjectId, ref: 'Campaign' })
-   campaign: Campaign;
+   campaign: AppSchema<Campaign>;
 }

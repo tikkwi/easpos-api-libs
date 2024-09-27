@@ -6,6 +6,8 @@ import { EAuthCredential } from '@common/utils/enum';
 import BaseSchema from '../core/base.schema';
 import AppProp from '../decorator/app_prop.decorator';
 
+export type TAuthCredential = Omit<AuthCredential, '_id'> & { id: string };
+
 class AllowedService {
    @IsString()
    @IsNotEmpty()

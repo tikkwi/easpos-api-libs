@@ -2,20 +2,19 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Document, Model } from 'mongoose';
 import { APP, PAGE_SIZE } from '@common/constant';
 import { ModuleRef } from '@nestjs/core';
-import { ConfigService } from '@nestjs/config';
 import ContextService from './context/context.service';
+import * as process from 'node:process';
 
 export default class Repository<T> {
    constructor(
       private readonly model: Model<T>,
       private readonly moduleRef: ModuleRef,
-      private readonly config: ConfigService,
    ) {}
 
    async create(dto: Omit<CreateType<T>, 'category' | 'context'>) {
       const context = await this.moduleRef.resolve(ContextService);
       return {
-         data: (await new this.model({ ...dto, app: this.config.get(APP) }).save({
+         data: (await new this.model({ ...dto, app: process.env[APP] }).save({
             session: context.get('session'),
          })) as Document<unknown, unknown, T> & T,
       };

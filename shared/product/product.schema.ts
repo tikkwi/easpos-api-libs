@@ -37,16 +37,16 @@ export default class Product extends BaseProduct {
    type: EProduct;
 
    @AppProp({ type: SchemaTypes.ObjectId, ref: 'Category' })
-   category: Category;
+   category: AppSchema<Category>;
 
    @AppProp({ type: [{ type: SchemaTypes.ObjectId, ref: 'Category' }], required: false })
-   tags?: Category[];
+   tags?: AppSchema<Category>[];
 
    @AppProp({ type: SchemaTypes.ObjectId, ref: 'Category', required: false })
-   unit?: Category;
+   unit?: AppSchema<Category>;
 
    @AppProp({ type: SchemaTypes.ObjectId, ref: 'Category' })
-   subType: Category;
+   subType: AppSchema<Category>;
 
    @AppProp({ type: Number, default: 1 })
    allowanceCount: number;

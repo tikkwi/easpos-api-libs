@@ -67,5 +67,5 @@ export default class User extends BaseSchema {
    mobileNo?: string;
 
    @AppProp({ type: SchemaTypes.ObjectId, ref: 'Address', required: false })
-   address?: Address;
+   address?: AppSchema<Address>;
 }

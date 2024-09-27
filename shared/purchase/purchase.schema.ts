@@ -39,7 +39,7 @@ export default class Purchase extends BaseSchema {
    payment: Payment;
 
    @AppProp({ type: SchemaTypes.ObjectId, ref: 'Product' })
-   product: Product;
+   product: AppSchema<Product>;
 }
 
 export const PurchaseSchema = SchemaFactory.createForClass(Purchase);

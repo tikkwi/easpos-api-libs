@@ -1,10 +1,7 @@
 import 'express';
 
 declare global {
-   type Request = import('express').Request;
-   type Response = import('express').Response;
    type ObjectId = import('mongoose').Types.ObjectId;
-   type Session = import('mongoose').ClientSession;
    type Connection = import('mongoose').Connection;
    type Metadata = import('@grpc/grpc-js').Metadata;
    type FilterQuery<T> = import('mongoose').FilterQuery<T>;
@@ -19,15 +16,16 @@ declare global {
 
    type Merchant = import('@common/schema/merchant.schema').default;
    type AuthCredential = import('@common/schema/auth_credential.schema').default;
-   type RequestLog = import('@shared/audit/audit.schema').RequestLog;
+   type Allowance = import('@shared/allowance/allowance.schema').default;
 
-   type AuditService = import('@shared/audit/audit.service').default;
    type CategoryService = import('@shared/category/category.service').default;
 
    type CreateType<T> = Omit<T, '_id' | 'createdAt' | 'updatedAt' | 'app' | 'category'> & {
       category?: import('@common/dto/action.dto').CreateCategoryDto;
       context?: import('@common/core/context/context.service').default;
    };
+
+   type AppSchema<M> = Omit<M, '_id'> & { id?: string };
 
    type PaginationType<T> = Partial<{
       page: number;
@@ -73,11 +71,11 @@ declare global {
 
    type BasicAuth = { userName: string; password: string };
 
-   //NOTE: append a_ for global caches
+   //NOTE: append a_ for global caches and t_ for temporary
    type AppCache = {
       a_adm_auth_cred?: AuthCredential;
       merchant?: AuthMerchant;
-      applicable_alw?: import('@shared/allowance/allowance.schema').default[];
+      t_applicable_alw?: Array<AppSchema<Allowance>>;
    };
 }
 
@@ -90,6 +88,6 @@ declare module 'express' {
 declare module 'express-session' {
    interface SessionData {
       user?: string;
-      merchant?: string;
+      merchantConfig?: string;
    }
 }
