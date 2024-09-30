@@ -3,6 +3,13 @@ import { Type } from 'class-transformer';
 import { Cash, ProductPurchased } from '@common/dto/entity.dto';
 import { BaseDto } from '@common/dto/core.dto';
 
+export type PurchasedAllowanceType = {
+   point: number;
+   discount: number;
+   cash: number;
+   product: Array<{ id: string; amount: number; unitId?: string }>;
+};
+
 export class GetApplicableAllowanceDto extends BaseDto {
    @ValidateNested()
    @Type(() => Cash)
@@ -33,18 +40,4 @@ export class GetApplicableAllowanceDto extends BaseDto {
    @ValidateNested({ each: true })
    @Type(() => ProductPurchased)
    products?: ProductPurchased[];
-}
-
-export class AllowanceUsage {
-   @IsMongoId()
-   allowanceId: string;
-
-   @IsBoolean()
-   keep: boolean;
-}
-
-export class GetAllowanceUsageDto {
-   @ValidateNested({ each: true })
-   @Type(() => AllowanceUsage)
-   usages: AllowanceUsage[];
 }

@@ -6,8 +6,8 @@ import { CreateCategoryDto } from '../dto/action.dto';
 export default abstract class CoreService<T = BaseSchema> {
    protected abstract repository: Repository<T>;
 
-   async findById({ lean, populate, id }: FindByIdDto) {
-      return this.repository.findOne({ id, options: { lean, populate } });
+   async findById({ lean, populate, id, errorOnNotFound }: FindByIdDto) {
+      return this.repository.findOne({ id, options: { lean, populate, errorOnNotFound } });
    }
 
    async create({ category: $category, context, ...dto }: CreateType<T>, catName?: string) {

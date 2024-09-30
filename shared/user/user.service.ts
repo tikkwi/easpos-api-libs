@@ -5,14 +5,14 @@ import { request, Request, Response } from 'express';
 import { responseError } from '@common/utils/misc';
 import { EUser, EUserApp } from '@common/utils/enum';
 import { encrypt } from '@common/utils/encrypt';
-import User from './user.schema';
+import { BaseUser } from './user.schema';
 import CoreService from '@common/core/core.service';
 import AppRedisService from '@common/core/app_redis/app_redis.service';
 import { LoginDto } from './user.dto';
 import AppBrokerService from '@common/core/app_broker/app_broker.service';
 import { MerchantServiceMethods } from '@common/dto/merchant.dto';
 
-export abstract class UserService<T extends User = User> extends CoreService<T> {
+export abstract class UserService<T extends BaseUser = BaseUser> extends CoreService<T> {
    protected abstract readonly db: AppRedisService;
    protected abstract readonly appBroker: AppBrokerService;
    protected abstract readonly merchantService: MerchantServiceMethods;
@@ -27,6 +27,7 @@ export abstract class UserService<T extends User = User> extends CoreService<T> 
             email,
             userName,
          },
+         errorOnNotFound: true,
          options: { populate: ['role'] },
       });
       if (!user || !compareSync(password, user.password))

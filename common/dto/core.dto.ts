@@ -1,5 +1,5 @@
 import { Type } from '@nestjs/common';
-import { IntersectionType, OmitType, PartialType } from '@nestjs/swagger';
+import { IntersectionType, OmitType, PartialType, PickType } from '@nestjs/swagger';
 import {
    IsBoolean,
    IsDateString,
@@ -58,6 +58,15 @@ export function PartialTypeIf<T>(
    classRef: Type<T>,
 ): Type<Partial<T>> {
    if (isPartial(classRef)) return PartialType(classRef);
+   return classRef;
+}
+
+export function PickTypeIf<T, K extends keyof T>(
+   isPick: (cls: any) => boolean,
+   classRef: Type<T>,
+   pick: Array<K>,
+): Type<Pick<T, K>> {
+   if (isPick(classRef)) return PickType(classRef, pick);
    return classRef;
 }
 

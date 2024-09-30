@@ -14,7 +14,7 @@ import {
    Min,
    ValidateNested,
 } from 'class-validator';
-import { EStatus, ETime, EUser, EUserApp } from '@common/utils/enum';
+import { EMfa, EStatus, ETime, EUser, EUserApp } from '@common/utils/enum';
 import { regex } from '@common/utils/regex';
 import { TmpBlock } from '@shared/user/user.schema';
 import { IsAppNumberString } from '../validator';
@@ -87,6 +87,9 @@ export class MFA {
 
    @IsDateString()
    expireAt: Date;
+
+   @IsEnum(EMfa)
+   type: EMfa;
 }
 
 export class UserProfile {

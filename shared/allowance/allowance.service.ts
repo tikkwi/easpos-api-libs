@@ -1,7 +1,7 @@
 import { EAllowance, EStatus } from '@common/utils/enum';
 import { BadRequestException } from '@nestjs/common';
 import { $dayjs, isPeriodExceed, normalizeDate } from '@common/utils/datetime';
-import { GetAllowanceUsageDto, GetApplicableAllowanceDto } from './allowance.dto';
+import { GetApplicableAllowanceDto } from './allowance.dto';
 import Allowance from './allowance.schema';
 import CoreService from '@common/core/core.service';
 import ProductService from '../product/product.service';
@@ -293,26 +293,7 @@ export default abstract class AllowanceService<
       return { data: allowances };
    }
 
-   async getAllowanceUsage({ usages }: GetAllowanceUsageDto) {
-      const a_usage = [];
-      const allowances = await this.db.get('t_applicable_alw');
-      if (!allowances) throw new BadRequestException('Refresh application allowances');
-      allowances.forEach((alw) => {
-         let usgInd;
-         for (let i = 0; i < usages.length; i++) {
-            if (usages[i].allowanceId === alw.id) {
-               usgInd = i;
-               break;
-            }
-         }
-         if (usgInd !== undefined && usages[usgInd].keep && alw.canKeep) {
-         } else a_usage.push(alw);
-         if (usgInd !== undefined) usages.splice(usgInd, 1);
-      });
-      return a_usage;
-   }
-
-   abstract getPurchasedAllowance(dto: GetApplicableAllowanceDto): Promise<any>;
+   abstract getPurchasedAllowance(dto: any): Promise<any>;
 
    async monitorExpire({ id }: FindByIdDto, errorOnExpire?: boolean) {
       let { data: allowance } = await this.findById({ id, errorOnNotFound: true });

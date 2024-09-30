@@ -163,3 +163,8 @@ export enum ECustomerAllowance {
    Cash = 'Cash',
    Allowance = 'Allowance',
 }
+
+export enum EMfa {
+   Mobile = 'Mobile',
+   Mail = 'Mail',
+}

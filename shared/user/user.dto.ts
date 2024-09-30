@@ -3,17 +3,15 @@ import {
    IsEmail,
    IsEnum,
    IsMongoId,
+   IsOptional,
    IsString,
    Matches,
    ValidateIf,
-   ValidateNested,
 } from 'class-validator';
-import { Type } from 'class-transformer';
 import { regex } from '@common/utils/regex';
 import { EUserApp } from '@common/utils/enum';
 import { CoreDto, FindDto } from '@common/dto/core.dto';
 import User from './user.schema';
-import { CreateAddressDto } from '../address/address.dto';
 
 export class GetUserDto extends FindDto {
    @IsMongoId()
@@ -42,8 +40,15 @@ export class LoginDto {
    app: EUserApp;
 }
 
-export class CreateUserDto extends OmitType(CoreDto(User), ['status', 'tmpBlock', 'mfa']) {
-   @ValidateNested()
-   @Type(() => CreateAddressDto)
-   addressDto: CreateAddressDto;
+export class CreateUserDto extends OmitType(CoreDto(User), [
+   'type',
+   'status',
+   'tmpBlock',
+   'mfa',
+   'mailVerified',
+   'mobileVerified',
+]) {
+   @IsOptional()
+   @IsMongoId()
+   addressId?: string;
 }

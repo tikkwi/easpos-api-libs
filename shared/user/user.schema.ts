@@ -13,6 +13,7 @@ import { MFA, Status } from '@common/dto/entity.dto';
 import BaseSchema from '@common/core/base.schema';
 import AppProp from '@common/decorator/app_prop.decorator';
 import Address from '../address/address.schema';
+import { IntersectionType, OmitType, PartialType, PickType } from '@nestjs/swagger';
 
 export class TmpBlock {
    @IsDateString()
@@ -62,10 +63,23 @@ export default class User extends BaseSchema {
    })
    password: string;
 
-   @AppProp({ type: String, required: false })
+   @AppProp({ type: String })
    @IsPhoneNumber()
-   mobileNo?: string;
+   mobileNo: string;
+
+   @AppProp({ type: Boolean, default: false })
+   mailVerified?: boolean;
+
+   @AppProp({ type: Boolean, default: false })
+   mobileVerified?: boolean;
 
    @AppProp({ type: SchemaTypes.ObjectId, ref: 'Address', required: false })
    address?: AppSchema<Address>;
 }
+
+const basePartialFields: Array<keyof User> = ['mail', 'mobileNo'];
+
+export class BaseUser extends IntersectionType(
+   OmitType(User, basePartialFields),
+   PartialType(PickType(User, basePartialFields)),
+) {}
