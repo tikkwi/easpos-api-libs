@@ -1,12 +1,13 @@
 import { SchemaTypes } from 'mongoose';
-import { Status } from '@common/dto/entity.dto';
-import { EExpenseScope, EStatus } from '@common/utils/enum';
+import { EExpenseScope } from '@common/utils/enum';
 import { ValidateIf } from 'class-validator';
 import BaseSchema from '@common/core/base.schema';
 import AppProp from '@common/decorator/app_prop.decorator';
 import Category from '../category/category.schema';
 import Product from '../product/product.schema';
+import { Schema, SchemaFactory } from '@nestjs/mongoose';
 
+@Schema()
 export default class Expense extends BaseSchema {
    @AppProp({ type: String, required: false })
    voucherId?: string;
@@ -22,12 +23,6 @@ export default class Expense extends BaseSchema {
 
    @AppProp({ type: Boolean })
    isTax: boolean;
-
-   @AppProp(
-      { type: SchemaTypes.Mixed, immutable: false, default: { status: EStatus.Pending } },
-      { type: Status },
-   )
-   status: Status;
 
    @AppProp({ type: String, required: false })
    remark?: string;
@@ -50,7 +45,9 @@ export default class Expense extends BaseSchema {
    @AppProp({ type: [{ type: SchemaTypes.ObjectId, ref: 'Product' }] })
    eftWhlProds: AppSchema<Product>[];
 
-   @ValidateIf((o) => o.scope === EExpenseScope.WholeProduct)
+   @ValidateIf((o) => o.scope === EExpenseScope.PerUnitProduct)
    @AppProp({ type: [{ type: SchemaTypes.ObjectId, ref: 'Product' }] })
    eftPerUntProds: AppSchema<Product>[];
 }
+
+export const ExpenseSchema = SchemaFactory.createForClass(Expense);

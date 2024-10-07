@@ -1,6 +1,6 @@
 import { SchemaTypes } from 'mongoose';
 import { ValidateIf } from 'class-validator';
-import { Cash, ProductPurchased, Status, TimeRange } from '@common/dto/entity.dto';
+import { Cash, ProductPurchased, TimeRange } from '@common/dto/entity.dto';
 import { EAllowance, EStatus } from '@common/utils/enum';
 import BaseSchema from '@common/core/base.schema';
 import AppProp from '@common/decorator/app_prop.decorator';
@@ -34,17 +34,11 @@ export default abstract class Allowance extends BaseSchema {
    @AppProp({ type: Boolean })
    perProduct: boolean;
 
-   @AppProp(
-      { type: SchemaTypes.Mixed, immutable: false, default: { status: EStatus.Pending } },
-      { type: Status },
-   )
-   status: Status;
+   @AppProp({ type: String, enum: EStatus, default: EStatus.Active })
+   status: EStatus;
 
    @AppProp({ type: Boolean, default: false })
    stackable: boolean;
-
-   @AppProp({ type: [{ type: SchemaTypes.ObjectId, ref: 'Category' }] })
-   applicablePrices: AppSchema<Category>[];
 
    @ValidateIf((o) => [EAllowance.SpendBase, EAllowance.TotalSpendBase].includes(o.type))
    @AppProp({ type: SchemaTypes.Mixed }, { type: Cash })

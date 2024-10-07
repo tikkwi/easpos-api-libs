@@ -5,7 +5,7 @@
       "removeComments": true,
       "emitDecoratorMetadata": true,
       "experimentalDecorators": true,
-      "target": "ES2023",
+      "target": "esnext",
       "sourceMap": true,
       "incremental": true,
       "skipLibCheck": true,

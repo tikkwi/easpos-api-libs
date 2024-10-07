@@ -14,37 +14,10 @@ import {
    Min,
    ValidateNested,
 } from 'class-validator';
-import { EMfa, EStatus, ETime, EUser, EUserApp } from '@common/utils/enum';
+import { EField, EMfa, EStatus, ETime, EUser, EUserApp } from '@common/utils/enum';
 import { regex } from '@common/utils/regex';
 import { TmpBlock } from '@shared/user/user.schema';
 import { IsAppNumberString } from '../validator';
-
-class UserPermissions {
-   @IsString({ each: true })
-   urls: string[];
-
-   @IsString({ each: true })
-   auxiliaryServices: string[];
-}
-
-export class UserServicePermission {
-   @IsString()
-   service: string;
-
-   @IsOptional()
-   @ValidateNested({ each: true })
-   @Type(() => UserPermissions)
-   permissions: UserPermissions;
-}
-
-export class FieldValue {
-   @IsNotEmpty()
-   @IsMongoId()
-   field: string;
-
-   //NOTE: require manual validation here
-   value: any;
-}
 
 export class Period {
    @IsNumber()
@@ -66,19 +39,6 @@ export class Period {
    @Min(0)
    @Max(59)
    seconds?: number;
-}
-
-export class Status {
-   @IsEnum(EStatus)
-   status: EStatus;
-
-   @IsOptional()
-   @IsString()
-   remark?: string;
-
-   @IsOptional()
-   @IsMongoId()
-   adjudicatedBy?: string; //NOTE: null for system manipulation
 }
 
 export class MFA {
@@ -202,21 +162,42 @@ export class Cash {
    currencyId: string;
 }
 
-export class Price {
-   @IsMongoId()
-   typeId: string;
-
-   @IsBoolean()
-   basePrice: number;
-
-   @IsMongoId()
-   currencyId: string;
-}
-
 export class TimedCredit {
    @IsDateString()
    expireAt: string;
 
    @IsNumber()
    amount: number;
+}
+
+export class Field {
+   @IsString() //NOTE: use this field to meta value
+   @Matches(regex.fieldName)
+   name: string;
+
+   @IsEnum(EField)
+   type: EField;
+
+   @IsBoolean()
+   isOptional: boolean;
+
+   @IsBoolean()
+   isArray: boolean;
+
+   @IsOptional()
+   @IsNumber()
+   priority: number; //NOTE: might use this field to dynamic render custom fields on UI
+
+   @IsOptional()
+   @IsString()
+   remark?: string;
+}
+
+export class FieldValue {
+   @IsString()
+   @Matches(regex.fieldName)
+   name: string;
+
+   @IsNotEmpty()
+   value: any;
 }

@@ -1,5 +1,4 @@
 import { SchemaTypes } from 'mongoose';
-import { Status } from '@common/dto/entity.dto';
 import { Schema, SchemaFactory } from '@nestjs/mongoose';
 import BaseSchema from '@common/core/base.schema';
 import AppProp from '@common/decorator/app_prop.decorator';
@@ -17,11 +16,8 @@ export default class Campaign extends BaseSchema {
    @AppProp({ type: Date })
    endDate: Date;
 
-   @AppProp(
-      { type: SchemaTypes.Mixed, immutable: false, default: { status: EStatus.Pending } },
-      { type: Status },
-   )
-   status: Status;
+   @AppProp({ type: String, enum: EStatus })
+   status: EStatus;
 
    @AppProp({ type: String, required: false })
    description?: string;

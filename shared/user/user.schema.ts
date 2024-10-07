@@ -9,7 +9,7 @@ import {
 } from 'class-validator';
 import { SchemaTypes } from 'mongoose';
 import { EStatus, ETmpBlock, EUser } from '@common/utils/enum';
-import { MFA, Status } from '@common/dto/entity.dto';
+import { MFA } from '@common/dto/entity.dto';
 import BaseSchema from '@common/core/base.schema';
 import AppProp from '@common/decorator/app_prop.decorator';
 import Address from '../address/address.schema';
@@ -35,11 +35,8 @@ export default class User extends BaseSchema {
    @AppProp({ type: String, enum: EUser, default: EUser.Merchant, required: false })
    type: EUser;
 
-   @AppProp(
-      { type: SchemaTypes.Mixed, immutable: false, default: { status: EStatus.Pending } },
-      { type: Status },
-   )
-   status?: Status;
+   @AppProp({ type: String, enum: EStatus, default: EStatus.Active })
+   status: EStatus;
 
    @AppProp({ type: SchemaTypes.Mixed, required: false }, { type: TmpBlock })
    tmpBlock?: TmpBlock;

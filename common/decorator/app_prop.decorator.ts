@@ -17,6 +17,7 @@ import { Type } from 'class-transformer';
 type Options = {
    userName?: boolean;
    validateString?: boolean;
+   validateEnum?: boolean;
    prop?: boolean;
    swagger?: Omit<ApiPropertyOptions, 'type'>;
    type?: any;
@@ -27,9 +28,15 @@ export default function AppProp(
    options?: Options | (Options & { nested: any }),
 ) {
    return function (target: any, key: string) {
-      const { validateString = true, prop = true, userName = false, swagger } = options ?? {};
+      const {
+         validateString = true,
+         validateEnum = true,
+         prop = true,
+         userName = false,
+         swagger,
+      } = options ?? {};
 
-      const pOpt: any = {
+      const pOpt = {
          immutable: true,
          unique: userName,
          ...((propOptions as any) ?? {}),
@@ -55,7 +62,7 @@ export default function AppProp(
          if (options.type) Type(() => options.type)(target, key);
       }
       if (!pOpt.required) IsOptional()(target, key);
-      if (pOpt.enum) IsEnum(pOpt.enum as any)(target, key);
+      if (pOpt.enum && validateEnum) IsEnum(pOpt.enum as any)(target, key);
 
       const valOpt = { each: isArray ? true : undefined };
       switch (isArray ? pOpt.type[0].name : pOpt.type.name) {

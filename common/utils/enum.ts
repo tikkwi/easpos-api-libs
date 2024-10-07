@@ -31,6 +31,28 @@ export enum EStatus {
    Queuing = 'Queuing',
 }
 
+export enum EProductStatus {
+   InTransitFromSupplier = 'InTransitFromSupplier',
+   AwaitingRestock = 'AwaitingRestock',
+   Discontinued = 'Discontinued',
+   AvailableOrder = 'AvailableOrder', //NOTE: this can be for both back ordering or drop-shipping
+   SupplierOutOfStock = 'SupplierOutOfStock',
+   InStock = 'InStock',
+   OutOfStock = 'OutOfStock',
+   FindingNewSupplier = 'FindingNewSupplier',
+}
+
+export enum EProductUnitStatus {
+   Available = 'Available',
+   Damaged = 'Damaged',
+   Returned = 'Returned',
+   Sold = 'Sold',
+   InTransitFromSupplier = 'InTransitFromSupplier',
+   InTransitToCustomer = 'InTransitToCustomer',
+   Expired = 'Expired',
+   Consigned = 'Consigned',
+}
+
 export enum ETmpBlock {
    WrongPassF = 'WrongPassF',
    WrongPassS = 'WrongPassS',
@@ -72,19 +94,15 @@ export enum EField {
    Boolean = 'Boolean',
    URL = 'URL',
    Image = 'Image',
-   User = 'User',
    Datetime = 'Datetime',
-   Address = 'Address',
    Number = 'Number',
    Phone = 'Phone',
-   Color = 'Color',
 }
 
 export enum ECategory {
    Merchant = 'Merchant',
    UserRole = 'UserRole',
    Product = 'Product',
-   ProductTag = 'ProductTag',
    Campaign = 'Campaign',
    PaymentMethod = 'PaymentMethod',
    Price = 'Price',
@@ -94,6 +112,9 @@ export enum ECategory {
    StateProvince = 'StateProvince',
    Country = 'Country',
    Unit = 'Unit',
+   ProductTag = 'ProductTag',
+   ProductVariantTag = 'ProductVariantTag',
+   ProductUnitTag = 'ProductUnitTag',
 }
 
 export enum EExpenseScope {

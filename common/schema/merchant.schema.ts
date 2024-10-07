@@ -2,7 +2,7 @@ import { Schema, SchemaFactory } from '@nestjs/mongoose';
 import { IsEmail, IsEnum, IsMongoId, IsPhoneNumber, IsString } from 'class-validator';
 import { SchemaTypes } from 'mongoose';
 import { EStatus, EUserApp } from '@common/utils/enum';
-import { Cash, MFA, Status } from '@common/dto/entity.dto';
+import { Cash, MFA } from '@common/dto/entity.dto';
 import BaseSchema from '../core/base.schema';
 import AppProp from '../decorator/app_prop.decorator';
 import Category from '@shared/category/category.schema';
@@ -48,11 +48,8 @@ export default class Merchant extends BaseSchema {
    @AppProp({ type: [{ type: SchemaTypes.Mixed }], default: [] }, { type: LoggedInMerchantUser })
    loggedInUsers: LoggedInMerchantUser[];
 
-   @AppProp(
-      { type: SchemaTypes.Mixed, immutable: false, default: { status: EStatus.Pending } },
-      { type: Status },
-   )
-   status: Status;
+   @AppProp({ type: String, enum: EStatus, default: EStatus.Pending })
+   status: EStatus;
 
    @AppProp({ type: Boolean, default: false, required: false })
    sentSubEndMail?: boolean;

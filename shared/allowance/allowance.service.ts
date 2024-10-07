@@ -21,7 +21,6 @@ export default abstract class AllowanceService<
    async getApplicableAllowances({
       basePrice,
       perProduct,
-      priceId,
       currencyId,
       paymentMethodId,
       addressId,
@@ -79,15 +78,6 @@ export default abstract class AllowanceService<
                $redact: {
                   $switch: {
                      branches: [
-                        {
-                           case: {
-                              $and: [
-                                 { $ne: ['$applicablePrices', null] },
-                                 { $in: [priceId, '$applicablePrices'] },
-                              ],
-                              then: '$$KEEP',
-                           },
-                        },
                         {
                            case: {
                               $and: [

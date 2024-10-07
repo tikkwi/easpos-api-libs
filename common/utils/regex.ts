@@ -1,6 +1,7 @@
 export const regex = {
    firstUpperCase: /^([a-z])/,
    userName: /^[a-zA-Z0-9]{3,12}$/,
+   fieldName: /^[a-zA-Z0-9]{3,20}$/,
    enum: /^[a-zA-Z0-9]{1,12}$/,
 };
 

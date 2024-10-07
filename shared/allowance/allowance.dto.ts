@@ -16,10 +16,6 @@ export class GetApplicableAllowanceDto extends BaseDto {
    basePrice: Cash;
 
    @IsOptional()
-   @IsMongoId()
-   priceId?: string;
-
-   @IsOptional()
    @IsString()
    coupon?: string;
 
