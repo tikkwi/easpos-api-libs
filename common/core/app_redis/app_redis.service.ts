@@ -7,7 +7,7 @@ import { ModuleRef } from '@nestjs/core';
 import ContextService from '../context/context.service';
 
 /*
-NOTE: cache authorized status up to 1 day which mean merchant_user may able to
+NOTE: cache authorized status up to 1 day which mean employee may able to
 authorized 1 day max even if subscription is expired..
 */
 @Injectable()

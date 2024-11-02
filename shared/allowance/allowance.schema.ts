@@ -1,6 +1,6 @@
 import { SchemaTypes } from 'mongoose';
 import { ValidateIf } from 'class-validator';
-import { Cash, ProductPurchased, TimeRange } from '@common/dto/entity.dto';
+import { Amount, ProductPurchased, TimeRange } from '@common/dto/entity.dto';
 import { EAllowance, EStatus } from '@common/utils/enum';
 import BaseSchema from '@common/core/base.schema';
 import AppProp from '@common/decorator/app_prop.decorator';
@@ -41,8 +41,8 @@ export default abstract class Allowance extends BaseSchema {
    stackable: boolean;
 
    @ValidateIf((o) => [EAllowance.SpendBase, EAllowance.TotalSpendBase].includes(o.type))
-   @AppProp({ type: SchemaTypes.Mixed }, { type: Cash })
-   spendTrigger?: Cash;
+   @AppProp({ type: SchemaTypes.Mixed }, { type: Amount })
+   spendTrigger?: Amount;
 
    @ValidateIf((o) => o.type === EAllowance.TierBased)
    @AppProp({ type: SchemaTypes.Mixed }, { type: TimeRange })

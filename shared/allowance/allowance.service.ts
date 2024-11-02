@@ -4,7 +4,7 @@ import { $dayjs, isPeriodExceed, normalizeDate } from '@common/utils/datetime';
 import { GetApplicableAllowanceDto } from './allowance.dto';
 import Allowance from './allowance.schema';
 import CoreService from '@common/core/core.service';
-import ProductService from '../product/product.service';
+import ProductService from '@app/product/product.service';
 import UnitService from '../unit/unit.service';
 import AllowanceCodeService from '../allowance_code/allowance_code.service';
 import AppRedisService from '@common/core/app_redis/app_redis.service';

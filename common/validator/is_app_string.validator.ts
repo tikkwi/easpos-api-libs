@@ -6,10 +6,23 @@ import {
    ValidatorConstraintInterface,
 } from 'class-validator';
 
+type StringType = 'number' | 'include';
+type StringOption<T extends StringType> = T extends 'number'
+   ? { length?: number }
+   : { arr: readonly string[] };
+
 @ValidatorConstraint({ async: false })
 class IsNumberStringConstraint implements ValidatorConstraintInterface {
    validate(value: any, { constraints }: ValidationArguments): boolean {
-      return typeof value === 'string' && new RegExp(`^[0-9]{${constraints[0] ?? 6}$`).test(value);
+      const type: StringType = constraints[0];
+      const option = constraints[1];
+
+      return (
+         typeof value === 'string' &&
+         (type === 'number'
+            ? new RegExp(`^[0-9]{${option.length ?? 6}$`).test(value)
+            : option && option.arr.includes(value))
+      );
    }
 
    defaultMessage({ constraints }: ValidationArguments): string {
@@ -17,13 +30,17 @@ class IsNumberStringConstraint implements ValidatorConstraintInterface {
    }
 }
 
-export function IsAppNumberString(length?: number, options?: ValidationOptions) {
+export function IsAppString<T extends StringType>(
+   type: T,
+   strOption?: StringOption<T>,
+   options?: ValidationOptions,
+) {
    return function ({ constructor }: any, propertyName: string) {
       registerDecorator({
          target: constructor,
          propertyName,
          options,
-         constraints: [length],
+         constraints: [type, strOption],
          validator: IsNumberStringConstraint,
       });
    };

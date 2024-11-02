@@ -36,11 +36,11 @@ export default class UnitService extends CoreService<Unit> {
             errorOnNotFound: true,
          }));
       }
-      for (const { amount, currencyId } of current) {
+      for (const { amount, unitId } of current) {
          const {
             data: { baseUnit },
          } = await this.repository.findOne({
-            filter: { _id: currencyId, currency, category: categoryId },
+            filter: { _id: unitId, currency, category: categoryId },
             errorOnNotFound: true,
          });
          exchanged += baseUnit * amount;

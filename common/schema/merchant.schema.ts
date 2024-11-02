@@ -2,12 +2,12 @@ import { Schema, SchemaFactory } from '@nestjs/mongoose';
 import { IsEmail, IsEnum, IsMongoId, IsPhoneNumber, IsString } from 'class-validator';
 import { SchemaTypes } from 'mongoose';
 import { EStatus, EUserApp } from '@common/utils/enum';
-import { Cash, MFA } from '@common/dto/entity.dto';
+import { Amount, MFA } from '@common/dto/entity.dto';
 import BaseSchema from '../core/base.schema';
 import AppProp from '../decorator/app_prop.decorator';
 import Category from '@shared/category/category.schema';
 import Purchase from '@shared/purchase/purchase.schema';
-import PurchasedSubscription from '@shared/purchased_subscription/purchased_subscription.schema';
+import PurchasedSubscription from '@shared/subscription/subscription.schema';
 
 export class LoggedInMerchantUser {
    @IsMongoId()
@@ -57,8 +57,8 @@ export default class Merchant extends BaseSchema {
    @AppProp({ type: Boolean, default: false, required: false })
    sentPreSubEndMail?: boolean;
 
-   @AppProp({ type: [SchemaTypes.Mixed], default: 0 }, { type: Cash })
-   totalSpend: Cash[];
+   @AppProp({ type: [SchemaTypes.Mixed], default: 0 }, { type: Amount })
+   totalSpend: Amount[];
 
    @AppProp({ type: SchemaTypes.ObjectId, ref: 'Purchase', required: false })
    offlinePurchase?: AppSchema<Purchase>;

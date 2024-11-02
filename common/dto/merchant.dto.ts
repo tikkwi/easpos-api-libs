@@ -4,7 +4,7 @@ import { IsMongoId, IsNotEmpty, ValidateNested } from 'class-validator';
 import { CreateCategoryDto } from './action.dto';
 import { CoreDto, FindByIdDto } from './core.dto';
 import Merchant, { LoggedInMerchantUser } from '@common/schema/merchant.schema';
-import { IsAppNumberString } from '@common/validator';
+import { IsAppString } from '../validator';
 
 export class CreateMerchantDto extends OmitType(CoreDto(Merchant), [
    'offlinePurchase',
@@ -24,7 +24,7 @@ export class MerchantUserLoginDto extends LoggedInMerchantUser {
 }
 
 export class MerchantVerifyDto extends OmitType(FindByIdDto, ['errorOnNotFound']) {
-   @IsAppNumberString()
+   @IsAppString('number')
    code: string;
 }
 

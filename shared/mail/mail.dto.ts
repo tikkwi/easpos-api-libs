@@ -12,7 +12,7 @@ import { EMail } from '@common/utils/enum';
 class SubExpireDto {
    @IsNotEmpty()
    @IsDateString()
-   expireAt: Date;
+   expireAt: string;
 }
 
 export class SendMailDto {

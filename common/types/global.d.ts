@@ -20,6 +20,8 @@ declare global {
 
    type CategoryService = import('@shared/category/category.service').default;
 
+   type WeekDay = (typeof import('@common/constant/app.constant').WEEK_DAY)[number];
+
    type CreateType<T> = Omit<T, '_id' | 'createdAt' | 'updatedAt' | 'app' | 'category'> & {
       category?: import('@common/dto/action.dto').CreateCategoryDto;
       context?: import('@common/core/context/context.service').default;

@@ -6,6 +6,7 @@ export enum EApp {
 export enum EUserApp {
    SuperAdmin = 'SuperAdmin',
    Seller = 'Seller',
+   Owner = 'Owner',
    Admin = 'Admin',
    Partner = 'Partner',
    Customer = 'Customer',
@@ -40,12 +41,16 @@ export enum EProductStatus {
    InStock = 'InStock',
    OutOfStock = 'OutOfStock',
    FindingNewSupplier = 'FindingNewSupplier',
+   ShortStock = 'ShortStock',
+   RequireReplenishment = 'RequireReplenishment',
 }
 
 export enum EProductUnitStatus {
    Available = 'Available',
    Damaged = 'Damaged',
-   Returned = 'Returned',
+   Wasted = 'Wasted',
+   WaitingWarranty = 'WaitingWarranty',
+   ReturnedToSupplier = 'ReturnedToSupplier',
    Sold = 'Sold',
    InTransitFromSupplier = 'InTransitFromSupplier',
    InTransitToCustomer = 'InTransitToCustomer',
@@ -53,14 +58,38 @@ export enum EProductUnitStatus {
    Consigned = 'Consigned',
 }
 
+export enum EProcurementStatus {
+   Pending = 'Pending',
+   Approved = 'Approved',
+   Ordered = 'Ordered',
+   InTransit = 'InTransit',
+   Delivered = 'Delivered',
+   InspectionProgress = 'InspectionProgress',
+   Cancelled = 'Cancelled',
+   Returned = 'Returned',
+   Completed = 'Completed',
+}
+
+export enum EInspectionStatus {
+   Pending = 'Pending',
+   Approved = 'Approved',
+   InProgress = 'InProgress',
+   Passed = 'Passed',
+   Failed = 'Failed',
+   ReInspectionRequired = 'ReInspectionRequired',
+   Cancelled = 'Cancelled',
+}
+
+export enum ELocationStatus {
+   Open = 'Open',
+   Closed = 'Closed',
+   UnderMaintenance = 'UnderMaintenance',
+}
+
 export enum ETmpBlock {
    WrongPassF = 'WrongPassF',
    WrongPassS = 'WrongPassS',
    WrongPassT = 'WrongPassT',
-}
-
-export enum ESchemaStatus {
-   Merchant = 'Merchant',
 }
 
 export enum EMail {
@@ -115,6 +144,10 @@ export enum ECategory {
    ProductTag = 'ProductTag',
    ProductVariantTag = 'ProductVariantTag',
    ProductUnitTag = 'ProductUnitTag',
+   PayrollAdjustment = 'PayrollAdjustment',
+   Ingredient = 'Ingredient',
+   Procurement = 'Procurement',
+   Inspection = 'Inspection',
 }
 
 export enum EExpenseScope {
@@ -123,6 +156,7 @@ export enum EExpenseScope {
    ProductTag = 'ProductTag',
    WholeProduct = 'WholeProduct',
    PerUnitProduct = 'PerUnitProduct',
+   Procurement = 'Procurement',
 }
 
 export enum EEntityMetadata {
@@ -188,4 +222,11 @@ export enum ECustomerAllowance {
 export enum EMfa {
    Mobile = 'Mobile',
    Mail = 'Mail',
+}
+
+export enum EDocumentPermission {
+   Branch = 'Branch',
+   Warehouse = 'Warehouse',
+   Section = 'Section',
+   Shelf = 'Shelf',
 }

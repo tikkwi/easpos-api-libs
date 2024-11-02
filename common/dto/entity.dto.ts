@@ -12,37 +12,67 @@ import {
    Matches,
    Max,
    Min,
+   ValidateIf,
    ValidateNested,
 } from 'class-validator';
 import { EField, EMfa, EStatus, ETime, EUser, EUserApp } from '@common/utils/enum';
 import { regex } from '@common/utils/regex';
 import { TmpBlock } from '@shared/user/user.schema';
-import { IsAppNumberString } from '../validator';
+import { IsAppString } from '../validator';
+import { WEEK_DAY } from '../constant';
 
-export class Period {
-   @IsNumber()
-   @Min(1)
-   @Max(31)
-   days?: number;
+export function $Period(
+   reqPeriod?: Array<'year' | 'month' | 'day' | 'hour' | 'minute' | 'second'>,
+) {
+   class Period {
+      @ValidateIf(() => reqPeriod && reqPeriod.includes('year'))
+      @IsNumber()
+      @Min(1900)
+      @Max(2100)
+      year?: number;
 
-   @IsNumber()
-   @Min(0)
-   @Max(23)
-   hours?: number;
+      @ValidateIf(() => reqPeriod && reqPeriod.includes('month'))
+      @IsNumber()
+      @Min(1)
+      @Max(12)
+      month?: number;
 
-   @IsNumber()
-   @Min(0)
-   @Max(59)
-   minutes?: number;
+      @ValidateIf(() => reqPeriod && reqPeriod.includes('day'))
+      @IsNumber()
+      @Min(1)
+      @Max(31)
+      days?: number;
 
-   @IsNumber()
-   @Min(0)
-   @Max(59)
-   seconds?: number;
+      @ValidateIf(() => reqPeriod && reqPeriod.includes('hour'))
+      @IsNumber()
+      @Min(0)
+      @Max(23)
+      hours?: number;
+
+      @ValidateIf(() => reqPeriod && reqPeriod.includes('minute'))
+      @IsNumber()
+      @Min(0)
+      @Max(59)
+      minutes?: number;
+
+      @ValidateIf(() => reqPeriod && reqPeriod.includes('second'))
+      @IsNumber()
+      @Min(0)
+      @Max(59)
+      seconds?: number;
+   }
+
+   return Period;
 }
 
+export class Period extends $Period() {}
+
+export class TimePeriod extends $Period(['hour', 'minute']) {}
+
+export class MonthlyPeriod extends $Period(['year', 'month']) {}
+
 export class MFA {
-   @IsAppNumberString()
+   @IsAppString('number')
    code: string;
 
    @IsDateString()
@@ -154,12 +184,13 @@ export class ProductPurchased {
    quantity: number;
 }
 
-export class Cash {
+export class Amount {
    @IsNumber()
    amount: number;
 
+   @IsOptional()
    @IsMongoId()
-   currencyId: string;
+   unitId?: string; //NOTE: can also be currency
 }
 
 export class TimedCredit {
@@ -200,4 +231,73 @@ export class FieldValue {
 
    @IsNotEmpty()
    value: any;
+}
+
+export class Subscription {
+   @IsDateString()
+   subActiveDate: string;
+
+   @IsEnum(EStatus)
+   status: EStatus;
+
+   @IsDateString()
+   expireAt: string;
+
+   @IsBoolean()
+   sentExpiredMail: boolean;
+
+   @IsBoolean()
+   sentPreExpiredMail: boolean;
+}
+
+export class MonthlyOperatingSchedule {
+   @ValidateNested()
+   @Type(() => MonthlyPeriod)
+   month: MonthlyPeriod;
+
+   @IsNumber(undefined, { each: true })
+   @Min(1, { each: true })
+   @Max(31, { each: true })
+   days: number[];
+}
+
+export class OperatingSchedule {
+   @IsOptional()
+   @IsAppString('include', { arr: WEEK_DAY }, { each: true })
+   weeklyClosedDay?: WeekDay[];
+
+   @IsOptional()
+   @IsNumber(undefined, { each: true })
+   @Min(0, { each: true })
+   @Max(100, { each: true })
+   monthlyClosedDay?: number[];
+
+   @IsOptional()
+   @ValidateNested({ each: true })
+   @Type(() => MonthlyOperatingSchedule)
+   exceptionOpenDays?: MonthlyOperatingSchedule[];
+
+   @IsOptional()
+   @ValidateNested()
+   @Type(() => TimePeriod)
+   openingTime?: TimePeriod;
+
+   @IsOptional()
+   @ValidateNested()
+   @Type(() => TimePeriod)
+   closingTime?: TimePeriod;
+}
+
+export class Dimension {
+   @ValidateNested()
+   @Type(() => Amount)
+   x: Amount;
+
+   @ValidateNested()
+   @Type(() => Amount)
+   y: Amount;
+
+   @ValidateNested()
+   @Type(() => Amount)
+   z: Amount;
 }

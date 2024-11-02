@@ -1,6 +1,6 @@
 import { IsBoolean, IsMongoId, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
-import { Cash, ProductPurchased } from '@common/dto/entity.dto';
+import { Amount, ProductPurchased } from '@common/dto/entity.dto';
 import { BaseDto } from '@common/dto/core.dto';
 
 export type PurchasedAllowanceType = {
@@ -12,8 +12,8 @@ export type PurchasedAllowanceType = {
 
 export class GetApplicableAllowanceDto extends BaseDto {
    @ValidateNested()
-   @Type(() => Cash)
-   basePrice: Cash;
+   @Type(() => Amount)
+   basePrice: Amount;
 
    @IsOptional()
    @IsString()

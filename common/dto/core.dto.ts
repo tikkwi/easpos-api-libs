@@ -61,12 +61,16 @@ export function PartialTypeIf<T>(
    return classRef;
 }
 
-export function PickTypeIf<T, K extends keyof T>(
-   isPick: (cls: any) => boolean,
+export function SelectionTypeIf<T, K extends keyof T, P extends boolean>(
+   selectIf: (cls: any) => boolean,
    classRef: Type<T>,
-   pick: Array<K>,
-): Type<Pick<T, K>> {
-   if (isPick(classRef)) return PickType(classRef, pick);
+   select: Array<K>,
+   isPick: P,
+): P extends true ? Type<Pick<T, K>> : Type<Omit<T, K>> {
+   if (selectIf(classRef))
+      return (isPick ? PickType(classRef, select) : OmitType(classRef, select)) as P extends true
+         ? Type<Pick<T, K>>
+         : Type<Omit<T, K>>;
    return classRef;
 }
 
@@ -86,6 +90,11 @@ export class FindDto extends PartialType(BaseDto) {
 export class FindByIdDto extends FindDto {
    @IsMongoId()
    id: string | ObjectId;
+}
+
+export class FindByIdsDto extends OmitType(FindDto, ['errorOnNotFound']) {
+   @IsMongoId({ each: true })
+   ids: string[];
 }
 
 export class FindByCodeDto extends FindDto {
