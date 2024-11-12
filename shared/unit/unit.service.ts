@@ -1,6 +1,6 @@
 import { BadRequestException, Inject } from '@nestjs/common';
 import Unit from './unit.schema';
-import CoreService from '@common/core/core.service';
+import ACoreService from '@common/core/core.service';
 import { CreateUnitDto, ExchangeUnitDto } from './unit.dto';
 import AppService from '@common/decorator/app_service.decorator';
 import { REPOSITORY } from '@common/constant';
@@ -8,7 +8,7 @@ import Repository from '@common/core/repository';
 import { ECategory } from '@common/utils/enum';
 
 @AppService()
-export default class UnitService extends CoreService<Unit> {
+export default class UnitService extends ACoreService<Unit> {
    constructor(@Inject(REPOSITORY) protected readonly repository: Repository<Unit>) {
       super();
    }

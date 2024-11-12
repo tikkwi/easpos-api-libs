@@ -1,9 +1,9 @@
-import { EAllowance, EStatus } from '@common/utils/enum';
+import { EPriceAdjustment, EStatus } from '@common/utils/enum';
 import { BadRequestException } from '@nestjs/common';
 import { $dayjs, isPeriodExceed, normalizeDate } from '@common/utils/datetime';
 import { GetApplicableAllowanceDto } from './allowance.dto';
 import Allowance from './allowance.schema';
-import CoreService from '@common/core/core.service';
+import ACoreService from '@common/core/core.service';
 import ProductService from '@app/product/product.service';
 import UnitService from '../unit/unit.service';
 import AllowanceCodeService from '../allowance_code/allowance_code.service';
@@ -12,7 +12,7 @@ import { FindByIdDto } from '@common/dto/core.dto';
 
 export default abstract class AllowanceService<
    T extends Allowance = Allowance,
-> extends CoreService<T> {
+> extends ACoreService<T> {
    protected abstract productService: ProductService;
    protected abstract unitService: UnitService;
    protected abstract allowanceCodeService: AllowanceCodeService;
@@ -81,7 +81,7 @@ export default abstract class AllowanceService<
                         {
                            case: {
                               $and: [
-                                 { $eq: ['$type', EAllowance.PaymentMethod] },
+                                 { $eq: ['$type', EPriceAdjustment.PaymentMethod] },
                                  { $in: [paymentMethodId, '$paymentMethodTrigger'] },
                               ],
                            },
@@ -90,7 +90,7 @@ export default abstract class AllowanceService<
                         {
                            case: {
                               $and: [
-                                 { $eq: ['$type', EAllowance.Currency] },
+                                 { $eq: ['$type', EPriceAdjustment.Currency] },
                                  { $in: [currencyId, '$currencyTrigger'] },
                               ],
                            },
@@ -99,7 +99,7 @@ export default abstract class AllowanceService<
                         {
                            case: {
                               $and: [
-                                 { $eq: ['$type', EAllowance.Geographic] },
+                                 { $eq: ['$type', EPriceAdjustment.Geographic] },
                                  { $in: [addressId, '$addressTrigger'] },
                               ],
                            },
@@ -108,7 +108,7 @@ export default abstract class AllowanceService<
                         {
                            case: {
                               $and: [
-                                 { $eq: ['$type', EAllowance.Bundle] },
+                                 { $eq: ['$type', EPriceAdjustment.Bundle] },
                                  {
                                     $eq: [
                                        {
@@ -160,7 +160,7 @@ export default abstract class AllowanceService<
                         {
                            case: {
                               $and: [
-                                 { $eq: ['$type', EAllowance.TierBased] },
+                                 { $eq: ['$type', EPriceAdjustment.TierBased] },
                                  { $in: [tier, '$tierTrigger'] },
                               ],
                            },
@@ -169,7 +169,7 @@ export default abstract class AllowanceService<
                         {
                            case: {
                               $and: [
-                                 { $eq: ['$type', EAllowance.StockLevel] },
+                                 { $eq: ['$type', EPriceAdjustment.StockLevel] },
                                  { $eq: ['$perProduct', true] },
                                  {
                                     $cond: {
@@ -185,7 +185,7 @@ export default abstract class AllowanceService<
                         {
                            case: {
                               $and: [
-                                 { $eq: ['$type', EAllowance.VolumeLevel] },
+                                 { $eq: ['$type', EPriceAdjustment.VolumeLevel] },
                                  { $eq: ['$perProduct', true] },
                                  { $gte: ['$levelTrigger', products[0].quantity] },
                               ],
@@ -197,9 +197,9 @@ export default abstract class AllowanceService<
                               $in: [
                                  '$type',
                                  [
-                                    EAllowance.TimeBased,
-                                    EAllowance.SpendBase,
-                                    EAllowance.TotalSpendBase,
+                                    EPriceAdjustment.TimeBased,
+                                    EPriceAdjustment.SpendBase,
+                                    EPriceAdjustment.TotalSpendBase,
                                  ],
                               ],
                            },
@@ -221,9 +221,9 @@ export default abstract class AllowanceService<
                         $match: {
                            type: {
                               $nin: [
-                                 EAllowance.TimeBased,
-                                 EAllowance.SpendBase,
-                                 EAllowance.TotalSpendBase,
+                                 EPriceAdjustment.TimeBased,
+                                 EPriceAdjustment.SpendBase,
+                                 EPriceAdjustment.TotalSpendBase,
                               ],
                            },
                         },
@@ -234,9 +234,9 @@ export default abstract class AllowanceService<
                         $match: {
                            type: {
                               $in: [
-                                 EAllowance.TimeBased,
-                                 EAllowance.SpendBase,
-                                 EAllowance.TotalSpendBase,
+                                 EPriceAdjustment.TimeBased,
+                                 EPriceAdjustment.SpendBase,
+                                 EPriceAdjustment.TotalSpendBase,
                               ],
                            },
                         },
@@ -255,7 +255,7 @@ export default abstract class AllowanceService<
          }
          for (const allowance of allowances[0].unfiltered) {
             let applicable;
-            if (allowance.type === EAllowance.TimeBased) {
+            if (allowance.type === EPriceAdjustment.TimeBased) {
                if (
                   $dayjs().isAfter(
                      normalizeDate(allowance.timeTrigger.type, allowance.timeTrigger.from),
@@ -268,7 +268,7 @@ export default abstract class AllowanceService<
             } else {
                const spend = await getTargetAmount(
                   allowance.spendTrigger.currencyId,
-                  allowance.type === EAllowance.TotalSpendBase,
+                  allowance.type === EPriceAdjustment.TotalSpendBase,
                );
                if (spend <= allowance.spendTrigger.amount) applicable = allowance;
             }

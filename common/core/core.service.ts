@@ -3,7 +3,7 @@ import BaseSchema from './base.schema';
 import Repository from './repository';
 import { CreateCategoryDto } from '../dto/action.dto';
 
-export default abstract class CoreService<T = BaseSchema> {
+export default abstract class ACoreService<T = BaseSchema> {
    protected abstract repository: Repository<T>;
 
    async findById({ lean, populate, id, errorOnNotFound }: FindByIdDto) {

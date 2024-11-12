@@ -1,12 +1,12 @@
 import { Body, Get, Param, Post } from '@nestjs/common';
-import CoreController from '@common/core/core.controller';
+import ACoreController from '@common/core/core.controller';
 import UnitService from './unit.service';
 import { CreateCurrencyDto, CreateUnitDto } from './unit.dto';
 import AppController from '@common/decorator/app_controller.decorator';
 import { EAllowedUser } from '@common/utils/enum';
 
 @AppController('unit', { admin: [EAllowedUser.Admin], user: [EAllowedUser.Merchant] })
-export default class UnitController extends CoreController {
+export default class UnitController extends ACoreController {
    constructor(protected readonly service: UnitService) {
       super();
    }

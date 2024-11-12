@@ -6,13 +6,13 @@ import { responseError } from '@common/utils/misc';
 import { EUser, EUserApp } from '@common/utils/enum';
 import { encrypt } from '@common/utils/encrypt';
 import { BaseUser } from './user.schema';
-import CoreService from '@common/core/core.service';
+import ACoreService from '@common/core/core.service';
 import AppRedisService from '@common/core/app_redis/app_redis.service';
 import { LoginDto } from './user.dto';
 import AppBrokerService from '@common/core/app_broker/app_broker.service';
 import { MerchantServiceMethods } from '@common/dto/merchant.dto';
 
-export abstract class UserService<T extends BaseUser = BaseUser> extends CoreService<T> {
+export abstract class AUserService<T extends BaseUser = BaseUser> extends ACoreService<T> {
    protected abstract readonly db: AppRedisService;
    protected abstract readonly appBroker: AppBrokerService;
    protected abstract readonly merchantService: MerchantServiceMethods;

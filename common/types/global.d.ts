@@ -21,6 +21,8 @@ declare global {
    type CategoryService = import('@shared/category/category.service').default;
 
    type WeekDay = (typeof import('@common/constant/app.constant').WEEK_DAY)[number];
+   type CalendarDate = (typeof import('@common/constant/app.constant').CALENDAR_DATE)[number];
+   type DateTime = (typeof import('@common/constant/app.constant').DATE_TIME)[number];
 
    type CreateType<T> = Omit<T, '_id' | 'createdAt' | 'updatedAt' | 'app' | 'category'> & {
       category?: import('@common/dto/action.dto').CreateCategoryDto;

@@ -177,7 +177,7 @@ export class TimeRange {
 }
 
 export class ProductPurchased {
-   @IsString() //NOTE:qr-code
+   @IsString() //NOTE:bar-code or id
    product: string;
 
    @IsNumber()

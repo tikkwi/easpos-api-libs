@@ -111,6 +111,7 @@ export enum EAllowedUser {
    Admin = 'Admin',
    Merchant = 'Merchant',
    Customer = 'Customer',
+   CustomerP = 'CustomerP',
    Partner = 'Partner',
    MerchantNoVerified = 'MerchantNoVerified',
    MerchantNoSub = 'MerchantNoSub',
@@ -181,15 +182,23 @@ export enum ETime {
    Month = 'Month',
 }
 
-export enum EAllowance {
-   TimeBased = 'TimeBased',
-   StockLevel = 'StockLevel', //NOTE: validate if applicable product have
-   VolumeLevel = 'VolumeLevel',
-   TierBased = 'TierBased',
-   Geographic = 'Geographic',
+export enum EPriceAdjustment {
+   Time = 'Time',
+   Tier = 'Tier',
    Bundle = 'Bundle',
-   SpendBase = 'SpendBase',
-   TotalSpendBase = 'TotalSpendBase',
+   Spend = 'Spend',
+   PaymentMethod = 'PaymentMethod',
+   Currency = 'Currency',
+}
+
+export enum EStockPriceAdjustment {
+   StockLevelLower = 'StockLevelLower', //NOTE: validate if applicable product have
+   StockLevelHigher = 'StockLevelHigher', //NOTE: validate if applicable product have
+   Volume = 'Volume',
+   Time = 'Time',
+   Tier = 'Tier',
+   Bundle = 'Bundle',
+   Spend = 'Spend',
    PaymentMethod = 'PaymentMethod',
    Currency = 'Currency',
 }
@@ -230,3 +239,5 @@ export enum EDocumentPermission {
    Section = 'Section',
    Shelf = 'Shelf',
 }
+
+export enum EClientPermission {}

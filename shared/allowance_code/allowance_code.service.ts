@@ -1,5 +1,5 @@
 import { CreateAllowanceCodeDto } from './allowance_code.dto';
-import CoreService from '@common/core/core.service';
+import ACoreService from '@common/core/core.service';
 import AllowanceCode from './allowance_code.schema';
 import AllowanceService from '../allowance/allowance.service';
 import AppService from '@common/decorator/app_service.decorator';
@@ -9,7 +9,7 @@ import Repository from '@common/core/repository';
 import { FindByCodeDto } from '@common/dto/core.dto';
 
 @AppService()
-export default class AllowanceCodeService extends CoreService<AllowanceCode> {
+export default class AllowanceCodeService extends ACoreService<AllowanceCode> {
    constructor(
       @Inject(REPOSITORY) protected readonly repository: Repository<AllowanceCode>,
       private readonly allowanceService: AllowanceService,

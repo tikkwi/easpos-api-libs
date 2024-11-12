@@ -2,11 +2,11 @@ import AppController from '@common/decorator/app_controller.decorator';
 import { EAllowedUser, ECategory } from '@common/utils/enum';
 import { Body, Post } from '@nestjs/common';
 import { CreateCampaignDto } from './campaign.dto';
-import CoreController from '@common/core/core.controller';
+import ACoreController from '@common/core/core.controller';
 import CampaignService from './campaign.service';
 
 @AppController('campaign', { admin: [EAllowedUser.Admin], user: [EAllowedUser.Merchant] })
-export default class CampaignController extends CoreController {
+export default class CampaignController extends ACoreController {
    constructor(protected readonly service: CampaignService) {
       super();
    }
