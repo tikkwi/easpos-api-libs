@@ -6,8 +6,6 @@ import { Amount, MFA } from '@common/dto/entity.dto';
 import BaseSchema from '../core/base.schema';
 import AppProp from '../decorator/app_prop.decorator';
 import Category from '@shared/category/category.schema';
-import Purchase from '@shared/purchase/purchase.schema';
-import PurchasedSubscription from '@shared/subscription/subscription.schema';
 
 export class LoggedInMerchantUser {
    @IsMongoId()
@@ -20,6 +18,7 @@ export class LoggedInMerchantUser {
    app: EUserApp;
 }
 
+//TODO create default and base schemas for merchant (eg. base customer tier)
 @Schema()
 export default class Merchant extends BaseSchema {
    @AppProp({ type: String })
@@ -60,11 +59,13 @@ export default class Merchant extends BaseSchema {
    @AppProp({ type: [SchemaTypes.Mixed], default: 0 }, { type: Amount })
    totalSpend: Amount[];
 
-   @AppProp({ type: SchemaTypes.ObjectId, ref: 'Purchase', required: false })
-   offlinePurchase?: AppSchema<Purchase>;
+   //TODO subscription fields
 
-   @AppProp({ type: SchemaTypes.ObjectId, ref: 'PurchasedSubscription' })
-   subscriptionPurchase?: AppSchema<PurchasedSubscription>;
+   // @AppProp({ type: SchemaTypes.ObjectId, ref: 'Purchase', required: false })
+   // offlinePurchase?: AppSchema<Purchase>;
+   //
+   // @AppProp({ type: SchemaTypes.ObjectId, ref: 'PurchasedSubscription' })
+   // subscriptionPurchase?: AppSchema<PurchasedSubscription>;
 }
 
 export const MerchantSchema = SchemaFactory.createForClass(Merchant);

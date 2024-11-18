@@ -1,5 +1,5 @@
 import { CoreDto } from '@common/dto/core.dto';
-import { IsBoolean, IsMongoId, IsOptional, ValidateIf, ValidateNested } from 'class-validator';
+import { IsMongoId, IsOptional, ValidateNested } from 'class-validator';
 import { IntersectionType, OmitType, PartialType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { CategoryDto } from '@common/dto/action.dto';
@@ -13,17 +13,9 @@ export class ExchangeUnitDto {
 
    @IsOptional()
    @IsMongoId()
-   targetId: string;
-
-   @IsOptional()
-   @IsBoolean()
-   currency?: boolean;
-
-   @ValidateIf((o) => !o.currency)
-   @IsMongoId()
-   categoryId?: string;
+   targetId?: string;
 }
 
-export class CreateCurrencyDto extends OmitType(CoreDto(Unit), ['category', 'currency']) {}
+export class CreateCurrencyDto extends OmitType(CoreDto(Unit), ['category']) {}
 
 export class CreateUnitDto extends IntersectionType(CreateCurrencyDto, PartialType(CategoryDto)) {}

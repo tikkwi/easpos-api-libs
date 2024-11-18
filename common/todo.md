@@ -8,3 +8,5 @@
 ## Schedule Jobs
 
 - [ ] check point balance every start of the month to downgrade tier
+- [ ] sub end and send mail (sub end/pre sub end) to the merchants
+- [ ] expire campaign and update adjustment as per this status

@@ -7,9 +7,6 @@ import { ValidateIf } from 'class-validator';
 
 @Schema()
 export default class Unit extends BaseSchema {
-   @AppProp({ type: Boolean, default: false })
-   default: boolean;
-
    @AppProp({ type: String })
    name: string;
 
@@ -23,7 +20,7 @@ export default class Unit extends BaseSchema {
    description?: string;
 
    @AppProp({ type: Boolean, default: false })
-   base: boolean;
+   isBase: boolean;
 
    @AppProp({ type: Boolean, default: true })
    active: boolean;
@@ -32,9 +29,9 @@ export default class Unit extends BaseSchema {
    baseUnit: number;
 
    @AppProp({ type: Boolean, default: false })
-   currency: boolean;
+   isCurrency: boolean;
 
-   @ValidateIf((o) => !o.currency)
+   @ValidateIf((o) => !o.isCurrency)
    @AppProp({ type: SchemaTypes.ObjectId, ref: 'Category' })
    category?: AppSchema<Category>;
 

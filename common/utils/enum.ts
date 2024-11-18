@@ -168,32 +168,9 @@ export enum EEntityMetadata {
    Customer = 'Customer',
 }
 
-export enum EAllowanceBenefit {
-   Point = 'Point',
-   Cash = 'Cash',
-   Product = 'Product',
-   Discount = 'Discount',
-}
-
-export enum ETime {
-   Hour = 'Hour',
-   Day = 'Day',
-   Week = 'Week',
-   Month = 'Month',
-}
-
 export enum EPriceAdjustment {
-   Time = 'Time',
-   Tier = 'Tier',
-   Bundle = 'Bundle',
-   Spend = 'Spend',
-   PaymentMethod = 'PaymentMethod',
-   Currency = 'Currency',
-}
-
-export enum EStockPriceAdjustment {
-   StockLevelLower = 'StockLevelLower', //NOTE: validate if applicable product have
-   StockLevelHigher = 'StockLevelHigher', //NOTE: validate if applicable product have
+   StockLevelLower = 'StockLevelLower',
+   StockLevelHigher = 'StockLevelHigher',
    Volume = 'Volume',
    Time = 'Time',
    Tier = 'Tier',

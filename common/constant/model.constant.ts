@@ -1,5 +1,5 @@
 export const REPOSITORY = 'REPOSITORY';
-export const ALLOWANCE = 'ALLOWANCE';
+export const PROMO_CODE = 'PROMO_CODE';
 export const PRODUCT = 'PRODUCT';
 export const PURCHASE = 'PURCHASE';
 export const ADMIN_APP = 'ADMIN_APP';

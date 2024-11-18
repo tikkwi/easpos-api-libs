@@ -27,9 +27,6 @@ type GetContextType = SetContextType & {
 @Injectable({ scope: Scope.REQUEST })
 export default class ContextService {
    #session: ClientSession;
-   #initialized = false;
-   #user: AuthUser;
-   #merchantConfig: AppSchema<MerchantConfig>;
    #ip: string;
    #requestedApp: string;
    #userAgent: EApp;
@@ -42,8 +39,7 @@ export default class ContextService {
    ) {}
 
    async initialize() {
-      if (this.#initialized)
-         throw new InternalServerErrorException('Context Already Initialized..');
+      if (this.#session) throw new InternalServerErrorException('Context Already Initialized..');
       this.#session = await this.connection.startSession();
    }
 
@@ -69,7 +65,11 @@ export default class ContextService {
       this.set({ [key]: updFun(this.get(key)) } as any);
    }
 
+   reset() {}
+
+   logout() {}
+
    #checkInitialization() {
-      if (!this.#initialized) throw new InternalServerErrorException('Context Not Initialized..');
+      if (!this.#session) throw new InternalServerErrorException('Context Not Initialized..');
    }
 }

@@ -1,7 +1,7 @@
 import { FindByIdDto, FindByIdsDto } from '@common/dto/core.dto';
 import BaseSchema from './base.schema';
 import Repository from './repository';
-import { CreateCategoryDto } from '../dto/action.dto';
+import { CategoryDto } from '../dto/action.dto';
 
 export default abstract class ACoreService<T = BaseSchema> {
    protected abstract repository: Repository<T>;
@@ -15,7 +15,7 @@ export default abstract class ACoreService<T = BaseSchema> {
    }
 
    async create({ category: $category, context, ...dto }: CreateType<T>, catName?: string) {
-      const categoryDto: CreateCategoryDto = $category ?? dto[catName];
+      const categoryDto: CategoryDto = $category ?? dto[catName];
 
       const category = categoryDto
          ? await context.get('categoryService').getCategory(categoryDto)

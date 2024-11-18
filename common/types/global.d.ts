@@ -8,6 +8,7 @@ declare global {
    type ProjectionType<T> = import('mongoose').ProjectionType<T>;
    type QueryOptions<T> = import('mongoose').QueryOptions<T>;
    type UpdateQuery<T> = import('mongoose').UpdateQuery<T>;
+   type ClientSession = import('mongoose').ClientSession;
 
    type EUser = import('@common/utils/enum').EUser;
    type EApp = import('@common/utils/enum').EApp;
@@ -17,15 +18,16 @@ declare global {
    type Merchant = import('@common/schema/merchant.schema').default;
    type AuthCredential = import('@common/schema/auth_credential.schema').default;
    type Allowance = import('@shared/allowance/allowance.schema').default;
+   type CustomerTier = import('@app/customer_tier/customer_tier.schema').default;
+   type MerchantConfig = import('@app/merchant_config/merchant_config.schema').default;
 
    type CategoryService = import('@shared/category/category.service').default;
 
    type WeekDay = (typeof import('@common/constant/app.constant').WEEK_DAY)[number];
    type CalendarDate = (typeof import('@common/constant/app.constant').CALENDAR_DATE)[number];
-   type DateTime = (typeof import('@common/constant/app.constant').DATE_TIME)[number];
 
    type CreateType<T> = Omit<T, '_id' | 'createdAt' | 'updatedAt' | 'app' | 'category'> & {
-      category?: import('@common/dto/action.dto').CreateCategoryDto;
+      category?: import('@common/dto/action.dto').CategoryDto;
       context?: import('@common/core/context/context.service').default;
    };
 
@@ -61,9 +63,7 @@ declare global {
       status: EStatus;
       isOwner: boolean;
       type: EUser;
-      tier?: string;
       app: EUserApp;
-      tmpBlock?: import('@global_schema/user.schema').TmpBlock;
       permissions: Record<string, number>;
       merchant?: string;
    };
@@ -91,7 +91,7 @@ declare module 'express' {
 
 declare module 'express-session' {
    interface SessionData {
-      user?: string;
-      merchantConfig?: string;
+      user?: AuthUser;
+      merchantConfig?: MerchantConfig;
    }
 }

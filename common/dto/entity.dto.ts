@@ -15,11 +15,12 @@ import {
    ValidateIf,
    ValidateNested,
 } from 'class-validator';
-import { EField, EMfa, EStatus, ETime, EUser, EUserApp } from '@common/utils/enum';
+import { EField, EMfa, EStatus, EUser, EUserApp } from '@common/utils/enum';
 import { regex } from '@common/utils/regex';
 import { TmpBlock } from '@shared/user/user.schema';
 import { IsAppString } from '../validator';
 import { WEEK_DAY } from '../constant';
+import { IsPeriod } from '../validator/is_period.validator';
 
 export function $Period(
    reqPeriod?: Array<'year' | 'month' | 'day' | 'hour' | 'minute' | 'second'>,
@@ -163,25 +164,19 @@ export class Payment {
    netPrice: number;
 }
 
-export class TimeRange {
-   @IsEnum(ETime)
-   type: ETime;
+/*
+ * Period Format (month:day:hour:minute)
+ * eg:
+ * 00:03:00:00 (every 3rd of the month)
+ * 00:00:23:00 (daily 23:00 for every month)
+ * */
+export class PeriodRange {
+   @IsPeriod()
+   from: string;
 
-   //NOTE: manual validate wrt type
-   @IsNumber()
-   from: number;
-
-   //NOTE: manual validate wrt type
-   @IsNumber()
-   to: number;
-}
-
-export class ProductPurchased {
-   @IsString() //NOTE:bar-code or id
-   product: string;
-
-   @IsNumber()
-   quantity: number;
+   //TODO: to validate every period segment after from
+   @IsPeriod()
+   to: string;
 }
 
 export class Amount {

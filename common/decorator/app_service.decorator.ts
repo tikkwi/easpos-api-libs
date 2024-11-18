@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import ContextService from '../core/context/context.service';
 import { omit } from 'lodash';
+import AppResourceService from '../core/app_resource.service';
+import ContextService from '../core/context/context.service';
 
 export default function AppService() {
    return function (target: any) {
@@ -12,7 +13,7 @@ export default function AppService() {
          if (typeof oriMeth === 'function' && key !== 'constructor') {
             descriptor.value = async function (...args) {
                const res = await oriMeth.apply(this, args);
-               const context: ContextService = this.args[0].context;
+               const context = await AppResourceService.getRef().resolve(ContextService);
                context.update('logTrail', (log) => {
                   const reqLog = {
                      service: target.name,

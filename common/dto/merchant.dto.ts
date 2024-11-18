@@ -1,7 +1,7 @@
 import { OmitType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsMongoId, IsNotEmpty, ValidateNested } from 'class-validator';
-import { CreateCategoryDto } from './action.dto';
+import { CategoryDto } from './action.dto';
 import { CoreDto, FindByIdDto } from './core.dto';
 import Merchant, { LoggedInMerchantUser } from '@common/schema/merchant.schema';
 import { IsAppString } from '../validator';
@@ -14,8 +14,8 @@ export class CreateMerchantDto extends OmitType(CoreDto(Merchant), [
 ]) {
    @IsNotEmpty()
    @ValidateNested()
-   @Type(() => CreateCategoryDto)
-   category: CreateCategoryDto;
+   @Type(() => CategoryDto)
+   category: CategoryDto;
 }
 
 export class MerchantUserLoginDto extends LoggedInMerchantUser {

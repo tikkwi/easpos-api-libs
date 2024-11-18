@@ -1,5 +1,5 @@
 import { BadRequestException, Inject } from '@nestjs/common';
-import { CreateCategoryDto } from '@common/dto/action.dto';
+import { CategoryDto } from '@common/dto/action.dto';
 import { REPOSITORY } from '@common/constant';
 import ACoreService from '@common/core/core.service';
 import Category from './category.schema';
@@ -12,7 +12,7 @@ export default class CategoryService extends ACoreService<Category> {
       super();
    }
 
-   async getCategory({ id, ...dto }: CreateCategoryDto) {
+   async getCategory({ id, ...dto }: CategoryDto) {
       const existing = await this.repository.findOne({
          filter: dto,
       });
