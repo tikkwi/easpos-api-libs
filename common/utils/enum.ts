@@ -45,6 +45,7 @@ export enum EProductStatus {
    RequireReplenishment = 'RequireReplenishment',
 }
 
+//TODO: separate stock_unit if specific status per unit is needed
 export enum EProductUnitStatus {
    Available = 'Available',
    Damaged = 'Damaged',
@@ -146,6 +147,9 @@ export enum ECategory {
    ProductVariantTag = 'ProductVariantTag',
    ProductUnitTag = 'ProductUnitTag',
    PayrollAdjustment = 'PayrollAdjustment',
+   MerchantTag = 'MerchantTag',
+   CustomerTag = 'CustomerTag',
+   PartnerTag = 'PartnerTag',
    Ingredient = 'Ingredient',
    Procurement = 'Procurement',
    Inspection = 'Inspection',

@@ -14,6 +14,7 @@ import BaseSchema from '@common/core/base.schema';
 import AppProp from '@common/decorator/app_prop.decorator';
 import Address from '../address/address.schema';
 import { IntersectionType, OmitType, PartialType, PickType } from '@nestjs/swagger';
+import Category from '../category/category.schema';
 
 export class TmpBlock {
    @IsDateString()
@@ -72,6 +73,9 @@ export default class User extends BaseSchema {
 
    @AppProp({ type: SchemaTypes.ObjectId, ref: 'Address', required: false })
    address?: AppSchema<Address>;
+
+   @AppProp({ type: [{ type: SchemaTypes.ObjectId, ref: 'Category' }], default: [] })
+   tags?: Array<AppSchema<Category>>;
 }
 
 const basePartialFields: Array<keyof User> = ['mail', 'mobileNo'];

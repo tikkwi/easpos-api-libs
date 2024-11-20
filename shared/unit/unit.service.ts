@@ -1,7 +1,7 @@
 import { BadRequestException, Inject } from '@nestjs/common';
 import Unit from './unit.schema';
 import ACoreService from '@common/core/core.service';
-import { ExchangeUnitDto } from './unit.dto';
+import { ExchangeUnitDto, GetBaseUnitDto } from './unit.dto';
 import AppService from '@common/decorator/app_service.decorator';
 import { REPOSITORY } from '@common/constant';
 import Repository from '@common/core/repository';
@@ -12,8 +12,21 @@ export default class UnitService extends ACoreService<Unit> {
       super();
    }
 
-   async getBase() {
-      return await this.repository.findOne({ filter: { base: true } });
+   async getBase({ unitId, categoryId }: GetBaseUnitDto) {
+      const findBase = async (catId: string) =>
+         this.repository.findOne({
+            filter: { isBase: true, category: catId },
+            errorOnNotFound: true,
+         });
+
+      if (categoryId) return await findBase(categoryId);
+      else {
+         const { data: unit } = await this.repository.findOne({
+            id: unitId,
+            errorOnNotFound: true,
+         });
+         return await findBase(unit.category as any);
+      }
    }
 
    async exchangeUnit({ current, targetId }: ExchangeUnitDto) {

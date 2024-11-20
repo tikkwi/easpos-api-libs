@@ -12,6 +12,7 @@ import {
 } from 'class-validator';
 import { EAllowedUser, EUserApp } from '@common/utils/enum';
 import ContextService from '../core/context/context.service';
+import { PopulateOptions } from 'mongoose';
 
 //types
 export type AllowedUser = keyof typeof EAllowedUser;
@@ -84,7 +85,7 @@ export class FindDto extends PartialType(BaseDto) {
 
    @IsOptional()
    @IsString({ each: true })
-   populate?: string[];
+   populate?: string | string[] | PopulateOptions | PopulateOptions[];
 }
 
 export class FindByIdDto extends FindDto {

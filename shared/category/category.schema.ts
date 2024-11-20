@@ -13,6 +13,9 @@ export default class Category extends BaseSchema {
 
    @AppProp({ type: String, enum: ECategory })
    type: ECategory;
+
+   @AppProp({ type: Boolean, default: false })
+   isTag: boolean;
 }
 
 export const CategorySchema = SchemaFactory.createForClass(Category);
