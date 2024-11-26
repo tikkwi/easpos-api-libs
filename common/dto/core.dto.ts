@@ -12,7 +12,7 @@ import {
 } from 'class-validator';
 import { EAllowedUser, EUserApp } from '@common/utils/enum';
 import ContextService from '../core/context/context.service';
-import { PopulateOptions } from 'mongoose';
+import { PopulateOptions, ProjectionType } from 'mongoose';
 
 //types
 export type AllowedUser = keyof typeof EAllowedUser;
@@ -84,8 +84,10 @@ export class FindDto extends PartialType(BaseDto) {
    errorOnNotFound?: boolean;
 
    @IsOptional()
-   @IsString({ each: true })
    populate?: string | string[] | PopulateOptions | PopulateOptions[];
+
+   @IsOptional()
+   projection?: ProjectionType<any>;
 }
 
 export class FindByIdDto extends FindDto {
@@ -93,7 +95,7 @@ export class FindByIdDto extends FindDto {
    id: string | ObjectId;
 }
 
-export class FindByIdsDto extends OmitType(FindDto, ['errorOnNotFound']) {
+export class FindByIdsDto extends FindDto {
    @IsMongoId({ each: true })
    ids: string[];
 }

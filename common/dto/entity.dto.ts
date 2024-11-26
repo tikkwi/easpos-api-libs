@@ -1,4 +1,5 @@
 import { Type } from 'class-transformer';
+import { Type as $Type } from '@nestjs/common';
 import {
    IsBoolean,
    IsDateString,
@@ -21,6 +22,7 @@ import { TmpBlock } from '@shared/user/user.schema';
 import { IsAppString } from '../validator';
 import { WEEK_DAY } from '../constant';
 import { IsPeriod } from '../validator/is_period.validator';
+import { OmitType } from '@nestjs/swagger';
 
 export function $Period(
    reqPeriod?: Array<'year' | 'month' | 'day' | 'hour' | 'minute' | 'second'>,
@@ -71,6 +73,15 @@ export class Period extends $Period() {}
 export class TimePeriod extends $Period(['hour', 'minute']) {}
 
 export class MonthlyPeriod extends $Period(['year', 'month']) {}
+
+export function AppSchema<T>(classRef: $Type<T>): $Type<Omit<T, '_id'> & { id: string }> {
+   class AS extends OmitType(classRef as any, ['_id'] as any) {
+      @IsMongoId()
+      id: string;
+   }
+
+   return AS as any;
+}
 
 export class MFA {
    @IsAppString('number')
@@ -295,4 +306,17 @@ export class Dimension {
    @ValidateNested()
    @Type(() => Amount)
    z: Amount;
+}
+
+export class BasicInfo {
+   @IsString()
+   name: string;
+
+   @IsOptional()
+   @IsString()
+   description?: string;
+
+   @IsOptional()
+   @IsString({ each: true })
+   attachments?: Array<string>;
 }

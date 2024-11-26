@@ -53,7 +53,6 @@ export default abstract class APriceAdjustment extends BaseSchema {
    @AppProp({ type: Boolean, default: false })
    stackable: boolean;
 
-   @ValidateIf((o) => o.types.includes(EPriceAdjustment.Spend) && o.applyWholeSale)
    @AppProp({ type: SchemaTypes.Mixed }, { type: Amount })
    spendTrigger?: Amount;
 
