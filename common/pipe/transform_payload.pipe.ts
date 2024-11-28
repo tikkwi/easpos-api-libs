@@ -7,6 +7,6 @@ export class TransformPayloadPipe implements PipeTransform {
    constructor(private readonly moduleRef: ModuleRef) {}
 
    async transform(value: any) {
-      return { ...(value ?? {}), context: await this.moduleRef.resolve(ContextService) };
+      return { ...(value ?? {}), context: await this.moduleRef.resolve(ContextService), ct: true }; //NOTE: ct to check if handler request comes from controller or inter-service
    }
 }

@@ -22,6 +22,12 @@
 ## Do
 
 - ```Service``` class ***must*** extend ```CoreService``` and use ```AppService``` rather than ```Injectable```
+- ```Controller``` class ***must*** extend ```CoreController``` and use ```AppController``` rather than ```Controller```
+- ```Hanlder``` that shouldn't allow direct http communication (only allow inter-service interaction) ***must*** start
+  with `nc_` (we don't need validation for these handlers)
+- Use `Entity`(include only entity's id) `EntityFull`(include all entity's fields) `EntityCompact`(include only some
+  meta name, description etc.)
+    - eg. `Product, ProductFull, ProductCompact`
 
 ## Don't
 

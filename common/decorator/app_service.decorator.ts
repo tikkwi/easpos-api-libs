@@ -1,7 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { omit } from 'lodash';
-import AppResourceService from '../core/app_resource.service';
-import ContextService from '../core/context/context.service';
 
 export default function AppService() {
    return function (target: any) {
@@ -12,8 +10,10 @@ export default function AppService() {
          const oriMeth = descriptor.value;
          if (typeof oriMeth === 'function' && key !== 'constructor') {
             descriptor.value = async function (...args) {
+               const context = args[0].context;
+               const ct = args[0].ct;
+               if (key.startsWith('nc_') && ct) throw new ForbiddenException();
                const res = await oriMeth.apply(this, args);
-               const context = await AppResourceService.getRef().resolve(ContextService);
                context.update('logTrail', (log) => {
                   const reqLog = {
                      service: target.name,
