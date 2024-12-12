@@ -37,7 +37,7 @@ export default class User extends BaseSchema {
    type: EUser;
 
    @AppProp({ type: String, enum: EStatus, default: EStatus.Active })
-   status: EStatus;
+   status?: EStatus;
 
    @AppProp({ type: SchemaTypes.Mixed, required: false }, { type: TmpBlock })
    tmpBlock?: TmpBlock;

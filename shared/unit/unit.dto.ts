@@ -2,9 +2,9 @@ import { CoreDto } from '@common/dto/core.dto';
 import { IsMongoId, IsOptional, ValidateIf, ValidateNested } from 'class-validator';
 import { IntersectionType, OmitType, PartialType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { CategoryDto } from '@common/dto/action.dto';
 import { Amount } from '@common/dto/entity.dto';
 import Unit from './unit.schema';
+import { CategoryDto } from '../category/category.dto';
 
 export class GetBaseUnitDto {
    @ValidateIf((o) => !o.categoryId)

@@ -26,10 +26,7 @@ declare global {
    type WeekDay = (typeof import('@common/constant/app.constant').WEEK_DAY)[number];
    type CalendarDate = (typeof import('@common/constant/app.constant').CALENDAR_DATE)[number];
 
-   type CreateType<T> = Omit<T, '_id' | 'createdAt' | 'updatedAt' | 'app' | 'category'> & {
-      category?: import('@common/dto/action.dto').CategoryDto;
-      context?: import('@common/core/context/context.service').default;
-   };
+   type CreateType<T> = Omit<T, '_id' | 'createdAt' | 'updatedAt'>;
 
    type AppSchema<M> = Omit<M, '_id'> & { id?: string };
 
@@ -91,7 +88,7 @@ declare module 'express' {
 
 declare module 'express-session' {
    interface SessionData {
-      user?: AuthUser;
-      merchantConfig?: MerchantConfig;
+      user?: string;
+      merchantConfig?: string;
    }
 }

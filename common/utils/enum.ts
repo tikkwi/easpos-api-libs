@@ -112,7 +112,6 @@ export enum EAllowedUser {
    Admin = 'Admin',
    Merchant = 'Merchant',
    Customer = 'Customer',
-   CustomerP = 'CustomerP',
    Partner = 'Partner',
    MerchantNoVerified = 'MerchantNoVerified',
    MerchantNoSub = 'MerchantNoSub',
@@ -121,10 +120,9 @@ export enum EAllowedUser {
 
 export enum EField {
    String = 'String',
-   Enum = 'Enum',
+   Id = 'Id',
    Boolean = 'Boolean',
    URL = 'URL',
-   Image = 'Image',
    Datetime = 'Datetime',
    Number = 'Number',
    Phone = 'Phone',
@@ -151,17 +149,25 @@ export enum ECategory {
    CustomerTag = 'CustomerTag',
    PartnerTag = 'PartnerTag',
    Ingredient = 'Ingredient',
-   Procurement = 'Procurement',
+   SupplierStock = 'SupplierStock',
    Inspection = 'Inspection',
 }
 
 export enum EExpenseScope {
    WholeBusiness = 'WholeBusiness',
-   ProductCategory = 'ProductCategory',
-   ProductTag = 'ProductTag',
    WholeProduct = 'WholeProduct',
    PerUnitProduct = 'PerUnitProduct',
-   Procurement = 'Procurement',
+}
+
+export enum EExpense {
+   Administrative = 'Administrative',
+   Marketing = 'Marketing',
+   Sale = 'Sale',
+   Finance = 'Finance',
+   ResearchDevelopment = 'ResearchDevelopment',
+   Tax = 'Tax',
+   COGS = 'COGS',
+   Operating = 'Operating',
 }
 
 export enum EEntityMetadata {

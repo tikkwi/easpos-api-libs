@@ -11,7 +11,7 @@ export default class Repository<T> {
       private readonly moduleRef: ModuleRef,
    ) {}
 
-   async create(dto: Omit<CreateType<T>, 'category' | 'context'>) {
+   async create(dto: CreateType<T>) {
       const context = await this.moduleRef.resolve(ContextService);
       return {
          data: (await new this.model({ ...dto, app: process.env[APP] }).save({

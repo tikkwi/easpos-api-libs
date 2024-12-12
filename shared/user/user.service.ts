@@ -8,14 +8,16 @@ import { encrypt } from '@common/utils/encrypt';
 import { BaseUser } from './user.schema';
 import ACoreService from '@common/core/core.service';
 import AppRedisService from '@common/core/app_redis/app_redis.service';
-import { LoginDto } from './user.dto';
+import { CreateUserDto, LoginDto } from './user.dto';
 import AppBrokerService from '@common/core/app_broker/app_broker.service';
 import { MerchantServiceMethods } from '@common/dto/merchant.dto';
+import AddressService from '../address/address.service';
 
 export abstract class AUserService<T extends BaseUser = BaseUser> extends ACoreService<T> {
    protected abstract readonly db: AppRedisService;
    protected abstract readonly appBroker: AppBrokerService;
    protected abstract readonly merchantService: MerchantServiceMethods;
+   protected abstract readonly addressService: AddressService;
 
    async logout(req: Request, res: Response) {
       req.session.destroy((err) => responseError(req, res, err));
@@ -73,5 +75,16 @@ export abstract class AUserService<T extends BaseUser = BaseUser> extends ACoreS
          }, {});
       }
       request.session.user = await encrypt(JSON.stringify(authUser));
+   }
+
+   protected async getCreateUserDto({ context, addressId, tagsDto, ...dto }: CreateUserDto) {
+      const tags = [];
+      if (tagsDto)
+         for (const tg of tagsDto) {
+            const { data: tag } = await context.get('categoryService').getCategory(tg);
+            tags.push(tag);
+         }
+      const { data: address } = await this.addressService.findById({ id: addressId });
+      return { tags, address, ...dto };
    }
 }

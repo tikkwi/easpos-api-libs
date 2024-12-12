@@ -1,10 +1,10 @@
 import { OmitType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsMongoId, IsNotEmpty, ValidateNested } from 'class-validator';
-import { CategoryDto } from './action.dto';
 import { CoreDto, FindByIdDto } from './core.dto';
 import Merchant, { LoggedInMerchantUser } from '@common/schema/merchant.schema';
 import { IsAppString } from '../validator';
+import { CategoryDto } from '@shared/category/category.dto';
 
 export class CreateMerchantDto extends OmitType(CoreDto(Merchant), [
    'offlinePurchase',

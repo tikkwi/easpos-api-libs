@@ -14,7 +14,7 @@ export default class AuditService extends ACoreService<Audit> {
    async logRequest({ context }: BaseDto) {
       const user = context.get('user');
 
-      return await super.create({
+      return await this.repository.create({
          submittedIP: context.get('ip'),
          sessionId: context.get('request')?.sessionID,
          crossAppRequest: !context.get('request'),

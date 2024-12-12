@@ -45,10 +45,10 @@ export class PaginationDto<T> {
 
 export function CoreDto<T>(
    classRef: Type<T>,
-): Type<BaseDto & Omit<T, '_id' | 'createdAt' | 'updatedAt' | 'app'>> {
+): Type<BaseDto & Omit<T, '_id' | 'createdAt' | 'updatedAt'>> {
    class CoreDtoClass extends IntersectionType(
       BaseDto,
-      OmitType(classRef as any, ['_id', 'createdAt', 'updatedAt', 'app'] as any),
+      OmitType(classRef as any, ['_id', 'createdAt', 'updatedAt'] as any),
    ) {}
 
    return CoreDtoClass as any;

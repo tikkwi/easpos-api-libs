@@ -1,6 +1,14 @@
-import { CategoryDto } from '@common/dto/action.dto';
 import { CoreDto } from '@common/dto/core.dto';
 import Campaign from './campaign.schema';
-import { IntersectionType } from '@nestjs/swagger';
+import { OmitType } from '@nestjs/swagger';
+import { IsOptional, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
 
-export class CreateCampaignDto extends IntersectionType(CoreDto(Campaign), CategoryDto) {}
+import { CategoryDto } from '../category/category.dto';
+
+export class CreateCampaignDto extends OmitType(CoreDto(Campaign), ['type']) {
+   @IsOptional()
+   @ValidateNested()
+   @Type(() => CategoryDto)
+   category?: CategoryDto;
+}
