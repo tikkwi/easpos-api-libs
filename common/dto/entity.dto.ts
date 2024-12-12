@@ -16,7 +16,7 @@ import {
    ValidateIf,
    ValidateNested,
 } from 'class-validator';
-import { EField, EMfa, EStatus, EUser, EUserApp } from '@common/utils/enum';
+import { EMfa, EStatus, EUser, EUserApp } from '@common/utils/enum';
 import { regex } from '@common/utils/regex';
 import { TmpBlock } from '@shared/user/user.schema';
 import { IsAppString } from '../validator';
@@ -207,33 +207,9 @@ export class TimedCredit {
    amount: number;
 }
 
-export class Field {
-   @IsString() //NOTE: use this field to meta value
-   @Matches(regex.fieldName)
-   name: string;
-
-   @IsEnum(EField)
-   type: EField;
-
-   @IsBoolean()
-   isOptional: boolean;
-
-   @IsBoolean()
-   isArray: boolean;
-
-   @IsOptional()
-   @IsNumber()
-   priority: number; //NOTE: might use this field to dynamic render custom fields on UI
-
-   @IsOptional()
-   @IsString()
-   remark?: string;
-}
-
 export class FieldValue {
-   @IsString()
-   @Matches(regex.fieldName)
-   name: string;
+   @IsMongoId()
+   id: string;
 
    @IsNotEmpty()
    value: any;

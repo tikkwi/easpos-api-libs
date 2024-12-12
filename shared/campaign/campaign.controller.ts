@@ -1,5 +1,5 @@
 import AppController from '@common/decorator/app_controller.decorator';
-import { EAllowedUser, ECategory } from '@common/utils/enum';
+import { EAllowedUser } from '@common/utils/enum';
 import { Body, Post } from '@nestjs/common';
 import { CreateCampaignDto } from './campaign.dto';
 import ACoreController from '@common/core/core.controller';
@@ -12,14 +12,7 @@ export default class CampaignController extends ACoreController {
    }
 
    @Post('create')
-   create(@Body() { category, ...dto }: CreateCampaignDto) {
-      return this.service.create({
-         ...dto,
-         ...(category
-            ? {
-                 category: { ...category, type: ECategory.Campaign },
-              }
-            : {}),
-      });
+   create(@Body() dto: CreateCampaignDto) {
+      return this.service.create(dto);
    }
 }

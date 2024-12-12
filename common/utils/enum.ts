@@ -112,7 +112,6 @@ export enum EAllowedUser {
    Admin = 'Admin',
    Merchant = 'Merchant',
    Customer = 'Customer',
-   CustomerP = 'CustomerP',
    Partner = 'Partner',
    MerchantNoVerified = 'MerchantNoVerified',
    MerchantNoSub = 'MerchantNoSub',
@@ -121,10 +120,9 @@ export enum EAllowedUser {
 
 export enum EField {
    String = 'String',
-   Enum = 'Enum',
+   Id = 'Id',
    Boolean = 'Boolean',
    URL = 'URL',
-   Image = 'Image',
    Datetime = 'Datetime',
    Number = 'Number',
    Phone = 'Phone',

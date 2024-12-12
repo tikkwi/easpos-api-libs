@@ -65,10 +65,6 @@ export default class ContextService {
       this.set({ [key]: updFun(this.get(key)) } as any);
    }
 
-   reset() {}
-
-   logout() {}
-
    #checkInitialization() {
       if (!this.#session) throw new InternalServerErrorException('Context Not Initialized..');
    }
