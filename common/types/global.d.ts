@@ -88,7 +88,7 @@ declare module 'express' {
 
 declare module 'express-session' {
    interface SessionData {
-      user?: string;
-      merchantConfig?: string;
+      user?: AuthUser;
+      merchantConfig?: MerchantConfig;
    }
 }
