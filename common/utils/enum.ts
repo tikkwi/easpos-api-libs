@@ -102,7 +102,7 @@ export enum EPath {}
 
 export enum EUser {
    Admin = 'Admin',
-   Merchant = 'Merchant',
+   Employee = 'Employee',
    Customer = 'Customer',
    Partner = 'Partner',
 }
@@ -227,4 +227,10 @@ export enum EDocumentPermission {
    Shelf = 'Shelf',
 }
 
-export enum EClientPermission {}
+export enum EType {
+   String = 'String',
+   Number = 'Number',
+   Boolean = 'Boolean',
+   Url = 'Url',
+   Id = 'Id',
+}

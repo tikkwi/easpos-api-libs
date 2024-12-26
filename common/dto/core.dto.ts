@@ -5,7 +5,6 @@ import {
    IsDateString,
    IsMongoId,
    IsNumber,
-   IsObject,
    IsOptional,
    IsString,
    Min,
@@ -13,6 +12,7 @@ import {
 import { EAllowedUser, EUserApp } from '@common/utils/enum';
 import ContextService from '../core/context/context.service';
 import { PopulateOptions, ProjectionType } from 'mongoose';
+import { IsRecord } from '../validator/is_record.validator';
 
 //types
 export type AllowedUser = keyof typeof EAllowedUser;
@@ -38,8 +38,7 @@ export class PaginationDto<T> {
    @Min(1)
    pageSize?: number;
 
-   //NOTE: sanitize manually
-   @IsObject()
+   @IsRecord()
    sort?: Record<keyof T, any>;
 }
 

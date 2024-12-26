@@ -61,7 +61,7 @@ declare global {
       isOwner: boolean;
       type: EUser;
       app: EUserApp;
-      permissions: Record<string, number>;
+      permissions: Array<string>;
       merchant?: string;
    };
 
@@ -88,7 +88,7 @@ declare module 'express' {
 
 declare module 'express-session' {
    interface SessionData {
-      user?: AuthUser;
-      merchantConfig?: MerchantConfig;
+      user?: string;
+      merchantConfig?: string;
    }
 }

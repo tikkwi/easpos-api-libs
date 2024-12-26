@@ -1,6 +1,6 @@
 import { compareSync } from 'bcryptjs';
 import { BadRequestException, ForbiddenException } from '@nestjs/common';
-import { omit } from 'lodash';
+import { concat, omit, uniq } from 'lodash';
 import { request, Request, Response } from 'express';
 import { responseError } from '@common/utils/misc';
 import { EUser, EUserApp } from '@common/utils/enum';
@@ -23,24 +23,26 @@ export abstract class AUserService<T extends BaseUser = BaseUser> extends ACoreS
       req.session.destroy((err) => responseError(req, res, err));
    }
 
-   async login({ email, userName, password, app }: LoginDto) {
+   async login({ email, userName, password, app, merchantId }: LoginDto) {
       const { data: user }: any = await this.repository.findOne({
          filter: {
             email,
             userName,
          },
          errorOnNotFound: true,
-         options: { populate: ['role'] },
+         options: { populate: ['role', 'tier'] },
       });
       if (!user || !compareSync(password, user.password))
          throw new BadRequestException(`Incorrect ${email ? 'email' : 'userName'} or password`);
       const authUser: AuthUser = { ...(omit(user, ['mfa', 'password']) as any), app };
       const appForbiddenMsg = `Not Allowed to use ${app}`;
+      if (user.type === EUser.Employee && !merchantId)
+         throw new BadRequestException('Merchant Id is required');
       switch (user.type) {
          case EUser.Admin:
             if (app !== EUserApp.SuperAdmin) throw new ForbiddenException(appForbiddenMsg);
             break;
-         case EUser.Merchant:
+         case EUser.Employee:
             if (![EUserApp.Seller, EUserApp.Admin].includes(app))
                throw new ForbiddenException(appForbiddenMsg);
             break;
@@ -52,13 +54,13 @@ export abstract class AUserService<T extends BaseUser = BaseUser> extends ACoreS
             break;
       }
 
-      if (user.merchant)
+      if (user.type === EUser.Employee)
          await this.appBroker.request<AuthMerchant>({
             action: (meta) =>
                this.merchantService.loginUser(
                   {
-                     id: user.merchant,
-                     userId: user._id,
+                     id: merchantId,
+                     userId: user.id,
                      name: `${user.firstName} ${user.lastName}`,
                      app,
                   },
@@ -69,11 +71,12 @@ export abstract class AUserService<T extends BaseUser = BaseUser> extends ACoreS
          });
       if (user.role) {
          authUser.isOwner = user.role.isOwner;
-         authUser.permissions = user.role.role?.permissions?.reduce((a, c) => {
-            a[c] = 1;
-            return a;
-         }, {});
+         authUser.permissions = user.role.permissions;
       }
+      if (user.tier)
+         authUser.permissions = uniq(
+            concat(...user.tier.benefits.map(({ permissions }) => permissions)),
+         );
       request.session.user = await encrypt(JSON.stringify(authUser));
    }
 

@@ -41,6 +41,10 @@ export class LoginDto {
 
    @IsEnum(EUserApp)
    app: EUserApp;
+
+   @IsOptional()
+   @IsMongoId()
+   merchantId?: string;
 }
 
 export class CreateUserDto extends IntersectionType(

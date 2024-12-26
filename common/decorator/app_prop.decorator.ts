@@ -15,6 +15,7 @@ import { regex } from '@common/utils/regex';
 import { Type } from 'class-transformer';
 
 type Options = {
+   validators?: Array<{ func: any; args: Array<any> }>;
    userName?: boolean;
    validateString?: boolean;
    validateEnum?: boolean;
@@ -34,6 +35,7 @@ export default function AppProp(
          prop = true,
          userName = false,
          swagger,
+         validators,
       } = options ?? {};
 
       const pOpt = {
@@ -91,5 +93,6 @@ export default function AppProp(
       }
 
       if (userName) Matches(regex.userName)(target, key);
+      if (validators) validators.forEach(({ func, args }) => func(...args)(target, key));
    };
 }

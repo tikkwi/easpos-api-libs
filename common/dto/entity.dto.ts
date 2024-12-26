@@ -144,7 +144,8 @@ export class AuthUser {
    @Type(() => TmpBlock)
    tmpBlock: TmpBlock;
 
-   permissions: Record<string, number>;
+   @IsString({ each: true })
+   permissions: Array<string>;
 }
 
 export class UserRole {
