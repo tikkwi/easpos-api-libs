@@ -110,7 +110,7 @@ export enum EUser {
 export enum EAllowedUser {
    Any = 'Any',
    Admin = 'Admin',
-   Merchant = 'Merchant',
+   Employee = 'Employee',
    Customer = 'Customer',
    Partner = 'Partner',
    MerchantNoVerified = 'MerchantNoVerified',

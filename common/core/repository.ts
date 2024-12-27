@@ -1,9 +1,8 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Document, Model } from 'mongoose';
-import { APP, PAGE_SIZE } from '@common/constant';
+import { PAGE_SIZE } from '@common/constant';
 import { ModuleRef } from '@nestjs/core';
-import ContextService from './context/context.service';
-import * as process from 'node:process';
+import RequestContextService from './request_context/request_context_service';
 
 export default class Repository<T> {
    constructor(
@@ -12,9 +11,9 @@ export default class Repository<T> {
    ) {}
 
    async create(dto: CreateType<T>) {
-      const context = await this.moduleRef.resolve(ContextService);
+      const context = await this.moduleRef.resolve(RequestContextService);
       return {
-         data: (await new this.model({ ...dto, app: process.env[APP] }).save({
+         data: (await new this.model({ ...dto }).save({
             session: context.get('session'),
          })) as Document<unknown, unknown, T> & T,
       };
@@ -58,7 +57,7 @@ export default class Repository<T> {
 
    async findAndUpdate({ id, filter, options, update }: UpdateType<T>) {
       if (!id && !filter) throw new BadRequestException('Require filter to update');
-      const context = await this.moduleRef.resolve(ContextService);
+      const context = await this.moduleRef.resolve(RequestContextService);
 
       const prev = id
          ? await this.model.findById(id, null)
@@ -78,7 +77,7 @@ export default class Repository<T> {
    }
 
    async updateMany({ ids, update }: Omit<UpdateType<T>, 'id' | 'filter'> & { ids: string[] }) {
-      const context = await this.moduleRef.resolve(ContextService);
+      const context = await this.moduleRef.resolve(RequestContextService);
       const prev = await this.model.find({ _id: { $in: ids } }, null);
       if (!prev || !prev.length) throw new NotFoundException('Not Found');
 
@@ -96,7 +95,7 @@ export default class Repository<T> {
    }
 
    async delete(id: string) {
-      const context = await this.moduleRef.resolve(ContextService);
+      const context = await this.moduleRef.resolve(RequestContextService);
       return {
          data: await this.model.findByIdAndDelete(id, { session: context.get('session') }),
       };

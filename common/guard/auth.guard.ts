@@ -14,7 +14,7 @@ import { APPS, AUTH_CREDENTIAL, MERCHANT, USERS } from '@common/constant';
 import { AuthCredentialServiceMethods } from '@common/dto/auth_credential.dto';
 import { AllowedUser } from '@common/dto/core.dto';
 import { EAllowedUser, EApp, EUser } from '@common/utils/enum';
-import ContextService from '../core/context/context.service';
+import RequestContextService from '../core/request_context/request_context_service';
 import { MerchantServiceMethods } from '../dto/merchant.dto';
 import AppBrokerService from '../core/app_broker/app_broker.service';
 
@@ -31,7 +31,7 @@ export default class AuthGuard implements CanActivate {
 
    async canActivate(context: ExecutionContext) {
       const isHttp = context.getType() === 'http';
-      const contextService = await this.moduleRef.resolve(ContextService);
+      const contextService = await this.moduleRef.resolve(RequestContextService);
       if (isHttp) {
          const allowedUsers = this.reflector.get<AllowedUser[]>(USERS, context.getHandler());
          const allowedApps = this.reflector.get(APPS, context.getHandler());
@@ -45,12 +45,12 @@ export default class AuthGuard implements CanActivate {
             const allowedMerchantUser = intersection(allowedUsers, [
                EAllowedUser.MerchantNoVerified,
                EAllowedUser.MerchantNoSub,
-               EAllowedUser.Merchant,
+               EAllowedUser.Employee,
                EAllowedUser.Owner,
             ]);
 
             if (
-               !(user.type === EUser.Merchant && allowedMerchantUser.length) ||
+               (user.type === EUser.Employee && !allowedMerchantUser.length) ||
                !allowedUsers.includes(user.type)
             )
                return false;
@@ -60,7 +60,7 @@ export default class AuthGuard implements CanActivate {
                request.originalUrl,
             );
 
-            if (user.type === EUser.Merchant) {
+            if (user.type === EUser.Employee) {
                const authMerchant = await this.broker.request<AuthMerchant>({
                   action: (meta) => this.merchantService.merchantWithAuth({ id: user.id }, meta),
                   cache: true,

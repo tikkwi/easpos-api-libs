@@ -10,7 +10,7 @@ import {
    Min,
 } from 'class-validator';
 import { EAllowedUser, EUserApp } from '@common/utils/enum';
-import ContextService from '../core/context/context.service';
+import RequestContextService from '../core/request_context/request_context_service';
 import { PopulateOptions, ProjectionType } from 'mongoose';
 import { IsRecord } from '../validator/is_record.validator';
 
@@ -20,7 +20,7 @@ export type AllowedUser = keyof typeof EAllowedUser;
 export type AllowedApp = keyof typeof EUserApp | 'Any';
 
 export class BaseDto {
-   context: ContextService;
+   context: RequestContextService;
 }
 
 export class PaginationDto<T> {

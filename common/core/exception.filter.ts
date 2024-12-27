@@ -1,12 +1,10 @@
-import { ArgumentsHost, Catch, ExceptionFilter, Logger } from '@nestjs/common';
+import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Request, Response } from 'express';
-import { APP } from '@common/constant';
 import { responseError } from '@common/utils/misc';
-import { firstUpperCase } from '@common/utils/regex';
 import AppRedisService from './app_redis/app_redis.service';
 import { ModuleRef } from '@nestjs/core';
-import ContextService from './context/context.service';
+import RequestContextService from './request_context/request_context_service';
 
 @Catch()
 export default class AppExceptionFilter implements ExceptionFilter {
@@ -17,9 +15,9 @@ export default class AppExceptionFilter implements ExceptionFilter {
    ) {}
 
    async catch(err: any, host: ArgumentsHost) {
-      const logger = new Logger(firstUpperCase(this.config.get(APP)));
-      logger.error(err);
-      const contextService = await this.moduleRef.resolve(ContextService);
+      // const logger = new Logger(firstUpperCase(this.config.get(APP)));
+      // logger.error(err);
+      const contextService = await this.moduleRef.resolve(RequestContextService);
       const session = contextService.get('session');
       session.abortTransaction();
       session.endSession();

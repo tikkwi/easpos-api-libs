@@ -62,7 +62,7 @@ declare global {
       type: EUser;
       app: EUserApp;
       permissions: Array<string>;
-      merchant?: string;
+      merchantId?: string;
    };
 
    type AuthMerchant = {

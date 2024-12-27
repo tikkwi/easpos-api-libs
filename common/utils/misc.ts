@@ -6,7 +6,6 @@ import {
    Provider,
 } from '@nestjs/common';
 import { ClientGrpc, ClientsModuleOptions, Transport } from '@nestjs/microservices';
-import { getModelToken } from '@nestjs/mongoose';
 import { camelCase } from 'lodash';
 import { join } from 'path';
 import { firstUpperCase } from './regex';
@@ -14,8 +13,9 @@ import { EAuthCredential } from './enum';
 import { Request, Response } from 'express';
 import { compare } from 'bcryptjs';
 import { ADMIN_URL, REPOSITORY } from '@common/constant';
-import Repository from '../core/repository';
 import { ModuleRef } from '@nestjs/core';
+import RequestContextService from '../core/request_context/request_context_service';
+import Repository from '../core/repository';
 
 type RepositoryProviderType = { name: string; provide?: string };
 
@@ -51,10 +51,10 @@ const getGrpcClientOptions = (pkgs: string[], url: string): ClientsModuleOptions
 
 const repositoryProvider = ({ provide, name }: RepositoryProviderType) => ({
    provide: provide ?? REPOSITORY,
-   useFactory: (model, moduleRef: ModuleRef) => {
-      return new Repository(model, moduleRef);
+   useFactory: (ctx: RequestContextService, moduleRef: ModuleRef) => {
+      return new Repository(ctx.getConnection().model(name), moduleRef);
    },
-   inject: [getModelToken(name), ModuleRef],
+   inject: [RequestContextService, ModuleRef],
 });
 
 export const getGrpcClient = (

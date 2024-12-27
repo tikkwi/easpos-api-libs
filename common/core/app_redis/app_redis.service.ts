@@ -4,7 +4,7 @@ import { REDIS_LCL_CLIENT } from '@common/constant';
 import { decrypt, encrypt } from '@common/utils/encrypt';
 import { days, minutes } from '@nestjs/throttler';
 import { ModuleRef } from '@nestjs/core';
-import ContextService from '../context/context.service';
+import RequestContextService from '../request_context/request_context_service';
 
 /*
 NOTE: cache authorized status up to 1 day which mean employee may able to
@@ -18,8 +18,8 @@ export default class AppRedisService {
    ) {}
 
    async getKey<K extends keyof AppCache>(key: K) {
-      const context = await this.moduleRef.resolve(ContextService);
-      return key.startsWith('a_') ? key : `${key}_${context.get('user').merchant}`;
+      const context = await this.moduleRef.resolve(RequestContextService);
+      return key.startsWith('a_') ? key : `${key}_${context.get('user').merchantId}`;
    }
 
    async set<K extends keyof AppCache>(key: K, value: AppCache[K], expire?: number) {

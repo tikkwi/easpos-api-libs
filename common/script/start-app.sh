@@ -10,7 +10,6 @@ docker-compose up -d
 echo "Redis Setup"
 sleep 5
 docker exec -i -e REDIS_LCL_USR="$REDIS_LCL_USR" -e REDIS_LCL_PWD="$REDIS_LCL_PWD" redis redis-cli <<EOF
-  echo "hello.. $REDIS_LCL_USR $REDIS_LCL_PWD"
   ACL SETUSER $REDIS_LCL_USR on >$REDIS_LCL_PWD ~* +@all
   echo "Persistence ...."
   CONFIG SET appendonly yes
@@ -42,37 +41,37 @@ else
 fi
 
 echo "Waiting for the replica set to be fully initiated and a primary to be elected..."
-sleep 10
+sleep 20
 
 PRIMARY_NODE=$(docker exec mongo1 mongosh --quiet --eval "rs.isMaster().primary" | tr -d '\r')
 echo "Primary node identified: $PRIMARY_NODE"
 
 echo "Create Admin User"
 docker exec -i -e MONGO_LCL_USR="$MONGO_LCL_USR" -e MONGO_LCL_PWD="$MONGO_LCL_PWD" "${PRIMARY_NODE%:*}" mongosh <<EOF
-use easpos
+use admin
 db.createUser({
   user: "$MONGO_LCL_USR",
   pwd: "$MONGO_LCL_PWD",
-  roles: [ { role: "readWrite", db: "easpos" } ]
+  roles: [ { role: "readWriteAnyDatabase", db: "admin" } ]
 })
 exit
 EOF
 
-echo "Adding Host..."
-ENTRIES=(
-    "127.0.0.1  mongo1"
-    "127.0.0.1  mongo2"
-    "127.0.0.1  mongo3"
-)
-
-# Loop through each entry and add it if it doesn't already exist
-for ENTRY in "${ENTRIES[@]}"; do
-    if ! grep -qF "$ENTRY" /etc/hosts; then
-        echo "Adding $ENTRY to /etc/hosts"
-        echo "$ENTRY" | sudo tee -a /etc/hosts
-    else
-        echo "$ENTRY already exists in /etc/hosts"
-    fi
-done
+#echo "Adding Host..."
+#ENTRIES=(
+#    "127.0.0.1  mongo1"
+#    "127.0.0.1  mongo2"
+#    "127.0.0.1  mongo3"
+#)
+#
+## Loop through each entry and add it if it doesn't already exist
+#for ENTRY in "${ENTRIES[@]}"; do
+#    if ! grep -qF "$ENTRY" /etc/hosts; then
+#        echo "Adding $ENTRY to /etc/hosts"
+#        echo "$ENTRY" | sudo tee -a /etc/hosts
+#    else
+#        echo "$ENTRY already exists in /etc/hosts"
+#    fi
+#done
 
 echo "App Started Successfully..."

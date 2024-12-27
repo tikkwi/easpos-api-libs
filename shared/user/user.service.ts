@@ -23,7 +23,8 @@ export abstract class AUserService<T extends BaseUser = BaseUser> extends ACoreS
       req.session.destroy((err) => responseError(req, res, err));
    }
 
-   async login({ email, userName, password, app, merchantId }: LoginDto) {
+   async login(req: Request, { email, userName, password, app, merchantId }: LoginDto) {
+      if (req.session.user) throw new BadRequestException('Already Logged In');
       const { data: user }: any = await this.repository.findOne({
          filter: {
             email,

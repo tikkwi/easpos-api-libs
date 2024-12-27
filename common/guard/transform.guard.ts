@@ -2,9 +2,7 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Request } from 'express';
 import { decrypt } from '@common/utils/encrypt';
 import { ModuleRef } from '@nestjs/core';
-import ContextService from '../core/context/context.service';
-import * as process from 'node:process';
-import { APP } from '../constant';
+import RequestContextService from '../core/request_context/request_context_service';
 import { ServerUnaryCall } from '@grpc/grpc-js';
 import { AuthUser } from '../dto/entity.dto';
 import MerchantConfig from '@app/merchant_config/merchant_config.schema';
@@ -14,11 +12,10 @@ export default class TransformGuard implements CanActivate {
    constructor(private readonly moduleRef: ModuleRef) {}
 
    async canActivate(context: ExecutionContext) {
-      const contextService = await this.moduleRef.resolve(ContextService);
-      await contextService.initialize();
+      const contextService = await this.moduleRef.resolve(RequestContextService);
+      const request: Request =
+         context.getType() === 'http' ? context.switchToHttp().getRequest() : undefined;
       if (context.getType() === 'http') {
-         const request: Request = context.switchToHttp().getRequest();
-
          let user: AuthUser, merchantConfig: MerchantConfig;
          if (request.session.user) user = await decrypt<AuthUser>(request.session.user);
          if (request.session.merchantConfig)
@@ -28,7 +25,7 @@ export default class TransformGuard implements CanActivate {
             user,
             merchantConfig,
             ip: request.ip,
-            requestedApp: process.env[APP],
+            // requestedApp: process.env[APP],
             userAgent: request.headers['user-agent'],
          });
       } else {
@@ -40,6 +37,7 @@ export default class TransformGuard implements CanActivate {
             requestedApp: meta.app as EApp,
          });
       }
+      if (request?.originalUrl !== '/login') await contextService.startSession();
 
       return true;
    }

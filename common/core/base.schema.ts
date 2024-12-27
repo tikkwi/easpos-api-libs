@@ -1,5 +1,4 @@
 import { SchemaTypes } from 'mongoose';
-import { EApp } from '@common/utils/enum';
 import AppProp from '../decorator/app_prop.decorator';
 
 export default class BaseSchema {
@@ -11,7 +10,4 @@ export default class BaseSchema {
 
    @AppProp({ type: Date, required: false })
    updatedAt: Date;
-
-   @AppProp({ type: String, enum: EApp })
-   app: EApp;
 }
