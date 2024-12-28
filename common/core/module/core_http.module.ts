@@ -1,9 +1,8 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 import { hours, minutes, ThrottlerModule } from '@nestjs/throttler';
-import { ConfigService } from '@nestjs/config';
 import { Redis } from 'ioredis';
-import { REDIS_LCL_CLIENT, TRT_TRS_HVY_F, TRT_TRS_HVY_S, TRT_TRS_HVY_T } from '@common/constant';
+import { REDIS_DCT_CLIENT } from '@common/constant';
 import CoreModule from './core.module';
 import ThrottlerStorageRedis from '../redis_throttler_storage.service';
 
@@ -11,26 +10,26 @@ import ThrottlerStorageRedis from '../redis_throttler_storage.service';
    imports: [
       CoreModule,
       ThrottlerModule.forRootAsync({
-         useFactory: async (config: ConfigService, client: Redis) => {
+         useFactory: async (client: Redis) => {
             return {
                throttlers: [
                   {
                      ttl: minutes(1),
-                     limit: config.get(TRT_TRS_HVY_F),
+                     limit: +process.env['TRT_Q'],
                   },
                   {
                      ttl: minutes(30),
-                     limit: config.get(TRT_TRS_HVY_S),
+                     limit: +process.env['TRT_M'],
                   },
                   {
                      ttl: hours(3),
-                     limit: config.get(TRT_TRS_HVY_T),
+                     limit: +process.env['TRT_L'],
                   },
                ],
                storage: new ThrottlerStorageRedis(client),
             };
          },
-         inject: [ConfigService, REDIS_LCL_CLIENT],
+         inject: [REDIS_DCT_CLIENT],
       }),
    ],
 })

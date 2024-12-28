@@ -33,7 +33,7 @@ export default class User extends BaseSchema {
    @AppProp({ type: String, unique: true }, { userName: true })
    userName: string;
 
-   @AppProp({ type: String, enum: EUser, default: EUser.Merchant, required: false })
+   @AppProp({ type: String, enum: EUser, default: EUser.Employee, required: false })
    type: EUser;
 
    @AppProp({ type: String, enum: EStatus, default: EStatus.Active })

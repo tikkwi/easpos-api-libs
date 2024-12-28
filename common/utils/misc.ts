@@ -16,6 +16,7 @@ import { ADMIN_URL, REPOSITORY } from '@common/constant';
 import { ModuleRef } from '@nestjs/core';
 import RequestContextService from '../core/request_context/request_context_service';
 import Repository from '../core/repository';
+import process from 'node:process';
 
 type RepositoryProviderType = { name: string; provide?: string };
 
@@ -105,3 +106,6 @@ export const authenticateBasicAuth = async ({ userName, password }: BasicAuth, c
    if (userName === usr && (await compare(pass, password))) return true;
    throw new ForbiddenException('Incorrect username or password');
 };
+
+export const getMongoUri = (id?: string) =>
+   `${process.env['MONGO_URI']}/${id ?? ''}?replicaSet=rs0&authSource=admin`;

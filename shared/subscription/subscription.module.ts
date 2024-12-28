@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
 import SubscriptionService from './subscription.service';
 import MailModule from '../mail/mail.module';
-import PurchaseModule from '../purchase/purchase.module';
 
 @Module({
-   imports: [MailModule, PurchaseModule],
+   imports: [MailModule],
    providers: [SubscriptionService],
    exports: [SubscriptionService],
 })

@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Redis } from 'ioredis';
-import { REDIS_LCL_CLIENT } from '@common/constant';
+import { REDIS_DCT_CLIENT } from '@common/constant';
 import { decrypt, encrypt } from '@common/utils/encrypt';
 import { days, minutes } from '@nestjs/throttler';
 import { ModuleRef } from '@nestjs/core';
@@ -13,7 +13,7 @@ authorized 1 day max even if subscription is expired..
 @Injectable()
 export default class AppRedisService {
    constructor(
-      @Inject(REDIS_LCL_CLIENT) private readonly db: Redis,
+      @Inject(REDIS_DCT_CLIENT) private readonly db: Redis,
       private readonly moduleRef: ModuleRef,
    ) {}
 

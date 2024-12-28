@@ -3,7 +3,7 @@ import { Controller } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { pull } from 'lodash';
 import { AllowedApp, AllowedUser } from '@common/dto/core.dto';
-import { APP, APPS, SKIP_APPS, SKIP_USERS, USERS } from '@common/constant';
+import { APPS, SKIP_APPS, SKIP_USERS, USERS } from '@common/constant';
 import { Apps, Users } from './allowance.decorator';
 import * as process from 'node:process';
 
@@ -24,8 +24,8 @@ export default function AppController(
          if (Array.isArray(allowedUsers)) clsUsers.splice(0, 0, ...allowedUsers);
          else {
             if (allowedUsers.default) clsUsers.splice(0, 0, ...allowedUsers.default);
-            if (allowedUsers[process.env[APP]])
-               clsUsers.splice(0, 0, ...allowedUsers[process.env[APP]]);
+            if (allowedUsers[process.env['APP']])
+               clsUsers.splice(0, 0, ...allowedUsers[process.env['APP']]);
          }
       }
 

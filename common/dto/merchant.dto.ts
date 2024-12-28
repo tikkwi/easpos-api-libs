@@ -6,12 +6,7 @@ import Merchant, { LoggedInMerchantUser } from '@common/schema/merchant.schema';
 import { IsAppString } from '../validator';
 import { CategoryDto } from '@shared/category/category.dto';
 
-export class CreateMerchantDto extends OmitType(CoreDto(Merchant), [
-   'offlinePurchase',
-   'subscriptionPurchase',
-   'status',
-   'type',
-]) {
+export class CreateMerchantDto extends OmitType(CoreDto(Merchant), ['status', 'type']) {
    @IsNotEmpty()
    @ValidateNested()
    @Type(() => CategoryDto)

@@ -5,7 +5,7 @@ import { CreateCampaignDto } from './campaign.dto';
 import ACoreController from '@common/core/core.controller';
 import CampaignService from './campaign.service';
 
-@AppController('campaign', { admin: [EAllowedUser.Admin], user: [EAllowedUser.Merchant] })
+@AppController('campaign', { admin: [EAllowedUser.Admin], user: [EAllowedUser.Employee] })
 export default class CampaignController extends ACoreController {
    constructor(protected readonly service: CampaignService) {
       super();

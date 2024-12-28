@@ -8,7 +8,7 @@ import CategoryService from '@shared/category/category.service';
 import MerchantConfig from '@app/merchant_config/merchant_config.schema';
 import AppContext from '../app_context.service';
 import { CONNECTION_POOL } from '../../constant';
-import process from 'node:process';
+import { getMongoUri } from '../../utils/misc';
 
 type UpdateContextType = { logTrail: Array<RequestLog> };
 
@@ -45,7 +45,7 @@ export default class RequestContextService {
       const id = this.get('user')?.merchantId;
       if (id) {
          if (CONNECTION_POOL.has(id)) return CONNECTION_POOL.get(id);
-         const conn = createConnection(`${process.env['MONGO_URI']}/${id}`);
+         const conn = createConnection(getMongoUri(id));
          CONNECTION_POOL.set(id, conn);
          return conn;
       }

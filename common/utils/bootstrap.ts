@@ -1,4 +1,3 @@
-import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { Transport } from '@nestjs/microservices';
 import { NestExpressApplication } from '@nestjs/platform-express';
@@ -7,7 +6,8 @@ import RedisStore from 'connect-redis';
 import * as session from 'express-session';
 import helmet from 'helmet';
 import { RedisClientType } from 'redis';
-import { APP, COOKIE_SECRET, REDIS_CLIENT } from '@common/constant';
+import { REDIS_CLIENT } from '@common/constant';
+import process from 'node:process';
 
 export default async function appBootstrap(
    module: any,
@@ -15,9 +15,10 @@ export default async function appBootstrap(
    ms?: { packages: string[]; module: any },
 ) {
    const app = await NestFactory.create<NestExpressApplication>(module);
-   const config = app.get<ConfigService>(ConfigService);
-   const currentApp = config.get<string>(APP);
-   const documentConfig = new DocumentBuilder().setTitle(currentApp).setVersion('1.0').build();
+   const documentConfig = new DocumentBuilder()
+      .setTitle(process.env['APP'])
+      .setVersion('1.0')
+      .build();
 
    // app.setGlobalPrefix(`${currentApp}_api`);
    const document = SwaggerModule.createDocument(app, documentConfig);
@@ -32,7 +33,7 @@ export default async function appBootstrap(
    app.use(
       session.default({
          store,
-         secret: COOKIE_SECRET,
+         secret: process.env['COOKIE_SECRET'],
          resave: false,
          saveUninitialized: false,
          cookie: {

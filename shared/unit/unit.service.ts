@@ -1,7 +1,7 @@
 import { BadRequestException, Inject } from '@nestjs/common';
 import Unit from './unit.schema';
 import ACoreService from '@common/core/core.service';
-import { ExchangeUnitDto, GetBaseUnitDto } from './unit.dto';
+import { CreateUnitDto, ExchangeUnitDto, GetBaseUnitDto } from './unit.dto';
 import AppService from '@common/decorator/app_service.decorator';
 import { REPOSITORY } from '@common/constant';
 import Repository from '@common/core/repository';
@@ -60,5 +60,10 @@ export default class UnitService extends ACoreService<Unit> {
       return {
          data: exchanged / targetAmount,
       };
+   }
+
+   async createUnit({ context, category: catDto, ...dto }: CreateUnitDto) {
+      const { data: category } = await context.get('categoryService').getCategory(catDto);
+      return this.repository.create({ ...dto, category });
    }
 }

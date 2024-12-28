@@ -1,6 +1,6 @@
 import { connect, connection } from 'mongoose';
 import { InternalServerErrorException } from '@nestjs/common';
-import process from 'node:process';
+import { getMongoUri } from '../utils/misc';
 
 type GetContextType = {
    connection: Connection;
@@ -12,7 +12,7 @@ export default class AppContext {
    static async startConnection() {
       if (this.#connection)
          throw new InternalServerErrorException('Connection Already Initialized..');
-      await connect(process.env['MONGO_URI']);
+      await connect(getMongoUri());
       this.#connection = connection;
    }
 
