@@ -19,9 +19,6 @@ declare global {
    type AuthCredential = import('@common/schema/auth_credential.schema').default;
    type Allowance = import('@shared/allowance/allowance.schema').default;
    type CustomerTier = import('@app/customer_tier/customer_tier.schema').default;
-   type MerchantConfig = import('@app/merchant_config/merchant_config.schema').default;
-
-   type CategoryService = import('@shared/category/category.service').default;
 
    type WeekDay = (typeof import('@common/constant/app.constant').WEEK_DAY)[number];
    type CalendarDate = (typeof import('@common/constant/app.constant').CALENDAR_DATE)[number];
