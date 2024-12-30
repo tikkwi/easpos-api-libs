@@ -10,7 +10,7 @@ import {
 import { SchemaTypes } from 'mongoose';
 import { EStatus, ETmpBlock, EUser } from '@common/utils/enum';
 import { MFA } from '@common/dto/entity.dto';
-import BaseSchema from '@common/core/base.schema';
+import BaseSchema from '@common/core/base/base.schema';
 import AppProp from '@common/decorator/app_prop.decorator';
 import Address from '../address/address.schema';
 import { IntersectionType, OmitType, PartialType, PickType } from '@nestjs/swagger';

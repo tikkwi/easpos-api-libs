@@ -1,16 +1,12 @@
-import { Inject } from '@nestjs/common';
-import { REPOSITORY } from '@common/constant';
-import ACoreService from '@common/core/core.service';
-import Repository from '@common/core/repository';
+import BaseService from '@common/core/base/base.service';
 import Address from './address.schema';
 import { CreateAddressDto } from './address.dto';
+import AppService from '@common/decorator/app_service.decorator';
 
-export default class AddressService extends ACoreService<Address> {
-   constructor(@Inject(REPOSITORY) protected readonly repository: Repository<Address>) {
-      super();
-   }
-
+@AppService()
+export default class AddressService extends BaseService<Address> {
    async create(dto: CreateAddressDto) {
-      return this.repository.create(dto);
+      const repository = await this.getRepository();
+      return repository.create(dto);
    }
 }

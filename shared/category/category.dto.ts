@@ -1,25 +1,12 @@
-import { CoreDto, FindByIdDto, FindByIdsDto, PartialTypeIf } from '@common/dto/core.dto';
+import { CoreDto, FindByIdDto, PartialTypeIf } from '@common/dto/core.dto';
 import Category from './category.schema';
 import { IsBoolean, IsEnum, IsMongoId, IsOptional, ValidateIf } from 'class-validator';
 import { ECategory } from '@common/utils/enum';
-import { IntersectionType, OmitType } from '@nestjs/swagger';
 
-class FindCategoryDto {
+export class CategoryFindByIdDto extends FindByIdDto {
    @IsEnum(ECategory)
-   type?: ECategory;
+   type: ECategory;
 }
-
-export class CreateCategoryDto extends CoreDto(Category) {}
-
-export class CategoryFindByIdDto extends IntersectionType(
-   FindCategoryDto,
-   OmitType(FindByIdDto, ['context']),
-) {}
-
-export class CategoryFindByIdsDto extends IntersectionType(
-   FindCategoryDto,
-   OmitType(FindByIdsDto, ['context']),
-) {}
 
 export class CategoryDto extends PartialTypeIf(({ id }) => !!id, CoreDto(Category)) {
    @ValidateIf((o) => !!!o.name)

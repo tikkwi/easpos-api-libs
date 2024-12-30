@@ -1,14 +1,12 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
-import Unit, { UnitSchema } from './unit.schema';
+import { UnitSchema } from './unit.schema';
 import UnitController from './unit.controller';
 import UnitService from './unit.service';
-import { getRepositoryProvider } from '@common/utils/misc';
+import { SCHEMA } from '@common/constant';
 
 @Module({
-   imports: [MongooseModule.forFeature([{ name: Unit.name, schema: UnitSchema }])],
    controllers: [UnitController],
-   providers: [UnitService, getRepositoryProvider({ name: Unit.name })],
+   providers: [UnitService, { provide: SCHEMA, useValue: UnitSchema }],
    exports: [UnitService],
 })
 export class UnitModule {}

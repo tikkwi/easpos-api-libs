@@ -1,3 +1,2 @@
 export const REDIS_CLIENT = 'REDIS_CLIENT';
-export const REDIS_DCT_CLIENT = 'REDIS_DCT_CLIENT';
 export const ADM_MRO_BSC_AUH = 'ADM_MRO_BSC_AUH';

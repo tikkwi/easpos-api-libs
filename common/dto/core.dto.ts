@@ -1,5 +1,5 @@
 import { Type } from '@nestjs/common';
-import { IntersectionType, OmitType, PartialType, PickType } from '@nestjs/swagger';
+import { OmitType, PartialType, PickType } from '@nestjs/swagger';
 import {
    IsBoolean,
    IsDateString,
@@ -10,7 +10,6 @@ import {
    Min,
 } from 'class-validator';
 import { EAllowedUser, EUserApp } from '@common/utils/enum';
-import RequestContextService from '../core/request_context/request_context_service';
 import { PopulateOptions, ProjectionType } from 'mongoose';
 import { IsRecord } from '../validator/is_record.validator';
 
@@ -18,10 +17,6 @@ import { IsRecord } from '../validator/is_record.validator';
 export type AllowedUser = keyof typeof EAllowedUser;
 
 export type AllowedApp = keyof typeof EUserApp | 'Any';
-
-export class BaseDto {
-   context: RequestContextService;
-}
 
 export class PaginationDto<T> {
    @IsNumber()
@@ -42,13 +37,8 @@ export class PaginationDto<T> {
    sort?: Record<keyof T, any>;
 }
 
-export function CoreDto<T>(
-   classRef: Type<T>,
-): Type<BaseDto & Omit<T, '_id' | 'createdAt' | 'updatedAt'>> {
-   class CoreDtoClass extends IntersectionType(
-      BaseDto,
-      OmitType(classRef as any, ['_id', 'createdAt', 'updatedAt'] as any),
-   ) {}
+export function CoreDto<T>(classRef: Type<T>): Type<Omit<T, '_id' | 'createdAt' | 'updatedAt'>> {
+   class CoreDtoClass extends OmitType(classRef as any, ['_id', 'createdAt', 'updatedAt'] as any) {}
 
    return CoreDtoClass as any;
 }
@@ -74,7 +64,7 @@ export function SelectionTypeIf<T, K extends keyof T, P extends boolean>(
    return classRef;
 }
 
-export class FindDto extends PartialType(BaseDto) {
+export class FindDto {
    @IsBoolean()
    lean?: boolean;
 

@@ -1,4 +1,4 @@
-export const REPOSITORY = 'REPOSITORY';
+export const SCHEMA = 'SCHEMA';
 export const PROMO_CODE = 'PROMO_CODE';
 export const PRODUCT = 'PRODUCT';
 export const PURCHASE = 'PURCHASE';

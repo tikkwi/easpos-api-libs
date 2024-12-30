@@ -1,27 +1,27 @@
-import { BadRequestException, Inject } from '@nestjs/common';
+import { BadRequestException } from '@nestjs/common';
 import Unit from './unit.schema';
-import ACoreService from '@common/core/core.service';
+import BaseService from '@common/core/base/base.service';
 import { CreateUnitDto, ExchangeUnitDto, GetBaseUnitDto } from './unit.dto';
 import AppService from '@common/decorator/app_service.decorator';
-import { REPOSITORY } from '@common/constant';
-import Repository from '@common/core/repository';
+import CategoryService from '../category/category.service';
 
 @AppService()
-export default class UnitService extends ACoreService<Unit> {
-   constructor(@Inject(REPOSITORY) protected readonly repository: Repository<Unit>) {
+export default class UnitService extends BaseService<Unit> {
+   constructor(private readonly categoryService: CategoryService) {
       super();
    }
 
    async getBase({ unitId, categoryId }: GetBaseUnitDto) {
+      const repository = await this.getRepository();
       const findBase = async (catId: string) =>
-         this.repository.findOne({
+         repository.findOne({
             filter: { isBase: true, category: catId },
             errorOnNotFound: true,
          });
 
       if (categoryId) return await findBase(categoryId);
       else {
-         const { data: unit } = await this.repository.findOne({
+         const { data: unit } = await repository.findOne({
             id: unitId,
             errorOnNotFound: true,
          });
@@ -30,11 +30,12 @@ export default class UnitService extends ACoreService<Unit> {
    }
 
    async exchangeUnit({ current, targetId }: ExchangeUnitDto) {
+      const repository = await this.getRepository();
       let exchanged = 0;
       let target,
          targetAmount = 1;
       if (targetId) {
-         const { data } = await this.repository.findOne({
+         const { data } = await repository.findOne({
             filter: { _id: targetId },
             errorOnNotFound: true,
          });
@@ -43,7 +44,7 @@ export default class UnitService extends ACoreService<Unit> {
       }
       for (const { amount, unitId } of current) {
          if (unitId) {
-            const { data } = await this.repository.findOne({
+            const { data } = await repository.findOne({
                filter: { _id: unitId },
                errorOnNotFound: true,
             });
@@ -62,8 +63,9 @@ export default class UnitService extends ACoreService<Unit> {
       };
    }
 
-   async createUnit({ context, category: catDto, ...dto }: CreateUnitDto) {
-      const { data: category } = await context.get('categoryService').getCategory(catDto);
-      return this.repository.create({ ...dto, category });
+   async createUnit({ category: catDto, ...dto }: CreateUnitDto) {
+      const { data: category } = await this.categoryService.getCategory(catDto);
+      const repository = await this.getRepository();
+      return repository.create({ ...dto, category });
    }
 }

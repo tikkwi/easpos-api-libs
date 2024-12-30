@@ -1,20 +1,15 @@
 import { pick } from 'lodash';
-import { Inject } from '@nestjs/common';
-import { REPOSITORY } from '@common/constant';
-import ACoreService from '@common/core/core.service';
+import BaseService from '@common/core/base/base.service';
 import Audit from './audit.schema';
-import Repository from '@common/core/repository';
-import { BaseDto } from '@common/dto/core.dto';
+import RequestContextService from '@common/core/request_context/request_context_service';
 
-export default class AuditService extends ACoreService<Audit> {
-   constructor(@Inject(REPOSITORY) protected readonly repository: Repository<Audit>) {
-      super();
-   }
-
-   async logRequest({ context }: BaseDto) {
+export default class AuditService extends BaseService<Audit> {
+   async logRequest() {
+      const repository = await this.getRepository();
+      const context = await this.moduleRef.resolve(RequestContextService);
       const user = context.get('user');
 
-      return await this.repository.create({
+      return await repository.create({
          submittedIP: context.get('ip'),
          sessionId: context.get('request')?.sessionID,
          crossAppRequest: !context.get('request'),

@@ -1,5 +1,5 @@
 import { SchemaTypes } from 'mongoose';
-import AppProp from '../decorator/app_prop.decorator';
+import AppProp from '../../decorator/app_prop.decorator';
 
 export default class BaseSchema {
    @AppProp({ type: SchemaTypes.ObjectId, auto: true })

@@ -3,7 +3,7 @@ import { IsEmail, IsEnum, IsMongoId, IsPhoneNumber, IsString } from 'class-valid
 import { SchemaTypes } from 'mongoose';
 import { EStatus, EUserApp } from '@common/utils/enum';
 import { Amount, MFA } from '@common/dto/entity.dto';
-import BaseSchema from '../core/base.schema';
+import BaseSchema from '../core/base/base.schema';
 import AppProp from '../decorator/app_prop.decorator';
 import Category from '@shared/category/category.schema';
 

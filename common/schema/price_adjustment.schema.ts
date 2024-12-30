@@ -2,7 +2,7 @@ import { SchemaTypes } from 'mongoose';
 import { ValidateIf } from 'class-validator';
 import { Amount, PeriodRange } from '../dto/entity.dto';
 import { EPriceAdjustment, EStatus } from '../utils/enum';
-import BaseSchema from '../core/base.schema';
+import BaseSchema from '../core/base/base.schema';
 import AppProp from '../decorator/app_prop.decorator';
 import Campaign from '@shared/campaign/campaign.schema';
 import Category from '@shared/category/category.schema';

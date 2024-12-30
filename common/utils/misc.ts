@@ -1,10 +1,4 @@
-import {
-   ForbiddenException,
-   HttpException,
-   HttpStatus,
-   InternalServerErrorException,
-   Provider,
-} from '@nestjs/common';
+import { ForbiddenException, HttpException, HttpStatus, Provider } from '@nestjs/common';
 import { ClientGrpc, ClientsModuleOptions, Transport } from '@nestjs/microservices';
 import { camelCase } from 'lodash';
 import { join } from 'path';
@@ -12,10 +6,7 @@ import { firstUpperCase } from './regex';
 import { EAuthCredential } from './enum';
 import { Request, Response } from 'express';
 import { compare } from 'bcryptjs';
-import { ADMIN_URL, REPOSITORY } from '@common/constant';
-import { ModuleRef } from '@nestjs/core';
-import RequestContextService from '../core/request_context/request_context_service';
-import Repository from '../core/repository';
+import { ADMIN_URL } from '@common/constant';
 import process from 'node:process';
 
 type RepositoryProviderType = { name: string; provide?: string };
@@ -46,17 +37,9 @@ const getGrpcClientOptions = (pkgs: string[], url: string): ClientsModuleOptions
       options: {
          package: `${pkg}_PACKAGE`,
          url,
-         protoPath: join(process.cwd(), `dist/common/src/proto/${pkg.toLowerCase()}.proto`),
+         protoPath: join(process.cwd(), `dist/common/proto/${pkg.toLowerCase()}.proto`),
       },
    }));
-
-const repositoryProvider = ({ provide, name }: RepositoryProviderType) => ({
-   provide: provide ?? REPOSITORY,
-   useFactory: (ctx: RequestContextService, moduleRef: ModuleRef) => {
-      return new Repository(ctx.getConnection().model(name), moduleRef);
-   },
-   inject: [RequestContextService, ModuleRef],
-});
 
 export const getGrpcClient = (
    models: string[],
@@ -65,28 +48,6 @@ export const getGrpcClient = (
    getGrpcClientOptions(models, url ?? ADMIN_URL),
    getGrpcServiceProviders(models),
 ];
-
-export function getRepositoryProvider(args: RepositoryProviderType): Provider;
-export function getRepositoryProvider(args: RepositoryProviderType[]): Provider[];
-export function getRepositoryProvider(
-   args: RepositoryProviderType | RepositoryProviderType[],
-): Provider | Provider[] {
-   if (Array.isArray(args)) {
-      const pvdr = [];
-      let defInc = false;
-      args.reduce((acc, { name, provide }) => {
-         if (!provide || provide === REPOSITORY) {
-            if (!defInc) defInc = true;
-            else throw new InternalServerErrorException();
-         }
-         if (acc.includes(provide)) throw new InternalServerErrorException();
-         acc.push(provide);
-         pvdr.push(repositoryProvider({ name, provide }));
-         return acc;
-      }, []);
-      return pvdr;
-   } else return repositoryProvider(args);
-}
 
 export const responseError = (req: Request, res: Response, err?: any) => {
    const status = err instanceof HttpException ? err.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;

@@ -1,4 +1,4 @@
-import BaseSchema from '@common/core/base.schema';
+import BaseSchema from '@common/core/base/base.schema';
 import { Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema()

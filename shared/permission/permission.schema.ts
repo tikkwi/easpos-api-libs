@@ -1,5 +1,5 @@
 import { IsUrl } from 'class-validator';
-import BaseSchema from '@common/core/base.schema';
+import BaseSchema from '@common/core/base/base.schema';
 import AppProp from '@common/decorator/app_prop.decorator';
 import { Schema, SchemaFactory } from '@nestjs/mongoose';
 

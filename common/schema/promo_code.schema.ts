@@ -1,4 +1,4 @@
-import BaseSchema from '../core/base.schema';
+import BaseSchema from '../core/base/base.schema';
 import AppProp from '../decorator/app_prop.decorator';
 import APriceAdjustment from './price_adjustment.schema';
 

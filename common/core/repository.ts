@@ -1,5 +1,5 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { Document, Model } from 'mongoose';
+import { Model } from 'mongoose';
 import { PAGE_SIZE } from '@common/constant';
 import { ModuleRef } from '@nestjs/core';
 import RequestContextService from './request_context/request_context_service';
@@ -13,9 +13,9 @@ export default class Repository<T> {
    async create(dto: CreateType<T>) {
       const context = await this.moduleRef.resolve(RequestContextService);
       return {
-         data: (await new this.model({ ...dto }).save({
+         data: await new this.model(dto).save({
             session: context.get('session'),
-         })) as Document<unknown, unknown, T> & T,
+         }),
       };
    }
 

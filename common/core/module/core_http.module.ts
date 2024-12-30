@@ -2,13 +2,19 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 import { hours, minutes, ThrottlerModule } from '@nestjs/throttler';
 import { Redis } from 'ioredis';
-import { REDIS_DCT_CLIENT } from '@common/constant';
+import { REDIS_CLIENT } from '@common/constant';
 import CoreModule from './core.module';
 import ThrottlerStorageRedis from '../redis_throttler_storage.service';
+import { RequestContextModule } from '../request_context/request_context_module';
+import BaseModule from '../base/base.module';
+import CategoryModule from '@shared/category/category.module';
 
 @Module({
    imports: [
+      RequestContextModule,
       CoreModule,
+      BaseModule,
+      CategoryModule,
       ThrottlerModule.forRootAsync({
          useFactory: async (client: Redis) => {
             return {
@@ -29,7 +35,7 @@ import ThrottlerStorageRedis from '../redis_throttler_storage.service';
                storage: new ThrottlerStorageRedis(client),
             };
          },
-         inject: [REDIS_DCT_CLIENT],
+         inject: [REDIS_CLIENT],
       }),
    ],
 })

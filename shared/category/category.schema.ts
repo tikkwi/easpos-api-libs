@@ -1,6 +1,6 @@
 import { ECategory } from '@common/utils/enum';
 import { Schema, SchemaFactory } from '@nestjs/mongoose';
-import BaseSchema from '@common/core/base.schema';
+import BaseSchema from '@common/core/base/base.schema';
 import AppProp from '@common/decorator/app_prop.decorator';
 
 @Schema()

@@ -11,10 +11,6 @@ echo "Redis Setup"
 sleep 5
 docker exec -i -e REDIS_LCL_USR="$REDIS_LCL_USR" -e REDIS_LCL_PWD="$REDIS_LCL_PWD" redis redis-cli <<EOF
   ACL SETUSER $REDIS_LCL_USR on >$REDIS_LCL_PWD ~* +@all
-  echo "Persistence ...."
-  CONFIG SET appendonly yes
-  CONFIG SET auto-aof-rewrite-percentage 100
-  CONFIG SET auto-aof-rewrite-min-size 64mb
   ACL SETUSER default off
   exit
 EOF

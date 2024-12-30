@@ -6,18 +6,20 @@ import { responseError } from '@common/utils/misc';
 import { EUser, EUserApp } from '@common/utils/enum';
 import { encrypt } from '@common/utils/encrypt';
 import { BaseUser } from './user.schema';
-import ACoreService from '@common/core/core.service';
+import BaseService from '@common/core/base/base.service';
 import AppRedisService from '@common/core/app_redis/app_redis.service';
 import { CreateUserDto, LoginDto } from './user.dto';
 import AppBrokerService from '@common/core/app_broker/app_broker.service';
 import { MerchantServiceMethods } from '@common/dto/merchant.dto';
 import AddressService from '../address/address.service';
+import CategoryService from '../category/category.service';
 
-export abstract class AUserService<T extends BaseUser = BaseUser> extends ACoreService<T> {
+export abstract class AUserService<T extends BaseUser = BaseUser> extends BaseService<T> {
    protected abstract readonly db: AppRedisService;
    protected abstract readonly appBroker: AppBrokerService;
    protected abstract readonly merchantService: MerchantServiceMethods;
    protected abstract readonly addressService: AddressService;
+   protected abstract readonly categoryService: CategoryService;
 
    async logout(req: Request, res: Response) {
       req.session.destroy((err) => responseError(req, res, err));
@@ -25,7 +27,8 @@ export abstract class AUserService<T extends BaseUser = BaseUser> extends ACoreS
 
    async login(req: Request, { email, userName, password, app, merchantId }: LoginDto) {
       if (req.session.user) throw new BadRequestException('Already Logged In');
-      const { data: user }: any = await this.repository.findOne({
+      const repository = await this.getRepository();
+      const { data: user }: any = await repository.findOne({
          filter: {
             email,
             userName,
@@ -81,11 +84,11 @@ export abstract class AUserService<T extends BaseUser = BaseUser> extends ACoreS
       request.session.user = await encrypt(JSON.stringify(authUser));
    }
 
-   protected async getCreateUserDto({ context, addressId, tagsDto, ...dto }: CreateUserDto) {
+   protected async getCreateUserDto({ addressId, tagsDto, ...dto }: CreateUserDto) {
       const tags = [];
       if (tagsDto)
          for (const tg of tagsDto) {
-            const { data: tag } = await context.get('categoryService').getCategory(tg);
+            const { data: tag } = await this.categoryService.getCategory(tg);
             tags.push(tag);
          }
       const { data: address } = await this.addressService.findById({ id: addressId });

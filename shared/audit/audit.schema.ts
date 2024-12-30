@@ -4,7 +4,7 @@ import { SchemaTypes } from 'mongoose';
 import { EApp } from '@common/utils/enum';
 import { UserProfile } from '@common/dto/entity.dto';
 import AppProp from '@common/decorator/app_prop.decorator';
-import BaseSchema from '@common/core/base.schema';
+import BaseSchema from '@common/core/base/base.schema';
 
 export class RequestLog {
    @IsNotEmpty()

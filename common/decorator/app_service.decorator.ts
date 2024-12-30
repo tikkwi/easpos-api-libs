@@ -3,7 +3,7 @@ import { omit } from 'lodash';
 
 export default function AppService() {
    return function (target: any) {
-      Injectable(target);
+      Injectable()(target);
 
       for (const key of Object.getOwnPropertyNames(target.prototype)) {
          const descriptor = Object.getOwnPropertyDescriptor(target.prototype, key);

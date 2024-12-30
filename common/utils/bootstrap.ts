@@ -8,12 +8,14 @@ import helmet from 'helmet';
 import { RedisClientType } from 'redis';
 import { REDIS_CLIENT } from '@common/constant';
 import process from 'node:process';
+import AppContext from '../core/app_context.service';
 
 export default async function appBootstrap(
    module: any,
    port: number,
    ms?: { packages: string[]; module: any },
 ) {
+   await AppContext.startConnection();
    const app = await NestFactory.create<NestExpressApplication>(module);
    const documentConfig = new DocumentBuilder()
       .setTitle(process.env['APP'])
@@ -51,7 +53,7 @@ export default async function appBootstrap(
       const [pkg, pth] = ms.packages.reduce(
          (acc, cur) => {
             acc[0].push(`${cur}_PACKAGE`);
-            acc[1].push(`dist/common/src/proto/${cur.toLowerCase()}.proto`);
+            acc[1].push(`dist/common/proto/${cur.toLowerCase()}.proto`);
             return acc;
          },
          [[], []],

@@ -1,5 +1,5 @@
 import { Get, Param } from '@nestjs/common';
-import ACoreService from './core.service';
+import ACoreService from './base/base.service';
 
 export default abstract class ACoreController {
    protected abstract service: ACoreService<any>;

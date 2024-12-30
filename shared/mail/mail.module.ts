@@ -1,12 +1,10 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
-import Mail, { MailSchema } from './mail.schema';
+import { MailSchema } from './mail.schema';
 import MailService from './mail.service';
-import { getRepositoryProvider } from '@common/utils/misc';
+import { SCHEMA } from '@common/constant';
 
 @Module({
-   imports: [MongooseModule.forFeature([{ name: Mail.name, schema: MailSchema }])],
-   providers: [MailService, getRepositoryProvider({ name: Mail.name })],
+   providers: [MailService, { provide: SCHEMA, useValue: MailSchema }],
    exports: [MailService],
 })
 export default class MailModule {}

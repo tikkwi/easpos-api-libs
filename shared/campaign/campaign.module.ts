@@ -1,13 +1,12 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
-import Campaign, { CampaignSchema } from './campaign.schema';
+import { CampaignSchema } from './campaign.schema';
 import CampaignController from './campaign.controller';
 import CampaignService from './campaign.service';
+import { SCHEMA } from '@common/constant';
 
 @Module({
-   imports: [MongooseModule.forFeature([{ name: Campaign.name, schema: CampaignSchema }])],
    controllers: [CampaignController],
-   providers: [CampaignService],
+   providers: [CampaignService, { provide: SCHEMA, useValue: CampaignSchema }],
    exports: [CampaignService],
 })
 export default class CampaignModule {}

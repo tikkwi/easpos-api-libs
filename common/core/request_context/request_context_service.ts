@@ -1,10 +1,7 @@
-import { Inject, Injectable, InternalServerErrorException, Scope } from '@nestjs/common';
-import { REQUEST } from '@nestjs/core';
+import { Injectable, InternalServerErrorException, Scope } from '@nestjs/common';
 import { Request } from 'express';
 import { ClientSession, createConnection } from 'mongoose';
-import { InjectConnection } from '@nestjs/mongoose';
 import { RequestLog } from '@shared/audit/audit.schema';
-import CategoryService from '@shared/category/category.service';
 import MerchantConfig from '@app/merchant_config/merchant_config.schema';
 import AppContext from '../app_context.service';
 import { CONNECTION_POOL } from '../../constant';
@@ -24,7 +21,6 @@ type SetContextType = UpdateContextType & {
 type GetContextType = SetContextType & {
    request?: Request;
    session: ClientSession;
-   categoryService: CategoryService;
 };
 
 @Injectable({ scope: Scope.REQUEST })
@@ -35,11 +31,7 @@ export default class RequestContextService {
    #userAgent: EApp;
    #logTrail: Array<RequestLog> = [];
 
-   constructor(
-      @Inject(REQUEST) private readonly request: Request,
-      @InjectConnection() private readonly connection: Connection,
-      private readonly categoryService: CategoryService,
-   ) {}
+   constructor() {}
 
    getConnection() {
       const id = this.get('user')?.merchantId;
