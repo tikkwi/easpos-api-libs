@@ -1,8 +1,8 @@
 import { Get, Param } from '@nestjs/common';
-import ACoreService from './base/base.service';
+import BaseService from './base/base.service';
 
 export default abstract class ACoreController {
-   protected abstract service: ACoreService<any>;
+   protected abstract service: BaseService<any>;
 
    @Get(':id')
    get(@Param('id') id: string) {

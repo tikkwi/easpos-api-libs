@@ -12,6 +12,14 @@ import {
 import { EType } from '../utils/enum';
 import { isBoolean } from 'lodash';
 
+type IsRecordConstraintType<K, T> = {
+   value?: T;
+   key?: K;
+   isValueArray?: boolean;
+   keyVldFun?: (key: K) => boolean;
+   valVldFun?: (val: T) => boolean;
+};
+
 @ValidatorConstraint({ async: false })
 class IsRecordConstraint implements ValidatorConstraintInterface {
    validateType(value: any, type: EType, isArray: boolean) {
@@ -27,16 +35,17 @@ class IsRecordConstraint implements ValidatorConstraintInterface {
    }
 
    validate(value: any, { constraints }: ValidationArguments): boolean {
-      const kT: EType | undefined = constraints[0];
-      const vT: EType | undefined = constraints[1];
-      const isArray: boolean = constraints[2];
+      const { key: kT, value: vT, isValueArray: isArray, keyVldFun, valVldFun } = constraints[0];
+
+      if ((!kT && !keyVldFun) || (!vT && !valVldFun)) return false;
 
       return (
          IsObject(value) &&
          Object.entries(value).every(([k, v]: any) => {
-            return this.validateType(k, kT ?? EType.String, false) && vT
-               ? this.validateType(v, vT, isArray)
-               : true;
+            return (
+               (keyVldFun ? keyVldFun(k) : this.validateType(k, kT ?? EType.String, false)) &&
+               (valVldFun ? valVldFun(v) : vT ? this.validateType(v, vT, isArray) : true)
+            );
          })
       );
    }
@@ -47,15 +56,13 @@ class IsRecordConstraint implements ValidatorConstraintInterface {
 }
 
 export function IsRecord<K extends EType.String | EType.Number, T extends EType>(
-   value?: T,
-   key?: K,
-   isValueArray?: boolean,
+   constraints?: IsRecordConstraintType<K, T>,
 ) {
    return function ({ constructor }: any, propertyName: string) {
       registerDecorator({
          target: constructor,
          propertyName,
-         constraints: [key, value, isValueArray],
+         constraints: [constraints],
          validator: IsRecordConstraint,
       });
    };

@@ -49,7 +49,7 @@ export default function AppProp(
 
       if (prop) Prop(pOpt)(target, key);
       ApiProperty({
-         type: pOpt.type,
+         // type: pOpt.type, // NOTE: trigger circular dependency issue
          enum: pOpt.enum as any,
          example: pOpt.enum ? Object.keys(pOpt.enum)[0] : userName ? 'easUser11' : undefined,
          description: userName ? 'Unique username with contain letters & numbers only' : undefined,
@@ -61,7 +61,7 @@ export default function AppProp(
          (Array.isArray(pOpt.type) && pOpt.type[0].type?.name === 'SchemaMixed')
       ) {
          ValidateNested({ each: Array.isArray(pOpt.type) ? true : undefined })(target, key);
-         if (options.type) Type(() => options.type)(target, key);
+         if (options?.type) Type(() => options.type)(target, key);
       }
       if (!pOpt.required) IsOptional()(target, key);
       if (pOpt.enum && validateEnum) IsEnum(pOpt.enum as any)(target, key);

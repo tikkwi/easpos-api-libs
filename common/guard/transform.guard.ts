@@ -5,7 +5,6 @@ import { ModuleRef } from '@nestjs/core';
 import RequestContextService from '../core/request_context/request_context_service';
 import { ServerUnaryCall } from '@grpc/grpc-js';
 import { AuthUser } from '../dto/entity.dto';
-import MerchantConfig from '@app/merchant_config/merchant_config.schema';
 
 @Injectable()
 export default class TransformGuard implements CanActivate {
@@ -16,14 +15,11 @@ export default class TransformGuard implements CanActivate {
       const request: Request =
          context.getType() === 'http' ? context.switchToHttp().getRequest() : undefined;
       if (context.getType() === 'http') {
-         let user: AuthUser, merchantConfig: MerchantConfig;
+         let user: AuthUser;
          if (request.session.user) user = await decrypt<AuthUser>(request.session.user);
-         if (request.session.merchantConfig)
-            merchantConfig = await decrypt<MerchantConfig>(request.session.merchantConfig);
 
          contextService.set({
             user,
-            merchantConfig,
             ip: request.ip,
             // requestedApp: process.env[APP],
             userAgent: request.headers['user-agent'],

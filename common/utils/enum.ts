@@ -6,8 +6,8 @@ export enum EApp {
 export enum EUserApp {
    SuperAdmin = 'SuperAdmin',
    Seller = 'Seller',
-   Owner = 'Owner',
    Admin = 'Admin',
+   Employee = 'Employee',
    Partner = 'Partner',
    Customer = 'Customer',
 }
@@ -141,16 +141,18 @@ export enum ECategory {
    StateProvince = 'StateProvince',
    Country = 'Country',
    Unit = 'Unit',
-   ProductTag = 'ProductTag',
-   ProductVariantTag = 'ProductVariantTag',
-   ProductUnitTag = 'ProductUnitTag',
    PayrollAdjustment = 'PayrollAdjustment',
-   MerchantTag = 'MerchantTag',
-   CustomerTag = 'CustomerTag',
-   PartnerTag = 'PartnerTag',
    Ingredient = 'Ingredient',
    SupplierStock = 'SupplierStock',
    Inspection = 'Inspection',
+   MerchantSubscription = 'MerchantSubscription',
+   ProductTag = 'ProductTag',
+   ProductVariantTag = 'ProductVariantTag',
+   ProductUnitTag = 'ProductUnitTag',
+   MerchantTag = 'MerchantTag',
+   CustomerTag = 'CustomerTag',
+   PartnerTag = 'PartnerTag',
+   MerchantSubscriptionTag = 'MerchantSubscriptionTag',
 }
 
 export enum EExpenseScope {

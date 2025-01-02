@@ -2,7 +2,6 @@ import { Injectable, InternalServerErrorException, Scope } from '@nestjs/common'
 import { Request } from 'express';
 import { ClientSession, createConnection } from 'mongoose';
 import { RequestLog } from '@shared/audit/audit.schema';
-import MerchantConfig from '@app/merchant_config/merchant_config.schema';
 import AppContext from '../app_context.service';
 import { CONNECTION_POOL } from '../../constant';
 import { getMongoUri } from '../../utils/misc';
@@ -12,7 +11,6 @@ type UpdateContextType = { logTrail: Array<RequestLog> };
 type SetContextType = UpdateContextType & {
    user: AuthUser;
    merchant: AuthMerchant;
-   merchantConfig: AppSchema<MerchantConfig>;
    ip: string;
    requestedApp: EApp;
    userAgent: string;

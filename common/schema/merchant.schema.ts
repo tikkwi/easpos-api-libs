@@ -18,7 +18,6 @@ export class LoggedInMerchantUser {
    app: EUserApp;
 }
 
-//TODO create default and base schemas for merchant (eg. base customer tier)
 @Schema()
 export default class Merchant extends BaseSchema {
    @AppProp({ type: String })
@@ -58,14 +57,6 @@ export default class Merchant extends BaseSchema {
 
    @AppProp({ type: [SchemaTypes.Mixed], default: 0 }, { type: Amount })
    totalSpend: Amount[];
-
-   //TODO subscription fields
-
-   // @AppProp({ type: SchemaTypes.ObjectId, ref: 'Purchase', required: false })
-   // offlinePurchase?: AppSchema<Purchase>;
-   //
-   // @AppProp({ type: SchemaTypes.ObjectId, ref: 'PurchasedSubscription' })
-   // subscriptionPurchase?: AppSchema<PurchasedSubscription>;
 }
 
 export const MerchantSchema = SchemaFactory.createForClass(Merchant);
