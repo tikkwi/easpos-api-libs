@@ -8,7 +8,7 @@ import RequestContextService from '../request_context/request_context_service';
 
 /*
 NOTE: cache authorized status up to 1 day which mean employee may able to
-authorized 1 day max even if subscription is expired..
+authorized 1 day max even if app_subscription is expired..
 */
 @Injectable()
 export default class AppRedisService {

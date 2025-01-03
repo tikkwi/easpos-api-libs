@@ -15,9 +15,9 @@ declare global {
    type EStatus = import('@common/utils/enum').EStatus;
    type EUserApp = import('@common/utils/enum').EUserApp;
 
-   type Merchant = import('@common/schema/merchant.schema').default;
-   type Subscription = import('@common/schema/subscription.schema').default;
-   type AuthCredential = import('@common/schema/auth_credential.schema').default;
+   type Merchant = import('../schema/ms/merchant.schema').default;
+   type Subscription = import('../schema/ms/app_subscription.schema').default;
+   type AuthCredential = import('../schema/ms/auth_credential.schema').default;
    type Allowance = import('@shared/allowance/allowance.schema').default;
    type CustomerTier = import('@app/customer_tier/customer_tier.schema').default;
 

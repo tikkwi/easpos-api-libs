@@ -2,7 +2,7 @@ import { OmitType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsMongoId, IsNotEmpty, ValidateNested } from 'class-validator';
 import { CoreDto, FindByIdDto } from './core.dto';
-import Merchant, { LoggedInMerchantUser } from '@common/schema/merchant.schema';
+import Merchant, { LoggedInMerchantUser } from '../schema/ms/merchant.schema';
 import { IsAppString } from '../validator';
 import { CategoryDto } from '@shared/category/category.dto';
 

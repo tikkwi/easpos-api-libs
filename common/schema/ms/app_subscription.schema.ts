@@ -1,14 +1,14 @@
 import { Schema, SchemaFactory } from '@nestjs/mongoose';
-import AppProp from '../decorator/app_prop.decorator';
-import Purchase from '@app/purchase/purchase.schema';
+import AppProp from '../../decorator/app_prop.decorator';
+import Purchase from '@shared/purchase/purchase.schema';
 import { SchemaTypes } from 'mongoose';
-import { PriceAdjustment } from '@app/price_adjustment/price_adjustment.schema';
-import SubscriptionType from '@app/subscription_type/subscription_type.schema';
-import { EStatus } from '../utils/enum';
+import { SubPriceAdjustment } from './sub_price_adjustment.schema';
+import AppSubscriptionType from './app_subscription_type.schema';
+import { EStatus } from '../../utils/enum';
 import { IsBoolean } from 'class-validator';
 
 @Schema()
-export default class Subscription extends Purchase {
+export default class AppSubscription extends Purchase {
    @AppProp({ type: Date })
    startDate: Date;
 
@@ -31,13 +31,13 @@ export default class Subscription extends Purchase {
    sentPreExpiredMail: boolean;
 
    @AppProp({ type: [{ type: SchemaTypes.ObjectId, ref: 'SubscriptionType' }] })
-   appliedAdjustments: Array<AppSchema<PriceAdjustment>>;
+   appliedAdjustments: Array<AppSchema<SubPriceAdjustment>>;
 
    @AppProp({ type: SchemaTypes.ObjectId, ref: 'SubscriptionType' })
-   subscriptionType: AppSchema<SubscriptionType>;
+   subscriptionType: AppSchema<AppSubscriptionType>;
 
    @AppProp({ type: SchemaTypes.ObjectId, ref: 'Merchant' })
    merchant: AppSchema<Merchant>;
 }
 
-export const SubscriptionSchema = SchemaFactory.createForClass(Subscription);
+export const AppSubscriptionSchema = SchemaFactory.createForClass(AppSubscription);

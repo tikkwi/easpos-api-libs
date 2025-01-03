@@ -2,9 +2,9 @@ import { Schema, SchemaFactory } from '@nestjs/mongoose';
 import { hashSync } from 'bcryptjs';
 import { IsNotEmpty, IsOptional, IsString, IsUrl, ValidateIf } from 'class-validator';
 import { SchemaTypes } from 'mongoose';
-import { EAuthCredential } from '@common/utils/enum';
-import BaseSchema from '../core/base/base.schema';
-import AppProp from '../decorator/app_prop.decorator';
+import { EAuthCredential } from '../../utils/enum';
+import BaseSchema from '../../core/base/base.schema';
+import AppProp from '../../decorator/app_prop.decorator';
 
 export type TAuthCredential = Omit<AuthCredential, '_id'> & { id: string };
 
