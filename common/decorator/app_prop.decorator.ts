@@ -15,7 +15,7 @@ import { regex } from '@common/utils/regex';
 import { Type } from 'class-transformer';
 
 type Options = {
-   validators?: Array<{ func: any; args: Array<any> }>;
+   validators?: Array<{ func: any; args?: Array<any> }>;
    userName?: boolean;
    validateString?: boolean;
    validateEnum?: boolean;

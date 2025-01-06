@@ -26,9 +26,6 @@ export default abstract class APriceAdjustment extends BaseSchema {
    @AppProp({ type: Boolean })
    isPromo: boolean;
 
-   @AppProp({ type: Boolean })
-   applyWholeSale: boolean;
-
    //TODO: validate in promo-code for not creating promo code for auto trigger
    @AppProp({ type: Boolean })
    autoTrigger: boolean;
