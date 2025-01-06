@@ -63,7 +63,7 @@ export abstract class AUserService<T extends BaseUser = BaseUser> extends BaseSe
             action: (meta) =>
                this.merchantService.loginUser(
                   {
-                     id: merchantId,
+                     merchantId: merchantId,
                      userId: user.id,
                      name: `${user.firstName} ${user.lastName}`,
                      app,

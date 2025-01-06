@@ -57,7 +57,7 @@ export default class AppSubscriptionType {
    @AppProp({ type: Number, default: 1 })
    baseAdminCount: number;
 
-   @AppProp({ type: Number, default: 1 })
+   @AppProp({ type: Number, default: 7 })
    preSubEndMail: number;
 
    @AppProp({ type: SchemaTypes.Mixed }, { type: SubscriptionPrice })

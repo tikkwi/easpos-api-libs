@@ -9,7 +9,7 @@ import { ModuleRef, Reflector } from '@nestjs/core';
 import { intersection } from 'lodash';
 import { Request } from 'express';
 import { ServerUnaryCall } from '@grpc/grpc-js';
-import { authenticateBasicAuth, getServiceToken } from '@common/utils/misc';
+import { authenticateBasicAuth } from '@common/utils/misc';
 import { APPS, AUTH_CREDENTIAL, MERCHANT, USERS } from '@common/constant';
 import { AuthCredentialServiceMethods } from '@common/dto/auth_credential.dto';
 import { AllowedUser } from '@common/dto/core.dto';
@@ -17,6 +17,7 @@ import { EAllowedUser, EApp, EUser } from '@common/utils/enum';
 import RequestContextService from '../core/request_context/request_context_service';
 import { MerchantServiceMethods } from '../dto/merchant.dto';
 import AppBrokerService from '../core/app_broker/app_broker.service';
+import { getServiceToken } from '../utils/regex';
 
 @Injectable()
 export default class AuthGuard implements CanActivate {

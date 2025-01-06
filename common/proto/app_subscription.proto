@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package APP_SUBSCRIPTION_PACKAGE;
+
+import 'shared/enum.proto';
+import 'sub_price_adjustment.proto';
+import 'app_subscription_type.proto';
+import 'merchant.proto';
+
+
+message AppSubscription {
+  string id = 1;
+  string startDate = 2;
+  optional string endDate = 3;
+  shared.EStatus status = 4;
+  int32 extraEmployeeCount = 5;
+  int32 extraAdminCount = 6;
+  bool sendExpiredMail = 7;
+  bool sendPreExpiredMail = 8;
+  repeated SUB_PRICE_ADJUSTMENT_PACKAGE.SubPriceAdjustment appliedAdjustments = 9;
+  APP_SUBSCRIPTION_TYPE_PACKAGE.AppSubscriptionType subscriptionType = 10;
+  MERCHANT_PACKAGE.Merchant merchant = 11;
+}
+

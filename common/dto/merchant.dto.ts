@@ -15,7 +15,7 @@ export class CreateMerchantDto extends OmitType(CoreDto(Merchant), ['status', 't
 
 export class MerchantUserLoginDto extends LoggedInMerchantUser {
    @IsMongoId()
-   id: string;
+   merchantId: string;
 }
 
 export class MerchantVerifyDto extends OmitType(FindByIdDto, ['errorOnNotFound']) {
@@ -25,6 +25,8 @@ export class MerchantVerifyDto extends OmitType(FindByIdDto, ['errorOnNotFound']
 
 export interface MerchantServiceMethods {
    loginUser(dto: MerchantUserLoginDto, meta: Metadata): Promise<{ data: AuthMerchant }>;
+
+   nhtp_createMerchant(dto: CreateMerchantDto, meta: Metadata): Promise<{ data: Merchant }>;
 
    findById(dto: FindByIdDto, meta: Metadata): Promise<{ data: Merchant }>;
 
