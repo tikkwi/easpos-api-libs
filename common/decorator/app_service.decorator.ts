@@ -12,7 +12,13 @@ export default function AppService() {
             descriptor.value = async function (...args) {
                const context = args[0].context;
                const ct = args[0].ct;
-               if (key.startsWith('nc_') && ct) throw new ForbiddenException();
+               if (
+                  (key.startsWith('nc_') && ct) ||
+                  (ct &&
+                     ((key.startsWith('nht_') && ct === 'http') ||
+                        (key.startsWith('nrp_') && ct === 'rpc')))
+               )
+                  throw new ForbiddenException();
                const res = await oriMeth.apply(this, args);
                context.update('logTrail', (log) => {
                   const reqLog = {

@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, Scope } from '@nestjs/common';
+import { ContextType, Injectable, InternalServerErrorException, Scope } from '@nestjs/common';
 import { Request } from 'express';
 import { ClientSession, createConnection } from 'mongoose';
 import { RequestLog } from '@shared/audit/audit.schema';
@@ -14,6 +14,7 @@ type SetContextType = UpdateContextType & {
    ip: string;
    requestedApp: EApp;
    userAgent: string;
+   contextType: ContextType;
 };
 
 type GetContextType = SetContextType & {

@@ -6,12 +6,13 @@ import {
    NestMiddleware,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { authenticateBasicAuth, getServiceToken } from '@common/utils/misc';
+import { authenticateBasicAuth } from '@common/utils/misc';
 import { AUTH_CREDENTIAL } from '@common/constant';
 import { AuthCredentialServiceMethods } from '@common/dto/auth_credential.dto';
 import { EApp } from '@common/utils/enum';
 import AppBrokerService from '../core/app_broker/app_broker.service';
 import process from 'node:process';
+import { getServiceToken } from '../utils/regex';
 
 @Injectable()
 export default class BasicAuthMiddleware implements NestMiddleware {

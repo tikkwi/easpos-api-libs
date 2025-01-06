@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package shared;
+
+message FindByIdDto {
+  string id = 1;
+}
+
+message CategoryDto {
+  string id = 1;
+  optional string name = 2;
+  optional string type = 3;
+}

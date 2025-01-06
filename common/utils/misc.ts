@@ -1,8 +1,7 @@
 import { ForbiddenException, HttpException, HttpStatus, Provider } from '@nestjs/common';
 import { ClientGrpc, ClientsModuleOptions, Transport } from '@nestjs/microservices';
-import { camelCase } from 'lodash';
 import { join } from 'path';
-import { firstUpperCase } from './regex';
+import { getServiceToken } from './regex';
 import { EAuthCredential } from './enum';
 import { Request, Response } from 'express';
 import { compare } from 'bcryptjs';
@@ -12,8 +11,6 @@ import process from 'node:process';
 type RepositoryProviderType = { name: string; provide?: string };
 
 export const any = (obj: any, key: string) => obj[key];
-
-export const getServiceToken = (model: string) => `${firstUpperCase(camelCase(model))}Service`;
 
 export const getBasicAuthType = (path: string) => {
    if (/.*\/(swagger$)/.test(path)) return EAuthCredential.Swagger;

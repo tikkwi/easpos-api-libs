@@ -2,7 +2,7 @@ import { Schema, SchemaFactory } from '@nestjs/mongoose';
 import { IsEmail, IsEnum, IsMongoId, IsPhoneNumber, IsString } from 'class-validator';
 import { SchemaTypes } from 'mongoose';
 import { EStatus, EUserApp } from '../../utils/enum';
-import { Amount, MFA } from '../../dto/entity.dto';
+import { MFA } from '../../dto/entity.dto';
 import BaseSchema from '../../core/base/base.schema';
 import AppProp from '../../decorator/app_prop.decorator';
 import Category from '@shared/category/category.schema';
@@ -48,15 +48,6 @@ export default class Merchant extends BaseSchema {
 
    @AppProp({ type: String, enum: EStatus, default: EStatus.Pending })
    status: EStatus;
-
-   @AppProp({ type: Boolean, default: false, required: false })
-   sentSubEndMail?: boolean;
-
-   @AppProp({ type: Boolean, default: false, required: false })
-   sentPreSubEndMail?: boolean;
-
-   @AppProp({ type: [SchemaTypes.Mixed], default: 0 }, { type: Amount })
-   totalSpend: Amount[];
 }
 
 export const MerchantSchema = SchemaFactory.createForClass(Merchant);

@@ -14,6 +14,8 @@ export default class TransformGuard implements CanActivate {
       const contextService = await this.moduleRef.resolve(RequestContextService);
       const request: Request =
          context.getType() === 'http' ? context.switchToHttp().getRequest() : undefined;
+      if (request?.originalUrl !== '/login') await contextService.startSession();
+      contextService.set({ contextType: context.getType() });
       if (context.getType() === 'http') {
          let user: AuthUser;
          if (request.session.user) user = await decrypt<AuthUser>(request.session.user);
@@ -33,7 +35,6 @@ export default class TransformGuard implements CanActivate {
             requestedApp: meta.app as EApp,
          });
       }
-      if (request?.originalUrl !== '/login') await contextService.startSession();
 
       return true;
    }

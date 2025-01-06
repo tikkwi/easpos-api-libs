@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package APP_SUBSCRIPTION_TYPE_PACKAGE;
+
+import 'shared/enum.proto';
+import 'shared/core.proto';
+
+
+message ExtraUserPrice {
+  int32 userBelow = 1;
+  shared.Amount pricePerUser = 2;
+}
+
+message SubscriptionPrice {
+  string periodBelow = 1;
+  shared.Amount price = 2;
+  ExtraUserPrice extraEmployeePrice = 3;
+  ExtraUserPrice extraAdminPrice = 4;
+}
+
+message AppSubscriptionType {
+  string id = 1;
+  bool isOffline = 2;
+  shared.Category type = 3;
+  repeated shared.Category tags = 4;
+  shared.Category category = 5;
+  int32 baseEmployeeCount = 6;
+  int32 baseAdminCount = 7;
+  SubscriptionPrice price = 8;
+  int32 preSubEndMail = 9;
+}
+

@@ -6,46 +6,84 @@ import "address.proto";
 import "user.proto";
 import "shared/enum.proto";
 import "shared/core.proto";
+import 'shared/dto.proto';
+import 'app_subscription.proto';
 
 service MerchantService {
-    rpc CreateMerchant(CreateMerchantDto) returns (MerchantReturn){}
-    rpc TmpTst(Empty) returns (TstReturn){}
+  rpc LoginUser(MerchantUserLoginDto) returns (AuthMerchantReturn) {}
+  rpc CreateMerchant(CreateMerchantDto) returns (MerchantReturn){}
+  rpc FindById(shared.FindByIdDto) returns (MerchantReturn){}
+  rpc MerchantWithAuth(shared.FindByIdDto) returns (AuthMerchantReturn){}
+  rpc TmpTst(Empty) returns (TstReturn){}
+}
+
+message MFA {
+  string code = 1;
+  string expireAt = 2;
+  shared.EMfa type = 3;
+}
+
+message LoggedInMerchantUser {
+  string userId = 1;
+  string name = 2;
+  string app = 3;
 }
 
 message Merchant {
-    string name = 1;
-    string mail = 2;
-    string mobileNo = 3;
-    shared.ESubscription subscriptionType = 4;
-    shared.EStatus status = 5;
-    ADDRESS_PACKAGE.Address address = 6;
-    shared.Category category = 7;
-    USER_PACKAGE.User user = 8;
+  string id = 1;
+  string name = 2;
+  string mail = 3;
+  string mobileNo = 4;
+  optional MFA mfa = 5;
+  bool verified = 6;
+  bool demoClaimed = 7;
+  shared.Category type = 8;
+  repeated LoggedInMerchantUser loggedInUsers = 9;
+  shared.EStatus status = 10;
+}
+
+message MerchantUserLoginDto {
+  string userId = 1;
+  string name = 2;
+  string app = 3;
+  string merchantId = 4;
 }
 
 message CreateMerchantDto {
-    string name = 1;
-    string mail = 2;
-    string mobileNo = 3;
-    optional shared.ESubscription subscriptionType = 4;
-    ADDRESS_PACKAGE.CreateAddressDto address = 5;
-    shared.CategoryDto category = 6;
-    USER_PACKAGE.CreateUserDto user = 7;
+  string name = 1;
+  string mail = 2;
+  string mobileNo = 3;
+  optional shared.ESubscription subscriptionType = 4;
+  ADDRESS_PACKAGE.CreateAddressDto address = 5;
+  shared.Category category = 6;
+  USER_PACKAGE.CreateUserDto user = 7;
 }
 
-message Empty {}
-
 message TstReturn {
-    int32 code = 1;
-    optional string message = 2;
-    string data = 3;
-    optional string token = 4;
+  int32 code = 1;
+  optional string message = 2;
+  optional string token = 4;
+  string data = 3;
 }
 
 message MerchantReturn {
-    int32 code = 1;
-    optional string message = 2;
-    Merchant data = 3;
-    optional string token = 4;
+  int32 code = 1;
+  optional string message = 2;
+  optional string token = 3;
+  Merchant data = 4;
+}
+
+
+message AuthMerchant {
+  optional Merchant merchant = 1;
+  optional APP_SUBSCRIPTION_PACKAGE.AppSubscription subscription = 2;
+  optional bool isSubActive = 3;
+}
+
+message AuthMerchantReturn {
+  int32 code = 1;
+  optional string message = 2;
+  optional string token = 3;
+  AuthMerchant data = 4;
 }
 

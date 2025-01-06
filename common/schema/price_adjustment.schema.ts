@@ -23,12 +23,6 @@ export default abstract class APriceAdjustment extends BaseSchema {
    @AppProp({ type: Boolean })
    isMarkup: boolean;
 
-   @AppProp({ type: Boolean })
-   isPromo: boolean;
-
-   @AppProp({ type: Boolean })
-   applyWholeSale: boolean;
-
    //TODO: validate in promo-code for not creating promo code for auto trigger
    @AppProp({ type: Boolean })
    autoTrigger: boolean;
@@ -53,6 +47,9 @@ export default abstract class APriceAdjustment extends BaseSchema {
    @AppProp({ type: Boolean, default: false })
    stackable: boolean;
 
+   @AppProp({ type: Date, required: false })
+   expireAt?: Date;
+
    @AppProp({ type: SchemaTypes.Mixed }, { type: Amount })
    spendTrigger?: Amount;
 
@@ -67,9 +64,6 @@ export default abstract class APriceAdjustment extends BaseSchema {
    @ValidateIf((o) => o.types.includes(EPriceAdjustment.Currency))
    @AppProp({ type: [{ type: SchemaTypes.ObjectId, ref: 'Currency' }] })
    currencyTrigger?: AppSchema<Unit>[];
-
-   @AppProp({ type: Date, required: false })
-   expireAt?: Date;
 
    @AppProp({ type: SchemaTypes.ObjectId, ref: 'Campaign' })
    campaign: AppSchema<Campaign>;

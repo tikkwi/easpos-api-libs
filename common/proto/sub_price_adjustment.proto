@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package SUB_PRICE_ADJUSTMENT_PACKAGE;
+
+import 'shared/enum.proto';
+import 'shared/core.proto';
+
+message Adjustment {
+  optional int32 percentageAdjustment = 1;
+  optional int32 absoluteAdjustment = 2;
+}
+
+message SubPriceAdjustment {
+  string id = 1;
+  repeated string types = 2;
+  Adjustment adjustment = 3;
+  string isMarkup = 4;
+  bool autoTrigger = 5;
+  bool isCouponPrioritize = 6;
+  string name = 7;
+  optional string description = 8;
+  bool perProduct = 9;
+  shared.EStatus status = 10;
+  bool stackable = 11;
+  optional string expireAt = 12;
+  optional shared.Amount spendTrigger = 13;
+  optional shared.PeriodRange timeTrigger = 14;
+  optional string paymentMethodTrigger = 15;
+  optional string currencyTrigger = 16;
+  optional string campaign = 17;
+}
+
