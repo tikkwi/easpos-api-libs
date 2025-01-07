@@ -1,4 +1,7 @@
 import 'express';
+import { ContextType } from '@nestjs/common';
+import { RequestLog } from '@shared/audit/audit.schema';
+import { Request } from 'express';
 
 declare global {
    type ObjectId = import('mongoose').Types.ObjectId;
@@ -27,6 +30,21 @@ declare global {
    type CreateType<T> = Omit<T, '_id' | 'createdAt' | 'updatedAt'>;
 
    type AppSchema<M> = Omit<M, '_id'> & { id?: string };
+
+   type RequestContext = {
+      connection: Connection;
+      session: ClientSession;
+      ip: string;
+      requestedApp: EApp;
+      userAgent: string;
+      contextType: ContextType;
+      logTrail: Array<RequestLog>;
+      merchantId?: string;
+      user?: AuthUser;
+      merchant?: AuthMerchant;
+      request?: Request;
+      crossRequestCallbacks?: Array<[(success: boolean, meta: Metadata) => void, meta: Metadata]>;
+   };
 
    type PaginationType<T> = Partial<{
       page: number;

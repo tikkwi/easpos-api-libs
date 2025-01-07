@@ -11,8 +11,8 @@ export default class UnitService extends BaseService<Unit> {
       super();
    }
 
-   async getBase({ unitId, categoryId }: GetBaseUnitDto) {
-      const repository = await this.getRepository();
+   async getBase({ ctx: { connection }, unitId, categoryId }: GetBaseUnitDto) {
+      const repository = await this.getRepository(connection);
       const findBase = async (catId: string) =>
          repository.findOne({
             filter: { isBase: true, category: catId },
@@ -29,8 +29,8 @@ export default class UnitService extends BaseService<Unit> {
       }
    }
 
-   async exchangeUnit({ current, targetId }: ExchangeUnitDto) {
-      const repository = await this.getRepository();
+   async exchangeUnit({ ctx: { connection }, current, targetId }: ExchangeUnitDto) {
+      const repository = await this.getRepository(connection);
       let exchanged = 0;
       let target,
          targetAmount = 1;
@@ -63,9 +63,9 @@ export default class UnitService extends BaseService<Unit> {
       };
    }
 
-   async createUnit({ category: catDto, ...dto }: CreateUnitDto) {
+   async createUnit({ ctx: { connection }, category: catDto, ...dto }: CreateUnitDto) {
       const { data: category } = await this.categoryService.getCategory(catDto);
-      const repository = await this.getRepository();
+      const repository = await this.getRepository(connection);
       return repository.create({ ...dto, category });
    }
 }

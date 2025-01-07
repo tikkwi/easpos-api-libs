@@ -1,19 +1,17 @@
 import { Body, Get, Param, Post } from '@nestjs/common';
-import ACoreController from '@common/core/core.controller';
 import UnitService from './unit.service';
 import { CreateUnitDto } from './unit.dto';
 import AppController from '@common/decorator/app_controller.decorator';
 import { EAllowedUser } from '@common/utils/enum';
+import { BaseDto } from '@common/dto/core.dto';
 
 @AppController('unit', { admin: [EAllowedUser.Admin], user: [EAllowedUser.Employee] })
-export default class UnitController extends ACoreController {
-   constructor(protected readonly service: UnitService) {
-      super();
-   }
+export default class UnitController {
+   constructor(protected readonly service: UnitService) {}
 
    @Get(':id')
-   async getCurrency(@Param('id') id: string) {
-      return this.service.findById({ id });
+   async getCurrency(@Param('id') id: string, @Body() { ctx }: BaseDto) {
+      return this.service.findById({ ctx, id });
    }
 
    @Post('create')

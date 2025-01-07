@@ -1,20 +1,17 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { PAGE_SIZE } from '@common/constant';
-import { ModuleRef } from '@nestjs/core';
-import RequestContextService from './request_context/request_context_service';
 
 export default class Repository<T> {
    constructor(
       private readonly model: Model<T>,
-      private readonly moduleRef: ModuleRef,
+      private readonly session: ClientSession,
    ) {}
 
    async create(dto: CreateType<T>) {
-      const context = await this.moduleRef.resolve(RequestContextService);
       return {
          data: await new this.model(dto).save({
-            session: context.get('session'),
+            session: this.session,
          }),
       };
    }
@@ -57,7 +54,6 @@ export default class Repository<T> {
 
    async findAndUpdate({ id, filter, options, update }: UpdateType<T>) {
       if (!id && !filter) throw new BadRequestException('Require filter to update');
-      const context = await this.moduleRef.resolve(RequestContextService);
 
       const prev = id
          ? await this.model.findById(id, null)
@@ -67,7 +63,7 @@ export default class Repository<T> {
 
       const updateOptions: [UpdateQuery<T>, QueryOptions<T>] = [
          { ...update, updatedAt: new Date() },
-         { lean: true, new: true, ...options, session: context.get('session') },
+         { lean: true, new: true, ...options, session: this.session },
       ];
       const data = id
          ? await this.model.findByIdAndUpdate(id, ...updateOptions)
@@ -77,14 +73,13 @@ export default class Repository<T> {
    }
 
    async updateMany({ ids, update }: Omit<UpdateType<T>, 'id' | 'filter'> & { ids: string[] }) {
-      const context = await this.moduleRef.resolve(RequestContextService);
       const prev = await this.model.find({ _id: { $in: ids } }, null);
       if (!prev || !prev.length) throw new NotFoundException('Not Found');
 
       await this.model.updateMany(
          { _id: { $in: ids } },
          { ...update, updatedAt: new Date() },
-         { session: context.get('session') },
+         { session: this.session },
       );
 
       const data = await this.model.find({ _id: { $in: ids } }, null, {
@@ -95,9 +90,8 @@ export default class Repository<T> {
    }
 
    async delete(id: string) {
-      const context = await this.moduleRef.resolve(RequestContextService);
       return {
-         data: await this.model.findByIdAndDelete(id, { session: context.get('session') }),
+         data: await this.model.findByIdAndDelete(id, { session: this.session }),
       };
    }
 

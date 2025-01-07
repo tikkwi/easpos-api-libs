@@ -1,24 +1,20 @@
 import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { responseError } from '@common/utils/misc';
-import { ModuleRef } from '@nestjs/core';
-import RequestContextService from './request_context/request_context_service';
 
 @Catch()
 export default class AppExceptionFilter implements ExceptionFilter {
-   constructor(private readonly moduleRef: ModuleRef) {}
-
    async catch(err: any, host: ArgumentsHost) {
       // const logger = new Logger(firstUpperCase(this.config.get(APP)));
       // logger.error(err);
-      const contextService = await this.moduleRef.resolve(RequestContextService);
-      const session = contextService.get('session');
-      session.abortTransaction();
-      session.endSession();
+
       if (host.getType() === 'http') {
          const ctx = host.switchToHttp();
          const response = ctx.getResponse<Response>();
          const request = ctx.getRequest<Request>();
+         const session: ClientSession = request.body.ctx.session;
+         session.abortTransaction();
+         session.endSession();
          responseError(request, response, err);
       }
       return {

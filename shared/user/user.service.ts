@@ -1,7 +1,7 @@
 import { compareSync } from 'bcryptjs';
 import { BadRequestException, ForbiddenException } from '@nestjs/common';
 import { concat, omit, uniq } from 'lodash';
-import { request, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { responseError } from '@common/utils/misc';
 import { EUser, EUserApp } from '@common/utils/enum';
 import { encrypt } from '@common/utils/encrypt';
@@ -25,9 +25,16 @@ export abstract class AUserService<T extends BaseUser = BaseUser> extends BaseSe
       req.session.destroy((err) => responseError(req, res, err));
    }
 
-   async login(req: Request, { email, userName, password, app, merchantId }: LoginDto) {
-      if (req.session.user) throw new BadRequestException('Already Logged In');
-      const repository = await this.getRepository();
+   async login({
+      ctx: { connection, request },
+      email,
+      userName,
+      password,
+      app,
+      merchantId,
+   }: LoginDto) {
+      if (request.session.user) throw new BadRequestException('Already Logged In');
+      const repository = await this.getRepository(connection);
       const { data: user }: any = await repository.findOne({
          filter: {
             email,
@@ -84,14 +91,14 @@ export abstract class AUserService<T extends BaseUser = BaseUser> extends BaseSe
       request.session.user = await encrypt(JSON.stringify(authUser));
    }
 
-   protected async getCreateUserDto({ addressId, tagsDto, ...dto }: CreateUserDto) {
+   protected async getCreateUserDto({ ctx, addressId, tagsDto, ...dto }: CreateUserDto) {
       const tags = [];
       if (tagsDto)
          for (const tg of tagsDto) {
             const { data: tag } = await this.categoryService.getCategory(tg);
             tags.push(tag);
          }
-      const { data: address } = await this.addressService.findById({ id: addressId });
+      const { data: address } = await this.addressService.findById({ ctx, id: addressId });
       return { tags, address, ...dto };
    }
 }

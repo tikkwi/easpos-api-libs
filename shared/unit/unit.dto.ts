@@ -1,4 +1,4 @@
-import { CoreDto } from '@common/dto/core.dto';
+import { BaseDto, CoreDto } from '@common/dto/core.dto';
 import { IsMongoId, IsNotEmpty, IsOptional, ValidateIf, ValidateNested } from 'class-validator';
 import { OmitType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
@@ -6,7 +6,7 @@ import { Amount } from '@common/dto/entity.dto';
 import Unit from './unit.schema';
 import { CategoryDto } from '../category/category.dto';
 
-export class GetBaseUnitDto {
+export class GetBaseUnitDto extends BaseDto {
    @ValidateIf((o) => !o.categoryId)
    @IsMongoId()
    unitId?: string;
@@ -16,7 +16,7 @@ export class GetBaseUnitDto {
    categoryId?: string;
 }
 
-export class ExchangeUnitDto {
+export class ExchangeUnitDto extends BaseDto {
    @ValidateNested({ each: true })
    @Type(() => Amount)
    current: Amount[];

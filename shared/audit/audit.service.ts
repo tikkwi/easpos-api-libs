@@ -1,21 +1,21 @@
 import { pick } from 'lodash';
 import BaseService from '@common/core/base/base.service';
 import Audit from './audit.schema';
-import RequestContextService from '@common/core/request_context/request_context_service';
+import { BaseDto } from '@common/dto/core.dto';
 
 export default class AuditService extends BaseService<Audit> {
-   async logRequest() {
-      const repository = await this.getRepository();
-      const context = await this.moduleRef.resolve(RequestContextService);
-      const user = context.get('user');
+   async logRequest({
+      ctx: { connection, ip, request, requestedApp, userAgent, logTrail, user },
+   }: BaseDto) {
+      const repository = await this.getRepository(connection);
 
       return await repository.create({
-         submittedIP: context.get('ip'),
-         sessionId: context.get('request')?.sessionID,
-         crossAppRequest: !context.get('request'),
-         requestedFrom: context.get('requestedApp'),
-         userAgent: context.get('userAgent') as any,
-         logTrail: context.get('logTrail'),
+         submittedIP: ip,
+         sessionId: request?.sessionID,
+         crossAppRequest: !request,
+         requestedFrom: requestedApp,
+         userAgent: userAgent as any,
+         logTrail,
          user: user
             ? {
                  id: user.id,

@@ -2,19 +2,10 @@ import { ForbiddenException, HttpException, HttpStatus, Provider } from '@nestjs
 import { ClientGrpc, ClientsModuleOptions, Transport } from '@nestjs/microservices';
 import { join } from 'path';
 import { getServiceToken } from './regex';
-import { EAuthCredential } from './enum';
 import { Request, Response } from 'express';
 import { compare } from 'bcryptjs';
 import { ADMIN_URL } from '@common/constant';
 import process from 'node:process';
-
-type RepositoryProviderType = { name: string; provide?: string };
-
-export const any = (obj: any, key: string) => obj[key];
-
-export const getBasicAuthType = (path: string) => {
-   if (/.*\/(swagger$)/.test(path)) return EAuthCredential.Swagger;
-};
 
 const getGrpcServiceProviders = (models: string[]): Provider[] => {
    return models.map((model) => {
