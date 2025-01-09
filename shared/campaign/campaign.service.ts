@@ -10,11 +10,13 @@ export default class CampaignService extends BaseService<Campaign> {
       super();
    }
 
-   async create({ ctx: { connection }, category, ...dto }: CreateCampaignDto) {
-      const repository = await this.getRepository(connection);
+   async create(ctx: RequestContext, { category, ...dto }: CreateCampaignDto) {
+      const repository = await this.getRepository(ctx.connection, ctx.session);
       return repository.create({
          ...dto,
-         ...(category ? { type: (await this.categoryService.getCategory(category)).data } : {}),
+         ...(category
+            ? { type: (await this.categoryService.getCategory(ctx, category)).data }
+            : {}),
       });
    }
 }

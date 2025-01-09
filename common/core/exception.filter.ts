@@ -12,7 +12,7 @@ export default class AppExceptionFilter implements ExceptionFilter {
          const ctx = host.switchToHttp();
          const response = ctx.getResponse<Response>();
          const request = ctx.getRequest<Request>();
-         const session: ClientSession = request.body.ctx.session;
+         const session: ClientSession = request.ctx.session;
          session.abortTransaction();
          session.endSession();
          responseError(request, response, err);

@@ -1,18 +1,16 @@
-import { Body, Post } from '@nestjs/common';
+import { Body, Post, Req } from '@nestjs/common';
 import AppController from '@common/decorator/app_controller.decorator';
 import { EAllowedUser } from '@common/utils/enum';
 import { CreateAddressDto } from './address.dto';
-import ACoreController from '@common/core/core.controller';
 import AddressService from './address.service';
+import { Request } from 'express';
 
 @AppController('address', { default: [EAllowedUser.Any] })
-export default class AddressController extends ACoreController {
-   constructor(protected readonly service: AddressService) {
-      super();
-   }
+export default class AddressController {
+   constructor(protected readonly service: AddressService) {}
 
    @Post('create')
-   async createAddress(@Body() dto: CreateAddressDto) {
-      return this.service.create(dto);
+   async createAddress(@Req() { ctx }: Request, @Body() dto: CreateAddressDto) {
+      return this.service.create(ctx, dto);
    }
 }

@@ -13,6 +13,7 @@ import AppBrokerService from '@common/core/app_broker/app_broker.service';
 import { MerchantServiceMethods } from '@common/dto/merchant.dto';
 import AddressService from '../address/address.service';
 import CategoryService from '../category/category.service';
+import process from 'node:process';
 
 export abstract class AUserService<T extends BaseUser = BaseUser> extends BaseService<T> {
    protected abstract readonly db: AppRedisService;
@@ -25,16 +26,9 @@ export abstract class AUserService<T extends BaseUser = BaseUser> extends BaseSe
       req.session.destroy((err) => responseError(req, res, err));
    }
 
-   async login({
-      ctx: { connection, request },
-      email,
-      userName,
-      password,
-      app,
-      merchantId,
-   }: LoginDto) {
+   async login(request: Request, { email, userName, password, app, merchantId }: LoginDto) {
       if (request.session.user) throw new BadRequestException('Already Logged In');
-      const repository = await this.getRepository(connection);
+      const repository = await this.getRepository(request.ctx.connection, request.ctx.session);
       const { data: user }: any = await repository.findOne({
          filter: {
             email,
@@ -77,6 +71,7 @@ export abstract class AUserService<T extends BaseUser = BaseUser> extends BaseSe
                   },
                   meta,
                ),
+            app: process.env['APP'] as EApp,
             cache: true,
             key: 'merchant',
          });
@@ -91,14 +86,17 @@ export abstract class AUserService<T extends BaseUser = BaseUser> extends BaseSe
       request.session.user = await encrypt(JSON.stringify(authUser));
    }
 
-   protected async getCreateUserDto({ ctx, addressId, tagsDto, ...dto }: CreateUserDto) {
+   protected async getCreateUserDto(
+      ctx: RequestContext,
+      { addressId, tagsDto, ...dto }: CreateUserDto,
+   ) {
       const tags = [];
       if (tagsDto)
          for (const tg of tagsDto) {
-            const { data: tag } = await this.categoryService.getCategory(tg);
+            const { data: tag } = await this.categoryService.getCategory(ctx, tg);
             tags.push(tag);
          }
-      const { data: address } = await this.addressService.findById({ ctx, id: addressId });
+      const { data: address } = await this.addressService.findById(ctx, { id: addressId });
       return { tags, address, ...dto };
    }
 }

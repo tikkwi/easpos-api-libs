@@ -1,7 +1,7 @@
 import { OmitType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsMongoId, IsNotEmpty, ValidateNested } from 'class-validator';
-import { CoreDto, FindByIdDto, MicroserviceAckDto } from './core.dto';
+import { CoreDto, FindByIdDto } from './core.dto';
 import Merchant, { LoggedInMerchantUser } from '../schema/ms/merchant.schema';
 import { IsAppString } from '../validator';
 import { CategoryDto } from '@shared/category/category.dto';
@@ -26,21 +26,11 @@ export class MerchantVerifyDto extends OmitType(FindByIdDto, ['errorOnNotFound']
 export interface MerchantServiceMethods {
    loginUser(dto: MerchantUserLoginDto, meta: Metadata): Promise<{ data: AuthMerchant }>;
 
-   nhtp_loginUserAck(dto: MicroserviceAckDto, meta: Metadata): Promise<{ message: string }>;
-
    nhtp_createMerchant(dto: CreateMerchantDto, meta: Metadata): Promise<{ data: Merchant }>;
-
-   nhtp_createMerchantAck(dto: MicroserviceAckDto, meta: Metadata): Promise<{ message: string }>;
 
    findById(dto: FindByIdDto, meta: Metadata): Promise<{ data: Merchant }>;
 
-   nhtp_findByIdAck(dto: MicroserviceAckDto, meta: Metadata): Promise<{ message: string }>;
-
    merchantWithAuth(dto: FindByIdDto, meta: Metadata): Promise<{ data: AuthMerchant }>;
 
-   nhtp_merchantWithAuthAck(dto: MicroserviceAckDto, meta: Metadata): Promise<{ message: string }>;
-
    tmpTst(meta: Metadata): { data: string };
-
-   nhtp_tmpTstAck(dto: MicroserviceAckDto, meta: Metadata): { message: string };
 }

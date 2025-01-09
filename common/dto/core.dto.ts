@@ -37,18 +37,12 @@ export class PaginationDto<T> {
    sort?: Record<keyof T, any>;
 }
 
-export class BaseDto {
-   ctx: RequestContext;
-}
-
 export class MicroserviceAckDto {
    @IsBoolean()
    success: boolean;
 }
 
-export function CoreDto<T>(
-   classRef: Type<T>,
-): Type<Omit<T, '_id' | 'createdAt' | 'updatedAt'> & BaseDto> {
+export function CoreDto<T>(classRef: Type<T>): Type<Omit<T, '_id' | 'createdAt' | 'updatedAt'>> {
    class CoreDtoClass extends OmitType(classRef as any, ['_id', 'createdAt', 'updatedAt'] as any) {}
 
    return CoreDtoClass as any;
@@ -75,7 +69,7 @@ export function SelectionTypeIf<T, K extends keyof T, P extends boolean>(
    return classRef;
 }
 
-export class FindDto extends BaseDto {
+export class FindDto {
    @IsBoolean()
    lean?: boolean;
 

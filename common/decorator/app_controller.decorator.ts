@@ -33,7 +33,6 @@ export default function AppController(
          const descriptor = Object.getOwnPropertyDescriptor(target.prototype, key);
          const originalMethod = descriptor?.value;
 
-         // if (typeof originalMethod === 'function' && key === 'test') {
          if (typeof originalMethod === 'function' && key !== 'constructor') {
             const users = [...(reflector.get(USERS, target.prototype[key]) ?? []), ...clsUsers];
 
@@ -47,13 +46,6 @@ export default function AppController(
             if (skippedApps) pull(apps, ...skippedApps);
             if (users.length) Users(users)(target.prototype[key], key, descriptor);
             if (apps.length) Apps(apps)(target.prototype[key], key, descriptor);
-            // descriptor.value = async function (...args) {
-            //    console.log('hie');
-            //    // const req = Req()(target.prototype[key], key, 0);
-            //    // args.splice(0, 0, req);
-            //    return originalMethod.apply(this, args);
-            // };
-            // Object.defineProperty(target.prototype, key, descriptor);
          }
       }
 

@@ -18,8 +18,9 @@ export default class AppContext {
       connect(getMongoUri()).then(() => (AppContext.#connection = connection));
    }
 
-   static getConnection(id: string) {
-      if (this.#connectionPool.has(id)) return this.#connectionPool.get(id);
+   static getConnection(id?: string) {
+      if (!id) return AppContext.#connection;
+      if (id && this.#connectionPool.has(id)) return this.#connectionPool.get(id);
       const conn = createConnection(getMongoUri(id));
       this.#connectionPool.set(id, conn);
       return conn;

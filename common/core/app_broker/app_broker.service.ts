@@ -11,14 +11,7 @@ import { EApp } from '../../utils/enum';
 export default class AppBrokerService {
    constructor(private readonly db: AppRedisService) {}
 
-   async request<T>({
-      action,
-      app,
-      cache = true,
-      onClientFinished,
-      ctx,
-      ...rest
-   }: BrokerRequest): Promise<T> {
+   async request<T>({ action, app, cache = true, meta: mta, ...rest }: BrokerRequest): Promise<T> {
       const { key } = rest as any;
       const currentApp = process.env['APP'];
       const isCrossApp = !app || app !== currentApp;
@@ -35,8 +28,9 @@ export default class AppBrokerService {
       const meta = new Metadata();
       meta.add('app', currentApp);
       meta.add('authorization', `Basic ${base64(`${usr}:${pwd}`)}`);
-      if (!ctx.crossRequestCallbacks) ctx.crossRequestCallbacks = [[onClientFinished, meta]];
-      else ctx.crossRequestCallbacks.push([onClientFinished, meta]);
+
+      if (mta) Object.entries(mta).forEach(([key, value]) => meta.add(key, value));
+
       const $action = isCrossApp ? (meta) => lastValueFrom(action(meta)) : action;
 
       const crossRequest = async () => {

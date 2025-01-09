@@ -18,7 +18,6 @@ import { regex } from '@common/utils/regex';
 import { TmpBlock } from '@shared/user/user.schema';
 import { IsAppString } from '../validator';
 import { OmitType } from '@nestjs/swagger';
-import { BaseDto } from './core.dto';
 
 export function AppSchema<T>(classRef: $Type<T>): $Type<Omit<T, '_id'> & { id: string }> {
    class AS extends OmitType(classRef as any, ['_id'] as any) {
@@ -141,7 +140,7 @@ export class Amount {
    unitId?: string; //NOTE: can also be currency
 }
 
-export class FieldValue extends BaseDto {
+export class FieldValue {
    @IsMongoId()
    id: string;
 
