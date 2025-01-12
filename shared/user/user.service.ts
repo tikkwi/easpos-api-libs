@@ -63,6 +63,7 @@ export abstract class AUserService<T extends BaseUser = BaseUser> extends BaseSe
          await this.appBroker.request<AuthMerchant>({
             action: (meta) =>
                this.merchantService.loginUser(
+                  request.ctx,
                   {
                      merchantId: merchantId,
                      userId: user.id,

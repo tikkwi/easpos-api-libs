@@ -4,8 +4,9 @@ import { join } from 'path';
 import { getServiceToken } from './regex';
 import { Request, Response } from 'express';
 import { compare } from 'bcryptjs';
-import { ADMIN_URL } from '@common/constant';
+import { ADMIN_URL, REQUESTED_APP, USER_AGENT } from '@common/constant';
 import process from 'node:process';
+import AppContext from '../core/app_context.service';
 
 const getGrpcServiceProviders = (models: string[]): Provider[] => {
    return models.map((model) => {
@@ -28,6 +29,20 @@ const getGrpcClientOptions = (pkgs: string[], url: string): ClientsModuleOptions
          protoPath: join(process.cwd(), `dist/common/proto/${pkg.toLowerCase()}.proto`),
       },
    }));
+
+export const getGrpcContext = async (meta: Metadata): Promise<RequestContext> => {
+   const merchantId = meta.get('merchantId')[0] as string;
+   const connection = AppContext.getConnection(merchantId);
+   return {
+      connection,
+      session: await connection.startSession(),
+      requestedApp: meta.get(REQUESTED_APP)[0] as EApp,
+      userAgent: meta.get(USER_AGENT)[0] as string,
+      logTrail: [],
+      merchantId,
+      contextType: 'rpc',
+   };
+};
 
 export const getGrpcClient = (
    models: string[],

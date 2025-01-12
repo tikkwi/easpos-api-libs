@@ -34,16 +34,15 @@ declare global {
    type RequestContext = {
       connection: Connection;
       session: ClientSession;
-      ip: string;
       requestedApp: EApp;
-      userAgent: string;
       contextType: ContextType;
       logTrail: Array<RequestLog>;
+      ip?: string;
+      userAgent?: string;
       merchantId?: string;
       user?: AuthUser;
       merchant?: AuthMerchant;
       request?: Request;
-      crossRequestCallbacks?: Array<[(success: boolean, meta: Metadata) => void, meta: Metadata]>;
    };
 
    type PaginationType<T> = Partial<{

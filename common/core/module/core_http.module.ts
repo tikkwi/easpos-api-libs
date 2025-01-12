@@ -6,6 +6,7 @@ import { REDIS_CLIENT } from '@common/constant';
 import ThrottlerStorageRedis from '../redis_throttler_storage.service';
 import BaseModule from '../base/base.module';
 import CategoryModule from '@shared/category/category.module';
+import TransformRequestMiddleware from '../../middleware/transform_request.middleware';
 
 @Module({
    imports: [
@@ -38,5 +39,6 @@ import CategoryModule from '@shared/category/category.module';
 export default class CoreHttpModule implements NestModule {
    configure(consumer: MiddlewareConsumer) {
       consumer.apply(cookieParser.default()).forRoutes('*');
+      consumer.apply(TransformRequestMiddleware).forRoutes('*');
    }
 }

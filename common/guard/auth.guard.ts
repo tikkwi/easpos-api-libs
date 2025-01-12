@@ -5,24 +5,23 @@ import {
    Injectable,
    UnauthorizedException,
 } from '@nestjs/common';
-import { ModuleRef, Reflector } from '@nestjs/core';
+import { Reflector } from '@nestjs/core';
 import { intersection } from 'lodash';
 import { Request } from 'express';
 import { ServerUnaryCall } from '@grpc/grpc-js';
-import { authenticateBasicAuth } from '@common/utils/misc';
-import { APPS, AUTH_CREDENTIAL, MERCHANT, USERS } from '@common/constant';
+import { APPS, AUTH_CREDENTIAL, AUTHORIZATION, MERCHANT, USERS } from '@common/constant';
 import { AuthCredentialServiceMethods } from '@common/dto/auth_credential.dto';
 import { AllowedUser } from '@common/dto/core.dto';
 import { EAllowedUser, EApp, EUser } from '@common/utils/enum';
 import { MerchantServiceMethods } from '../dto/merchant.dto';
 import AppBrokerService from '../core/app_broker/app_broker.service';
 import { getServiceToken } from '../utils/regex';
+import { authenticateBasicAuth, getGrpcContext } from '../utils/misc';
 
 @Injectable()
 export default class AuthGuard implements CanActivate {
    constructor(
       private readonly reflector: Reflector,
-      private readonly moduleRef: ModuleRef,
       private readonly broker: AppBrokerService,
       @Inject(getServiceToken(MERCHANT)) private readonly merchantService: MerchantServiceMethods,
       @Inject(getServiceToken(AUTH_CREDENTIAL))
@@ -59,7 +58,7 @@ export default class AuthGuard implements CanActivate {
             if (reqCtx.user.type === EUser.Employee) {
                const authMerchant = await this.broker.request<AuthMerchant>({
                   action: (meta) =>
-                     this.merchantService.merchantWithAuth({ id: reqCtx.user.id }, meta),
+                     this.merchantService.merchantWithAuth(reqCtx, { id: reqCtx.user.id }, meta),
                   cache: true,
                   key: 'merchant',
                   app: EApp.Admin,
@@ -83,16 +82,19 @@ export default class AuthGuard implements CanActivate {
             return gotPermission;
          } else throw new UnauthorizedException();
       } else {
-         const ctx: ServerUnaryCall<any, any> = (context.switchToRpc() as any).args[2];
-         const authHeader = (context.switchToRpc() as any).args[2].metadata
-            .getMap()
-            .authorization?.toString();
+         const call: ServerUnaryCall<any, any> = (context.switchToRpc() as any).args[2];
+         // const authHeader = (context.switchToRpc() as any).args[2].metadata
+         //    .getMap()
+         //    .authorization?.toString();
+         // ctx.
+         const authHeader = call.metadata.get(AUTHORIZATION)[0] as string;
          const basicAuth = await this.broker.request<AuthCredential>({
-            action: (meta) =>
+            action: async (meta) =>
                this.credService.getAuthCredential(
+                  await getGrpcContext(call.metadata),
                   {
-                     url: ctx.getPath(),
-                     ip: ctx.getPeer().replace(/:\d+$/, ''),
+                     url: call.getPath(),
+                     ip: call.getPeer().replace(/:\d+$/, ''),
                   },
                   meta,
                ),

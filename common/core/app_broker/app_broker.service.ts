@@ -6,6 +6,7 @@ import { decrypt } from '@common/utils/encrypt';
 import AppRedisService from '../app_redis/app_redis.service';
 import process from 'node:process';
 import { EApp } from '../../utils/enum';
+import { AUTHORIZATION, REQUESTED_APP } from '../../constant';
 
 @Injectable()
 export default class AppBrokerService {
@@ -26,9 +27,8 @@ export default class AppBrokerService {
             : process.env['ADMIN_PWD']
          : '';
       const meta = new Metadata();
-      meta.add('app', currentApp);
-      meta.add('authorization', `Basic ${base64(`${usr}:${pwd}`)}`);
-
+      meta.add(REQUESTED_APP, currentApp);
+      meta.add(AUTHORIZATION, `Basic ${base64(`${usr}:${pwd}`)}`);
       if (mta) Object.entries(mta).forEach(([key, value]) => meta.add(key, value));
 
       const $action = isCrossApp ? (meta) => lastValueFrom(action(meta)) : action;
