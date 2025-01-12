@@ -10,7 +10,7 @@ export default class TransformRequestMiddleware implements NestMiddleware {
       let user: AuthUser;
       if (request.session.user) user = await decrypt<AuthUser>(request.session.user);
       const connection = AppContext.getConnection();
-      request.ctx = {
+      request.body.ctx = {
          logTrail: [],
          requestedApp: process.env['APP'] as EApp,
          contextType: 'http',

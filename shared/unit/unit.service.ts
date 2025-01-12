@@ -11,7 +11,7 @@ export default class UnitService extends BaseService<Unit> {
       super();
    }
 
-   async getBase({ connection, session }: RequestContext, { unitId, categoryId }: GetBaseUnitDto) {
+   async getBase({ ctx: { connection, session }, unitId, categoryId }: GetBaseUnitDto) {
       const repository = await this.getRepository(connection, session);
       const findBase = async (catId: string) =>
          repository.findOne({
@@ -66,8 +66,8 @@ export default class UnitService extends BaseService<Unit> {
       };
    }
 
-   async createUnit(ctx: RequestContext, { category: catDto, ...dto }: CreateUnitDto) {
-      const { data: category } = await this.categoryService.getCategory(ctx, catDto);
+   async createUnit({ ctx, category: catDto, ...dto }: CreateUnitDto) {
+      const { data: category } = await this.categoryService.getCategory({ ctx, ...catDto });
       const repository = await this.getRepository(ctx.connection, ctx.session);
       return repository.create({ ...dto, category });
    }

@@ -7,7 +7,6 @@ import { EUser, EUserApp } from '@common/utils/enum';
 import { encrypt } from '@common/utils/encrypt';
 import { BaseUser } from './user.schema';
 import BaseService from '@common/core/base/base.service';
-import AppRedisService from '@common/core/app_redis/app_redis.service';
 import { CreateUserDto, LoginDto } from './user.dto';
 import AppBrokerService from '@common/core/app_broker/app_broker.service';
 import { MerchantServiceMethods } from '@common/dto/merchant.dto';
@@ -16,7 +15,6 @@ import CategoryService from '../category/category.service';
 import process from 'node:process';
 
 export abstract class AUserService<T extends BaseUser = BaseUser> extends BaseService<T> {
-   protected abstract readonly db: AppRedisService;
    protected abstract readonly appBroker: AppBrokerService;
    protected abstract readonly merchantService: MerchantServiceMethods;
    protected abstract readonly addressService: AddressService;
@@ -26,9 +24,9 @@ export abstract class AUserService<T extends BaseUser = BaseUser> extends BaseSe
       req.session.destroy((err) => responseError(req, res, err));
    }
 
-   async login(request: Request, { email, userName, password, app, merchantId }: LoginDto) {
+   async login(request: Request, { ctx, email, userName, password, app, merchantId }: LoginDto) {
       if (request.session.user) throw new BadRequestException('Already Logged In');
-      const repository = await this.getRepository(request.ctx.connection, request.ctx.session);
+      const repository = await this.getRepository(ctx.connection, ctx.session);
       const { data: user }: any = await repository.findOne({
          filter: {
             email,
@@ -63,8 +61,8 @@ export abstract class AUserService<T extends BaseUser = BaseUser> extends BaseSe
          await this.appBroker.request<AuthMerchant>({
             action: (meta) =>
                this.merchantService.loginUser(
-                  request.ctx,
                   {
+                     ctx,
                      merchantId: merchantId,
                      userId: user.id,
                      name: `${user.firstName} ${user.lastName}`,
@@ -87,17 +85,14 @@ export abstract class AUserService<T extends BaseUser = BaseUser> extends BaseSe
       request.session.user = await encrypt(JSON.stringify(authUser));
    }
 
-   protected async getCreateUserDto(
-      ctx: RequestContext,
-      { addressId, tagsDto, ...dto }: CreateUserDto,
-   ) {
+   protected async getCreateUserDto({ ctx, addressId, tagsDto, ...dto }: CreateUserDto) {
       const tags = [];
       if (tagsDto)
          for (const tg of tagsDto) {
-            const { data: tag } = await this.categoryService.getCategory(ctx, tg);
+            const { data: tag } = await this.categoryService.getCategory({ ctx, ...tg });
             tags.push(tag);
          }
-      const { data: address } = await this.addressService.findById(ctx, { id: addressId });
+      const { data: address } = await this.addressService.findById({ ctx, id: addressId });
       return { tags, address, ...dto };
    }
 }

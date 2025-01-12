@@ -5,7 +5,7 @@ import AppService from '@common/decorator/app_service.decorator';
 
 @AppService()
 export default class AddressService extends BaseService<Address> {
-   async create({ connection, session }: RequestContext, dto: CreateAddressDto) {
+   async create({ ctx: { connection, session }, ...dto }: CreateAddressDto) {
       const repository = await this.getRepository(connection, session);
       return repository.create(dto);
    }

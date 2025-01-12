@@ -35,7 +35,7 @@ export default class AuthGuard implements CanActivate {
       if (isHttp) {
          const allowedUsers = this.reflector.get<AllowedUser[]>(USERS, context.getHandler());
          const allowedApps = this.reflector.get(APPS, context.getHandler());
-         const reqCtx = request.ctx;
+         const reqCtx = request.body.ctx;
          if (!allowedUsers.length || allowedUsers.includes(EAllowedUser.Any)) return true;
          if (reqCtx.user) {
             if (allowedApps?.length && !allowedApps.includes(reqCtx.user.app)) return false;
@@ -58,7 +58,10 @@ export default class AuthGuard implements CanActivate {
             if (reqCtx.user.type === EUser.Employee) {
                const authMerchant = await this.broker.request<AuthMerchant>({
                   action: (meta) =>
-                     this.merchantService.merchantWithAuth(reqCtx, { id: reqCtx.user.id }, meta),
+                     this.merchantService.merchantWithAuth(
+                        { ctx: reqCtx, id: reqCtx.user.id },
+                        meta,
+                     ),
                   cache: true,
                   key: 'merchant',
                   app: EApp.Admin,
@@ -83,16 +86,12 @@ export default class AuthGuard implements CanActivate {
          } else throw new UnauthorizedException();
       } else {
          const call: ServerUnaryCall<any, any> = (context.switchToRpc() as any).args[2];
-         // const authHeader = (context.switchToRpc() as any).args[2].metadata
-         //    .getMap()
-         //    .authorization?.toString();
-         // ctx.
          const authHeader = call.metadata.get(AUTHORIZATION)[0] as string;
          const basicAuth = await this.broker.request<AuthCredential>({
             action: async (meta) =>
                this.credService.getAuthCredential(
-                  await getGrpcContext(call.metadata),
                   {
+                     ctx: await getGrpcContext(call.metadata),
                      url: call.getPath(),
                      ip: call.getPeer().replace(/:\d+$/, ''),
                   },

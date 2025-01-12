@@ -1,7 +1,7 @@
-import { OmitType } from '@nestjs/swagger';
+import { IntersectionType, OmitType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsMongoId, IsNotEmpty, ValidateNested } from 'class-validator';
-import { CoreDto, FindByIdDto } from './core.dto';
+import { BaseDto, CoreDto, FindByIdDto } from './core.dto';
 import Merchant, { LoggedInMerchantUser } from '../schema/ms/merchant.schema';
 import { IsAppString } from '../validator';
 import { CategoryDto } from '@shared/category/category.dto';
@@ -13,7 +13,7 @@ export class CreateMerchantDto extends OmitType(CoreDto(Merchant), ['status', 't
    category: CategoryDto;
 }
 
-export class MerchantUserLoginDto extends LoggedInMerchantUser {
+export class MerchantUserLoginDto extends IntersectionType(BaseDto, LoggedInMerchantUser) {
    @IsMongoId()
    merchantId: string;
 }
@@ -24,23 +24,11 @@ export class MerchantVerifyDto extends OmitType(FindByIdDto, ['errorOnNotFound']
 }
 
 export interface MerchantServiceMethods {
-   loginUser(
-      ctx: RequestContext,
-      dto: MerchantUserLoginDto,
-      meta: Metadata,
-   ): Promise<{ data: AuthMerchant }>;
+   loginUser(dto: MerchantUserLoginDto, meta: Metadata): Promise<{ data: AuthMerchant }>;
 
-   nhtp_createMerchant(
-      ctx: RequestContext,
-      dto: CreateMerchantDto,
-      meta: Metadata,
-   ): Promise<{ data: Merchant }>;
-    
-   merchantWithAuth(
-      ctx: RequestContext,
-      dto: FindByIdDto,
-      meta: Metadata,
-   ): Promise<{ data: AuthMerchant }>;
+   nhtp_createMerchant(dto: CreateMerchantDto, meta: Metadata): Promise<{ data: Merchant }>;
 
-   tmpTst(meta: Metadata): { data: string };
+   merchantWithAuth(dto: FindByIdDto, meta: Metadata): Promise<{ data: AuthMerchant }>;
+
+   tmpTst(dto, meta: Metadata): { data: string };
 }

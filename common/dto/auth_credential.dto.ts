@@ -1,6 +1,7 @@
 import { IsIP, IsNotEmpty, IsOptional, IsUrl } from 'class-validator';
+import { BaseDto } from './core.dto';
 
-export class GetAuthCredentialDto {
+export class GetAuthCredentialDto extends BaseDto {
    @IsNotEmpty()
    @IsUrl()
    url: string;
@@ -13,9 +14,5 @@ export class GetAuthCredentialDto {
 export type AuthCredentialReturn = { data: AuthCredential };
 
 export interface AuthCredentialServiceMethods {
-   getAuthCredential(
-      ctx: RequestContext,
-      dto: GetAuthCredentialDto,
-      meta?: Metadata,
-   ): Promise<AuthCredentialReturn>;
+   getAuthCredential(dto: GetAuthCredentialDto, meta?: Metadata): Promise<AuthCredentialReturn>;
 }

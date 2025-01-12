@@ -5,13 +5,13 @@ import AppService from '@common/decorator/app_service.decorator';
 
 @AppService()
 export default class CategoryService extends BaseService<Category> {
-   async findById({ connection, session }: RequestContext, { id, type }: CategoryFindByIdDto) {
+   async findById({ ctx: { connection, session }, id, type }: CategoryFindByIdDto) {
       const repository = await this.getRepository(connection, session);
       return await repository.findOne({ filter: { _id: id, type } });
    }
 
-   async getCategory(ctx: RequestContext, { id, type, ...dto }: CategoryDto) {
+   async getCategory({ ctx, id, type, ...dto }: CategoryDto) {
       const repository = await this.getRepository(ctx.connection, ctx.session);
-      return await (id ? this.findById(ctx, { id, type }) : repository.findOne({ filter: dto }));
+      return await (id ? this.findById({ ctx, id, type }) : repository.findOne({ filter: dto }));
    }
 }

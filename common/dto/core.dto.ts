@@ -18,6 +18,10 @@ export type AllowedUser = keyof typeof EAllowedUser;
 
 export type AllowedApp = keyof typeof EUserApp | 'Any';
 
+export class BaseDto {
+   ctx?: RequestContext;
+}
+
 export class PaginationDto<T> {
    @IsNumber()
    @Min(1)
@@ -37,12 +41,9 @@ export class PaginationDto<T> {
    sort?: Record<keyof T, any>;
 }
 
-export class MicroserviceAckDto {
-   @IsBoolean()
-   success: boolean;
-}
-
-export function CoreDto<T>(classRef: Type<T>): Type<Omit<T, '_id' | 'createdAt' | 'updatedAt'>> {
+export function CoreDto<T>(
+   classRef: Type<T>,
+): Type<Omit<T, '_id' | 'createdAt' | 'updatedAt'> & BaseDto> {
    class CoreDtoClass extends OmitType(classRef as any, ['_id', 'createdAt', 'updatedAt'] as any) {}
 
    return CoreDtoClass as any;
@@ -69,7 +70,7 @@ export function SelectionTypeIf<T, K extends keyof T, P extends boolean>(
    return classRef;
 }
 
-export class FindDto {
+export class FindDto extends BaseDto {
    @IsBoolean()
    lean?: boolean;
 

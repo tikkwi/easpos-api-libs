@@ -17,10 +17,12 @@ export default class BaseService<T = BaseSchema> {
       );
    }
 
-   async findById(
-      { connection, session }: RequestContext,
-      { id, errorOnNotFound = true, ...options }: FindByIdDto,
-   ) {
+   async findById({
+      ctx: { connection, session },
+      id,
+      errorOnNotFound = true,
+      ...options
+   }: FindByIdDto) {
       const repository = await this.getRepository(connection, session);
       return repository.findOne({
          id,
@@ -28,10 +30,12 @@ export default class BaseService<T = BaseSchema> {
       });
    }
 
-   async findByIds(
-      { connection, session }: RequestContext,
-      { ids, errorOnNotFound = true, ...options }: FindByIdsDto,
-   ) {
+   async findByIds({
+      ctx: { connection, session },
+      ids,
+      errorOnNotFound = true,
+      ...options
+   }: FindByIdsDto) {
       const repository = await this.getRepository(connection, session);
       const { data } = await repository.find({
          filter: { _id: { $in: ids } },

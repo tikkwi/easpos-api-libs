@@ -14,7 +14,7 @@ service MerchantService {
   rpc CreateMerchant(CreateMerchantDto) returns (MerchantReturn){}
   rpc FindById(shared.FindByIdDto) returns (MerchantReturn){}
   rpc MerchantWithAuth(shared.FindByIdDto) returns (AuthMerchantReturn){}
-  rpc TmpTst(Empty) returns (TstReturn){}
+  rpc TmpTst(TmpTestDto) returns (TstReturn){}
 }
 
 message MFA {
@@ -40,6 +40,10 @@ message Merchant {
   shared.Category type = 8;
   repeated LoggedInMerchantUser loggedInUsers = 9;
   shared.EStatus status = 10;
+}
+
+message TmpTestDto {
+  string message = 1 ;
 }
 
 message MerchantUserLoginDto {

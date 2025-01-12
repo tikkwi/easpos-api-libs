@@ -25,7 +25,10 @@ export default class BasicAuthMiddleware implements NestMiddleware {
    async use(request: Request, response: Response, next: () => void) {
       const { userName, password } = await this.appBroker.request<BasicAuth>({
          action: (meta) =>
-            this.credService.getAuthCredential(request.ctx, { url: request.originalUrl }, meta),
+            this.credService.getAuthCredential(
+               { ctx: request.body.ctx, url: request.originalUrl },
+               meta,
+            ),
          cache: true,
          key: 'a_adm_auth_cred',
          app: EApp.Admin,
