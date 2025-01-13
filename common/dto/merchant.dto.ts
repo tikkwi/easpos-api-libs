@@ -30,5 +30,5 @@ export interface MerchantServiceMethods {
 
    merchantWithAuth(dto: FindByIdDto, meta: Metadata): Promise<{ data: AuthMerchant }>;
 
-   tmpTst(dto, meta: Metadata): { data: string };
+   tmpTst(dto, meta: Metadata): { data: { message: string } };
 }

@@ -10,7 +10,7 @@ export default function AppService() {
          const oriMeth = descriptor.value;
          if (typeof oriMeth === 'function' && key !== 'constructor') {
             descriptor.value = async function (...args) {
-               const context = args[0].context;
+               const context: RequestContext = args[0].ctx;
                const ct = args[0].ct;
                if (
                   (key.startsWith('nc_') && ct) ||
@@ -20,18 +20,11 @@ export default function AppService() {
                )
                   throw new ForbiddenException();
                const res = await oriMeth.apply(this, args);
-               context.update('logTrail', (log) => {
-                  const reqLog = {
-                     service: target.name,
-                     auxiliaryService: key,
-                     payload: omit(args[0], 'context'),
-                     response: res,
-                  };
-                  if (log) log.push(reqLog);
-                  else {
-                     log = [reqLog];
-                     return log;
-                  }
+               context.logTrail.push({
+                  service: target.name,
+                  auxiliaryService: key,
+                  payload: omit(args[0], 'context'),
+                  response: res,
                });
                return res;
             };

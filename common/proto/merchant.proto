@@ -14,7 +14,7 @@ service MerchantService {
   rpc CreateMerchant(CreateMerchantDto) returns (MerchantReturn){}
   rpc FindById(shared.FindByIdDto) returns (MerchantReturn){}
   rpc MerchantWithAuth(shared.FindByIdDto) returns (AuthMerchantReturn){}
-  rpc TmpTst(TmpTestDto) returns (TstReturn){}
+  rpc TmpTst(TmpTestData) returns (TstReturn){}
 }
 
 message MFA {
@@ -42,9 +42,6 @@ message Merchant {
   shared.EStatus status = 10;
 }
 
-message TmpTestDto {
-  string message = 1 ;
-}
 
 message MerchantUserLoginDto {
   string userId = 1;
@@ -63,11 +60,15 @@ message CreateMerchantDto {
   USER_PACKAGE.CreateUserDto user = 7;
 }
 
+message TmpTestData {
+  string message = 1 ;
+}
+
 message TstReturn {
   int32 code = 1;
   optional string message = 2;
   optional string token = 4;
-  string data = 3;
+  TmpTestData data = 3;
 }
 
 message MerchantReturn {

@@ -8,15 +8,13 @@ import {
 import { Reflector } from '@nestjs/core';
 import { intersection } from 'lodash';
 import { Request } from 'express';
-import { ServerUnaryCall } from '@grpc/grpc-js';
-import { APPS, AUTH_CREDENTIAL, AUTHORIZATION, MERCHANT, USERS } from '@common/constant';
+import { APPS, AUTH_CREDENTIAL, MERCHANT, USERS } from '@common/constant';
 import { AuthCredentialServiceMethods } from '@common/dto/auth_credential.dto';
 import { AllowedUser } from '@common/dto/core.dto';
 import { EAllowedUser, EApp, EUser } from '@common/utils/enum';
 import { MerchantServiceMethods } from '../dto/merchant.dto';
 import AppBrokerService from '../core/app_broker/app_broker.service';
 import { getServiceToken } from '../utils/regex';
-import { authenticateBasicAuth, getGrpcContext } from '../utils/misc';
 
 @Injectable()
 export default class AuthGuard implements CanActivate {
@@ -85,23 +83,25 @@ export default class AuthGuard implements CanActivate {
             return gotPermission;
          } else throw new UnauthorizedException();
       } else {
-         const call: ServerUnaryCall<any, any> = (context.switchToRpc() as any).args[2];
-         const authHeader = call.metadata.get(AUTHORIZATION)[0] as string;
-         const basicAuth = await this.broker.request<AuthCredential>({
-            action: async (meta) =>
-               this.credService.getAuthCredential(
-                  {
-                     ctx: await getGrpcContext(call.metadata),
-                     url: call.getPath(),
-                     ip: call.getPeer().replace(/:\d+$/, ''),
-                  },
-                  meta,
-               ),
-            cache: true,
-            key: 'a_adm_auth_cred',
-            app: EApp.Admin,
-         });
-         return await authenticateBasicAuth(basicAuth, authHeader);
+         // const call: ServerUnaryCall<any, any> = (context.switchToRpc() as any).args[2];
+         // const authHeader = call.metadata.get(AUTHORIZATION)[0] as string;
+         // const basicAuth = await this.broker.request<AuthCredential>({
+         //    action: async (meta) =>
+         //       this.credService.getAuthCredential(
+         //          {
+         //             ctx: await getGrpcContext(call.metadata),
+         //             url: call.getPath(),
+         //             ip: call.getPeer().replace(/:\d+$/, ''),
+         //          },
+         //          meta,
+         //       ),
+         //    cache: true,
+         //    key: 'a_adm_auth_cred',
+         //    app: EApp.Admin,
+         // });
+         // return await authenticateBasicAuth(basicAuth, authHeader);
+
+         return true;
       }
    }
 }

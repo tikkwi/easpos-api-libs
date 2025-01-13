@@ -1,12 +1,13 @@
-import { connect, connection, createConnection } from 'mongoose';
-import { getMongoUri } from '../utils/misc';
+import { createConnection } from 'mongoose';
 import { LRUCache } from 'lru-cache';
 import process from 'node:process';
 
 type GetContextType = {};
 
 export default class AppContext {
-   static #connection: Connection;
+   static #connection = createConnection(
+      `${process.env['MONGO_URI']}/?replicaSet=rs0&authSource=admin`,
+   );
    static #connectionPool = new LRUCache({
       max: +process.env['MONGO_POOL_MAX_CONNECTIONS'],
       ttl: +process.env['MONGO_POOL_MAX_TTL'],
@@ -14,14 +15,12 @@ export default class AppContext {
       dispose: (connection: Connection) => connection.close(),
    });
 
-   constructor() {
-      connect(getMongoUri()).then(() => (AppContext.#connection = connection));
-   }
-
    static getConnection(id?: string) {
       if (!id) return AppContext.#connection;
       if (id && this.#connectionPool.has(id)) return this.#connectionPool.get(id);
-      const conn = createConnection(getMongoUri(id));
+      const conn = createConnection(
+         `${process.env['MONGO_URI']}/${id ?? ''}?replicaSet=rs0&authSource=admin`,
+      );
       this.#connectionPool.set(id, conn);
       return conn;
    }
