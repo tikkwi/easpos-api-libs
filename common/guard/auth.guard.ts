@@ -5,7 +5,7 @@ import {
    Injectable,
    UnauthorizedException,
 } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
+import { ModuleRef, Reflector } from '@nestjs/core';
 import { intersection } from 'lodash';
 import { Request } from 'express';
 import { APPS, AUTH_CREDENTIAL, MERCHANT, USERS } from '@common/constant';
@@ -15,10 +15,13 @@ import { EAllowedUser, EApp, EUser } from '@common/utils/enum';
 import { MerchantServiceMethods } from '../dto/merchant.dto';
 import AppBrokerService from '../core/app_broker/app_broker.service';
 import { getServiceToken } from '../utils/regex';
+import { ServerUnaryCall } from '@grpc/grpc-js';
+import { getGrpcContext } from '../utils/misc';
 
 @Injectable()
 export default class AuthGuard implements CanActivate {
    constructor(
+      private readonly moduleRef: ModuleRef,
       private readonly reflector: Reflector,
       private readonly broker: AppBrokerService,
       @Inject(getServiceToken(MERCHANT)) private readonly merchantService: MerchantServiceMethods,
@@ -34,7 +37,7 @@ export default class AuthGuard implements CanActivate {
          const allowedUsers = this.reflector.get<AllowedUser[]>(USERS, context.getHandler());
          const allowedApps = this.reflector.get(APPS, context.getHandler());
          const reqCtx = request.body.ctx;
-         if (!allowedUsers.length || allowedUsers.includes(EAllowedUser.Any)) return true;
+         if (!allowedUsers?.length || allowedUsers.includes(EAllowedUser.Any)) return true;
          if (reqCtx.user) {
             if (allowedApps?.length && !allowedApps.includes(reqCtx.user.app)) return false;
 
@@ -83,7 +86,8 @@ export default class AuthGuard implements CanActivate {
             return gotPermission;
          } else throw new UnauthorizedException();
       } else {
-         // const call: ServerUnaryCall<any, any> = (context.switchToRpc() as any).args[2];
+         const call: ServerUnaryCall<any, any> = (context.switchToRpc() as any).args[2];
+         call.request.ctx = await getGrpcContext(call.metadata);
          // const authHeader = call.metadata.get(AUTHORIZATION)[0] as string;
          // const basicAuth = await this.broker.request<AuthCredential>({
          //    action: async (meta) =>

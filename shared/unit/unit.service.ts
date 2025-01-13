@@ -4,10 +4,14 @@ import BaseService from '@common/core/base/base.service';
 import { CreateUnitDto, ExchangeUnitDto, GetBaseUnitDto } from './unit.dto';
 import AppService from '@common/decorator/app_service.decorator';
 import CategoryService from '../category/category.service';
+import { ModuleRef } from '@nestjs/core';
 
 @AppService()
 export default class UnitService extends BaseService<Unit> {
-   constructor(private readonly categoryService: CategoryService) {
+   constructor(
+      protected readonly moduleRef: ModuleRef,
+      private readonly categoryService: CategoryService,
+   ) {
       super();
    }
 

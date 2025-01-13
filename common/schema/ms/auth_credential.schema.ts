@@ -21,7 +21,7 @@ class AllowedService {
 
 @Schema()
 export default class AuthCredential extends BaseSchema {
-   @AppProp({ type: String, enum: EAuthCredential })
+   @AppProp({ type: String, enum: EAuthCredential, unique: true })
    type: EAuthCredential;
 
    @AppProp({ type: String }, { userName: true })

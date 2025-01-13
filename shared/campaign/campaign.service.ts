@@ -3,10 +3,14 @@ import BaseService from '@common/core/base/base.service';
 import Campaign from './campaign.schema';
 import { CreateCampaignDto } from './campaign.dto';
 import CategoryService from '../category/category.service';
+import { ModuleRef } from '@nestjs/core';
 
 @AppService()
 export default class CampaignService extends BaseService<Campaign> {
-   constructor(private readonly categoryService: CategoryService) {
+   constructor(
+      protected readonly moduleRef: ModuleRef,
+      private readonly categoryService: CategoryService,
+   ) {
       super();
    }
 

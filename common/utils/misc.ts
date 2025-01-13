@@ -32,10 +32,10 @@ const getGrpcClientOptions = (pkgs: string[], url: string): ClientsModuleOptions
 
 export const getGrpcContext = async (meta: Metadata): Promise<RequestContext> => {
    const merchantId = meta.get('merchantId')[0] as string;
-   const connection = AppContext.getConnection(merchantId);
+   const [connection, session] = await AppContext.getSession(merchantId);
    return {
       connection,
-      session: await connection.startSession(),
+      session,
       requestedApp: meta.get(REQUESTED_APP)[0] as EApp,
       userAgent: meta.get(USER_AGENT)[0] as string,
       logTrail: [],

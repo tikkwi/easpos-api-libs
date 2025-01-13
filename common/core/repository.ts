@@ -9,8 +9,9 @@ export default class Repository<T> {
    ) {}
 
    async create(dto: CreateType<T>) {
+      const doc = await this.model.create(dto);
       return {
-         data: await new this.model(dto).save({
+         data: await doc.save({
             session: this.session,
          }),
       };

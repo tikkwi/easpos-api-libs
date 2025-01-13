@@ -1,8 +1,13 @@
 import { pick } from 'lodash';
 import BaseService from '@common/core/base/base.service';
 import Audit from './audit.schema';
+import { ModuleRef } from '@nestjs/core';
 
 export default class AuditService extends BaseService<Audit> {
+   constructor(protected readonly moduleRef: ModuleRef) {
+      super();
+   }
+
    async logRequest({
       connection,
       session,

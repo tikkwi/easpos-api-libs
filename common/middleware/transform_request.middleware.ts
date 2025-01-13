@@ -9,7 +9,7 @@ export default class TransformRequestMiddleware implements NestMiddleware {
    async use(request: Request, _, next: () => void) {
       let user: AuthUser;
       if (request.session.user) user = await decrypt<AuthUser>(request.session.user);
-      const connection = AppContext.getConnection();
+      const [connection, session] = await AppContext.getSession();
       request.body.ctx = {
          logTrail: [],
          requestedApp: process.env['APP'] as EApp,
@@ -18,7 +18,7 @@ export default class TransformRequestMiddleware implements NestMiddleware {
          ip: request.ip,
          userAgent: request.headers['user-agent'],
          connection,
-         session: await connection.startSession(),
+         session,
       };
       next();
    }

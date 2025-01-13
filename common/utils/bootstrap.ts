@@ -19,7 +19,6 @@ export default async function appBootstrap(
       .setTitle(process.env['APP'])
       .setVersion('1.0')
       .build();
-
    // app.setGlobalPrefix(`${currentApp}_api`);
    const document = SwaggerModule.createDocument(app, documentConfig);
    SwaggerModule.setup('swagger', app, document);

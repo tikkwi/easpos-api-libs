@@ -1,18 +1,17 @@
 import { FindByIdDto, FindByIdsDto } from '../../dto/core.dto';
 import BaseSchema from './base.schema';
 import Repository from '../repository';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { SCHEMA } from '../../constant';
 import { Connection } from 'mongoose';
 
-@Injectable()
-export default class BaseService<T = BaseSchema> {
-   protected readonly moduleRef: ModuleRef;
+export default abstract class BaseService<T = BaseSchema> {
+   protected abstract readonly moduleRef: ModuleRef;
 
    async getRepository(connection: Connection, session: ClientSession): Promise<Repository<T>> {
       return new Repository(
-         connection.model(this.constructor.name, this.moduleRef.get(SCHEMA)),
+         connection.model(this.constructor.name.replace(/Ser.*$/, ''), this.moduleRef.get(SCHEMA)),
          session,
       );
    }

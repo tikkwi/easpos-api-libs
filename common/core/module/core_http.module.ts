@@ -4,13 +4,11 @@ import { hours, minutes, ThrottlerModule } from '@nestjs/throttler';
 import { Redis } from 'ioredis';
 import { REDIS_CLIENT } from '@common/constant';
 import ThrottlerStorageRedis from '../redis_throttler_storage.service';
-import BaseModule from '../base/base.module';
 import CategoryModule from '@shared/category/category.module';
 import TransformRequestMiddleware from '../../middleware/transform_request.middleware';
 
 @Module({
    imports: [
-      BaseModule,
       CategoryModule,
       ThrottlerModule.forRootAsync({
          useFactory: async (client: Redis) => {

@@ -1,6 +1,7 @@
 import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { responseError } from '@common/utils/misc';
+import { ServerUnaryCall } from '@grpc/grpc-js';
 
 @Catch()
 export default class AppExceptionFilter implements ExceptionFilter {
@@ -8,18 +9,23 @@ export default class AppExceptionFilter implements ExceptionFilter {
       // const logger = new Logger(firstUpperCase(this.config.get(APP)));
       // logger.error(err);
 
+      let session: ClientSession;
       if (host.getType() === 'http') {
          const ctx = host.switchToHttp();
          const response = ctx.getResponse<Response>();
          const request = ctx.getRequest<Request>();
-         const session: ClientSession = request.body.ctx.session;
-         session.abortTransaction();
-         session.endSession();
+         session = request.body.ctx.session;
          responseError(request, response, err);
+      } else {
+         const call: ServerUnaryCall<any, any> = (host.switchToRpc() as any).args[2];
+         session = call.request.ctx.session;
       }
-      return {
-         code: err.error === 'Forbidden resource' ? 403 : err.status ?? 500,
-         message: err.message ?? 'Internal Server Error',
-      };
+      session.abortTransaction();
+      session.endSession();
+      if (host.getType() === 'rpc')
+         return {
+            code: err.error === 'Forbidden resource' ? 403 : err.status ?? 500,
+            message: err.message ?? 'Internal Server Error',
+         };
    }
 }
