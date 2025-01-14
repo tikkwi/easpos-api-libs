@@ -13,3 +13,5 @@ export const CONNECTION_POOL = new LRUCache({
    updateAgeOnGet: true,
    dispose: (connection: Connection) => connection.close(),
 });
+export const ADMIN_BASIC_AUTH_PATHS = [];
+export const USER_BASIC_AUTH_PATHS = [];

@@ -9,7 +9,7 @@ import { Request, Response } from 'express';
 import { authenticateBasicAuth } from '@common/utils/misc';
 import { AUTH_CREDENTIAL } from '@common/constant';
 import { AuthCredentialServiceMethods } from '@common/dto/auth_credential.dto';
-import { EApp } from '@common/utils/enum';
+import { EApp, EAuthCredential } from '@common/utils/enum';
 import AppBrokerService from '../core/app_broker/app_broker.service';
 import process from 'node:process';
 import { getServiceToken } from '../utils/regex';
@@ -26,11 +26,14 @@ export default class BasicAuthMiddleware implements NestMiddleware {
       const { userName, password } = await this.appBroker.request<BasicAuth>({
          action: (meta) =>
             this.credService.getAuthCredential(
-               { ctx: request.body.ctx, url: request.originalUrl },
+               {
+                  ctx: request.body.ctx,
+                  type: request.originalUrl.includes('swagger')
+                     ? EAuthCredential.Swagger
+                     : (process.env['APP'] as EAuthCredential),
+               },
                meta,
             ),
-         cache: true,
-         key: 'a_adm_auth_cred',
          app: EApp.Admin,
       });
 

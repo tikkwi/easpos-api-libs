@@ -11,19 +11,19 @@ import { AUTHORIZATION, REQUESTED_APP } from '../../constant';
 export default class AppBrokerService {
    constructor(private readonly db: AppRedisService) {}
 
-   async request<T>({ action, app, cache = true, meta: mta, ...rest }: BrokerRequest): Promise<T> {
+   async request<T>({ action, app, cache = false, meta: mta, ...rest }: BrokerRequest): Promise<T> {
       const { key } = rest as any;
       const currentApp = process.env['APP'];
       const isCrossApp = !app || app !== currentApp;
       const usr = isCrossApp
          ? app === EApp.User
-            ? process.env['USER_USR']
-            : process.env['ADMIN_USR']
+            ? process.env['USER_RPC_USR']
+            : process.env['ADMIN_RPC_USR']
          : '';
       const pwd = isCrossApp
          ? app === EApp.User
-            ? process.env['USER_PWD']
-            : process.env['ADMIN_PWD']
+            ? process.env['USER_RPC_PWD']
+            : process.env['ADMIN_RPC_PWD']
          : '';
 
       const $action = isCrossApp ? (meta) => lastValueFrom(action(meta)) : action;

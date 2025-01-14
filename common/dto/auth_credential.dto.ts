@@ -1,14 +1,10 @@
-import { IsIP, IsNotEmpty, IsOptional, IsUrl } from 'class-validator';
+import { IsEnum } from 'class-validator';
 import { BaseDto } from './core.dto';
+import { EAuthCredential } from '../utils/enum';
 
 export class GetAuthCredentialDto extends BaseDto {
-   @IsNotEmpty()
-   @IsUrl()
-   url: string;
-
-   @IsOptional()
-   @IsIP()
-   ip?: string;
+   @IsEnum(EAuthCredential)
+   type: EAuthCredential;
 }
 
 export type AuthCredentialReturn = { data: AuthCredential };
