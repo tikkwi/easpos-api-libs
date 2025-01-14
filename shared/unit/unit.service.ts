@@ -33,10 +33,7 @@ export default class UnitService extends BaseService<Unit> {
       }
    }
 
-   async exchangeUnit(
-      { connection, session }: RequestContext,
-      { current, targetId }: ExchangeUnitDto,
-   ) {
+   async exchangeUnit({ ctx: { connection, session }, current, targetId }: ExchangeUnitDto) {
       const repository = await this.getRepository(connection, session);
       let exchanged = 0;
       let target,

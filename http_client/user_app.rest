@@ -1,0 +1,3 @@
+// @name Ms Test
+// @no-log
+GET {{user-app}}/ms-test?msg=ar bwr

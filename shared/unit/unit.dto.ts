@@ -16,7 +16,7 @@ export class GetBaseUnitDto extends BaseDto {
    categoryId?: string;
 }
 
-export class ExchangeUnitDto {
+export class ExchangeUnitDto extends BaseDto {
    @ValidateNested({ each: true })
    @Type(() => Amount)
    current: Amount[];
