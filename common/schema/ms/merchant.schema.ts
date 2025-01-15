@@ -6,6 +6,7 @@ import { MFA } from '../../dto/entity.dto';
 import BaseSchema from '../../core/base/base.schema';
 import AppProp from '../../decorator/app_prop.decorator';
 import Category from '@shared/category/category.schema';
+import Address from '@shared/address/address.schema';
 
 export class LoggedInMerchantUser {
    @IsMongoId()
@@ -34,20 +35,23 @@ export default class Merchant extends BaseSchema {
    @AppProp({ type: SchemaTypes.Mixed, required: false }, { type: MFA })
    mfa?: MFA;
 
-   @AppProp({ type: Boolean })
-   verified: boolean;
+   @AppProp({ type: Boolean, default: false })
+   verified?: boolean;
 
    @AppProp({ type: Boolean, default: false, required: false })
-   demoClaimed: boolean;
+   demoClaimed?: boolean;
 
    @AppProp({ type: SchemaTypes.ObjectId, ref: 'Category' })
    type: AppSchema<Category>;
 
    @AppProp({ type: [{ type: SchemaTypes.Mixed }], default: [] }, { type: LoggedInMerchantUser })
-   loggedInUsers: LoggedInMerchantUser[];
+   loggedInUsers?: LoggedInMerchantUser[];
 
    @AppProp({ type: String, enum: EStatus, default: EStatus.Pending })
-   status: EStatus;
+   status?: EStatus;
+
+   @AppProp({ type: SchemaTypes.ObjectId, ref: 'Address', required: false })
+   address?: AppSchema<Address>;
 }
 
 export const MerchantSchema = SchemaFactory.createForClass(Merchant);

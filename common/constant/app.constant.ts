@@ -1,6 +1,7 @@
 import { LRUCache } from 'lru-cache';
 import process from 'node:process';
 import { config } from 'dotenv';
+import { RequestMethod } from '@nestjs/common';
 
 config({ path: `${process.cwd()}/.env` });
 
@@ -14,4 +15,4 @@ export const CONNECTION_POOL = new LRUCache({
    dispose: (connection: Connection) => connection.close(),
 });
 export const ADMIN_BASIC_AUTH_PATHS = [];
-export const USER_BASIC_AUTH_PATHS = [];
+export const USER_BASIC_AUTH_PATHS = [{ path: '/create-merchant', method: RequestMethod.POST }];

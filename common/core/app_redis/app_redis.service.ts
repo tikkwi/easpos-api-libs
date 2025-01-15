@@ -37,7 +37,10 @@ export default class AppRedisService {
       del?: boolean,
    ): Promise<AppCache[K] | undefined> {
       const k = await this.getKey(key);
-      let { data }: any = await this.db.get(k).then((res) => decrypt(res));
+      const isKeyExist = await this.db.exists(k);
+      let { data }: any = isKeyExist
+         ? await this.db.get(k).then((res) => decrypt(res))
+         : { data: undefined };
 
       if (getFnc) {
          data = await getFnc();

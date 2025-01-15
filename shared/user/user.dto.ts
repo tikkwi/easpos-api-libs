@@ -54,6 +54,7 @@ export class CreateUserDto extends OmitType(CoreDto(User), [
    'mailVerified',
    'mobileVerified',
    'tags',
+   'address',
 ]) {
    @IsOptional()
    @IsMongoId()

@@ -90,7 +90,10 @@ declare global {
 
    //NOTE: append a_ for global caches and t_ for temporary
    type AppCache = {
-      a_adm_auth_cred?: AuthCredential;
+      a_adm_auth_cred_adm?: AuthCredential;
+      a_adm_auth_cred_mer?: AuthCredential;
+      a_adm_auth_cred_swg?: AuthCredential;
+      a_adm_auth_cred_adm_rpc?: AuthCredential;
       merchant?: AuthMerchant;
       t_applicable_alw?: Array<AppSchema<Allowance>>;
    };

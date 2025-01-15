@@ -2,50 +2,49 @@ syntax = "proto3";
 
 package USER_PACKAGE;
 
-import "shared/enum.proto";
 import "shared/core.proto";
 
 service UserService {
-    rpc GetUser (GetUserDto) returns (UserReturn) {}
-    rpc UserWithAuth (UserWihAuthDto) returns (UserReturn) {}
-    rpc CreateUser (CreateUserDto) returns (UserReturn) {}
+  rpc GetUser (GetUserDto) returns (UserReturn) {}
+  rpc UserWithAuth (UserWihAuthDto) returns (UserReturn) {}
+  rpc CreateUser (CreateUserDto) returns (UserReturn) {}
 }
 
 message User {
-    string _id = 1;
-    shared.EUser type = 2;
-    shared.EStatus status = 3;
-    string firstName = 4;
-    string lastName = 5;
-    string mail = 6;
+  string _id = 1;
+  string type = 2;
+  string status = 3;
+  string firstName = 4;
+  string lastName = 5;
+  string mail = 6;
 }
 
 message UserReturn {
-    int32 code = 1;
-    optional string message = 2;
-    User data = 3;
-    optional string token = 4;
+  int32 code = 1;
+  optional string message = 2;
+  User data = 3;
+  optional string token = 4;
 }
 
 message GetUserDto {
-    optional string id = 1;
-    optional string userName = 2;
-    optional string mail = 3;
+  optional string id = 1;
+  optional string userName = 2;
+  optional string mail = 3;
 }
 
 message UserWihAuthDto {
-    string id = 1;
-    string url = 2;
+  string id = 1;
+  string url = 2;
 }
 
 message CreateUserDto {
-    string userName = 1;
-    optional shared.EUser type = 2;
-    string firstName = 3;
-    string lastName = 4;
-    string mail = 5;
-    string password = 6;
-    optional shared.AuthUser authUser = 7;
-    repeated string permissions = 8;
-    optional string merchantId = 9;
+  string userName = 1;
+  optional shared.EUser type = 2;
+  string firstName = 3;
+  string lastName = 4;
+  string mail = 5;
+  string password = 6;
+  optional shared.AuthUser authUser = 7;
+  repeated string permissions = 8;
+  optional string merchantId = 9;
 }

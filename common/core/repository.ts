@@ -10,11 +10,10 @@ export default class Repository<T> {
 
    async create(dto: CreateType<T>) {
       const doc = await this.model.create(dto);
-      return {
-         data: await doc.save({
-            session: this.session,
-         }),
-      };
+      await doc.save({
+         session: this.session,
+      });
+      return { data: doc };
    }
 
    async find({ filter, projection, options, pagination }: FindType<T>) {

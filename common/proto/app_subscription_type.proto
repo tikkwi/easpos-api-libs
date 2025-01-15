@@ -2,9 +2,7 @@ syntax = "proto3";
 
 package APP_SUBSCRIPTION_TYPE_PACKAGE;
 
-import 'shared/enum.proto';
 import 'shared/core.proto';
-
 
 message ExtraUserPrice {
   int32 userBelow = 1;

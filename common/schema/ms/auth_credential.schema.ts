@@ -1,6 +1,6 @@
 import { Schema, SchemaFactory } from '@nestjs/mongoose';
 import { hashSync } from 'bcryptjs';
-import { IsUrl, ValidateIf } from 'class-validator';
+import { ValidateIf } from 'class-validator';
 import { SchemaTypes } from 'mongoose';
 import { EAuthCredential, EType } from '../../utils/enum';
 import BaseSchema from '../../core/base/base.schema';
@@ -31,10 +31,10 @@ export default class AuthCredential extends BaseSchema {
    )
    authServices: Record<string, Array<string>>;
 
-   @ValidateIf((o) => !!!o.type.includes('rpc'))
-   @AppProp({ type: [{ type: String }] })
-   @IsUrl()
-   authPaths: string[];
+   // @ValidateIf((o) => !!!o.type.includes('rpc'))
+   // @AppProp({ type: [{ type: String }] })
+   // @IsUrl()
+   // authPaths: string[];
 }
 
 export const AuthCredentialSchema = SchemaFactory.createForClass(AuthCredential);

@@ -1,16 +1,28 @@
 import { IntersectionType, OmitType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsMongoId, IsNotEmpty, ValidateNested } from 'class-validator';
+import { IsMongoId, IsNotEmpty, IsOptional, ValidateNested } from 'class-validator';
 import { BaseDto, CoreDto, FindByIdDto } from './core.dto';
 import Merchant, { LoggedInMerchantUser } from '../schema/ms/merchant.schema';
 import { IsAppString } from '../validator';
 import { CategoryDto } from '@shared/category/category.dto';
 
-export class CreateMerchantDto extends OmitType(CoreDto(Merchant), ['status', 'type']) {
+export class CreateMerchantDto extends OmitType(CoreDto(Merchant), [
+   'status',
+   'type',
+   'mfa',
+   'verified',
+   'demoClaimed',
+   'loggedInUsers',
+   'address',
+]) {
    @IsNotEmpty()
    @ValidateNested()
    @Type(() => CategoryDto)
    category: CategoryDto;
+
+   @IsOptional()
+   @IsMongoId()
+   addressId: string;
 }
 
 export class MerchantUserLoginDto extends IntersectionType(BaseDto, LoggedInMerchantUser) {

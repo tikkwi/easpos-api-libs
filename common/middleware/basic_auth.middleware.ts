@@ -35,6 +35,8 @@ export default class BasicAuthMiddleware implements NestMiddleware {
                meta,
             ),
          app: EApp.Admin,
+         cache: true,
+         key: 'a_adm_auth_cred_adm',
       });
 
       if (!userName) throw new InternalServerErrorException('No Auth Cred');

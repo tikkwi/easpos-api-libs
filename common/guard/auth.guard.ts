@@ -99,6 +99,8 @@ export default class AuthGuard implements CanActivate {
                   meta,
                ),
             app: EApp.Admin,
+            cache: true,
+            key: 'a_adm_auth_cred_adm_rpc',
          });
          const isAuthenticated = await authenticateBasicAuth(basicAuth, authHeader);
          if (isAuthenticated) {

@@ -8,7 +8,7 @@ import {
    IsString,
 } from 'class-validator';
 import { SchemaTypes } from 'mongoose';
-import { EStatus, ETmpBlock, EUser } from '@common/utils/enum';
+import { EStatus, ETmpBlock } from '@common/utils/enum';
 import { MFA } from '@common/dto/entity.dto';
 import BaseSchema from '@common/core/base/base.schema';
 import AppProp from '@common/decorator/app_prop.decorator';
@@ -32,9 +32,6 @@ export class TmpBlock {
 export default class User extends BaseSchema {
    @AppProp({ type: String, unique: true }, { userName: true })
    userName: string;
-
-   @AppProp({ type: String, enum: EUser, default: EUser.Employee, required: false })
-   type: EUser;
 
    @AppProp({ type: String, enum: EStatus, default: EStatus.Active })
    status?: EStatus;

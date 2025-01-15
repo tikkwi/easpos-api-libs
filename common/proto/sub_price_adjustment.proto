@@ -2,7 +2,6 @@ syntax = "proto3";
 
 package SUB_PRICE_ADJUSTMENT_PACKAGE;
 
-import 'shared/enum.proto';
 import 'shared/core.proto';
 
 message Adjustment {
@@ -20,7 +19,7 @@ message SubPriceAdjustment {
   string name = 7;
   optional string description = 8;
   bool perProduct = 9;
-  shared.EStatus status = 10;
+  string status = 10;
   bool stackable = 11;
   optional string expireAt = 12;
   optional shared.Amount spendTrigger = 13;
