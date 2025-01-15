@@ -39,7 +39,7 @@ message UserWihAuthDto {
 
 message CreateUserDto {
   string userName = 1;
-  optional shared.EUser type = 2;
+  optional string type = 2;
   string firstName = 3;
   string lastName = 4;
   string mail = 5;

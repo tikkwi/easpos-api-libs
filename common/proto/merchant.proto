@@ -38,7 +38,7 @@ message Merchant {
   bool demoClaimed = 7;
   shared.Category type = 8;
   repeated LoggedInMerchantUser loggedInUsers = 9;
-  shared.EStatus status = 10;
+  string status = 10;
 }
 
 
