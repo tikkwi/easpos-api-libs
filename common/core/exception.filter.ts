@@ -14,14 +14,14 @@ export default class AppExceptionFilter implements ExceptionFilter {
          const ctx = host.switchToHttp();
          const response = ctx.getResponse<Response>();
          const request = ctx.getRequest<Request>();
-         session = request.body.ctx.session;
+         session = request.body.ctx?.session;
          responseError(request, response, err);
       } else {
          const call: ServerUnaryCall<any, any> = (host.switchToRpc() as any).args[2];
          session = call.request.ctx.session;
       }
-      session.abortTransaction();
-      session.endSession();
+      await session?.abortTransaction();
+      await session?.endSession();
       if (host.getType() === 'rpc')
          return {
             code: err.error === 'Forbidden resource' ? 403 : err.status ?? 500,

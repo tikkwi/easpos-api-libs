@@ -11,7 +11,7 @@ import {
 } from 'class-validator';
 import { EAllowedUser, EUserApp } from '@common/utils/enum';
 import { PopulateOptions, ProjectionType } from 'mongoose';
-import { IsRecord } from '../validator/is_record.validator';
+import { IsRecord } from '../validator';
 
 //types
 export type AllowedUser = keyof typeof EAllowedUser;

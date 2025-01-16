@@ -17,6 +17,8 @@ message AuthUser {
 message Category {
   optional string name = 1;
   optional string type = 2;
+  optional bool default = 3;
+  optional string id = 4;
 }
 
 message Empty {}

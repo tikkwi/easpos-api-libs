@@ -16,14 +16,15 @@ export default class AppContext {
    });
 
    static async getSession(id?: string): Promise<[Connection, ClientSession]> {
-      let conn;
+      let conn: Connection;
       if (!id) conn = AppContext.#connection;
       else if (id && this.#connectionPool.has(id)) conn = this.#connectionPool.get(id);
-      else
+      else {
          conn = createConnection(
-            `${process.env['MONGO_URI']}/${id ?? ''}?replicaSet=rs0&authSource=admin`,
+            `${process.env['MONGO_URI']}/${id ?? ''}?repl icaSet=rs0&authSource=admin`,
          );
-      this.#connectionPool.set(id, conn);
+         this.#connectionPool.set(id, conn);
+      }
       const session = await conn.startSession();
       session.startTransaction();
       return [conn, session];

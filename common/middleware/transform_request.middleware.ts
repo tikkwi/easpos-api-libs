@@ -13,17 +13,19 @@ export default class TransformRequestMiddleware implements NestMiddleware {
       const isBasicAuthPath = USER_BASIC_AUTH_PATHS.some(({ path }) =>
          request.originalUrl.includes(path),
       );
-      const [connection, session] = isBasicAuthPath ? undefined : await AppContext.getSession();
-      request.body.ctx = {
+      request.ctx = {
          logTrail: [],
          requestedApp: process.env['APP'] as EApp,
          contextType: 'http',
          user,
          ip: request.ip,
          userAgent: request.headers['user-agent'],
-         connection,
-         session,
       };
+      if (isBasicAuthPath) {
+         const [connection, session] = await AppContext.getSession();
+         request.ctx.connection = connection;
+         request.ctx.session = session;
+      }
       next();
    }
 }

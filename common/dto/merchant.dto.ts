@@ -1,20 +1,15 @@
-import { IntersectionType, OmitType } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
+import { IntersectionType, OmitType, PickType } from '@nestjs/swagger';
 import { IsMongoId, IsNotEmpty, IsOptional, ValidateNested } from 'class-validator';
-import { BaseDto, CoreDto, FindByIdDto } from './core.dto';
+import { BaseDto, FindByIdDto } from './core.dto';
 import Merchant, { LoggedInMerchantUser } from '../schema/ms/merchant.schema';
 import { IsAppString } from '../validator';
+import { Type } from 'class-transformer';
 import { CategoryDto } from '@shared/category/category.dto';
 
-export class CreateMerchantDto extends OmitType(CoreDto(Merchant), [
-   'status',
-   'type',
-   'mfa',
-   'verified',
-   'demoClaimed',
-   'loggedInUsers',
-   'address',
-]) {
+export class CreateMerchantDto extends IntersectionType(
+   BaseDto,
+   PickType(Merchant, ['name', 'mail', 'mobileNo']),
+) {
    @IsNotEmpty()
    @ValidateNested()
    @Type(() => CategoryDto)
@@ -38,7 +33,7 @@ export class MerchantVerifyDto extends OmitType(FindByIdDto, ['errorOnNotFound']
 export interface MerchantServiceMethods {
    loginUser(dto: MerchantUserLoginDto, meta: Metadata): Promise<{ data: AuthMerchant }>;
 
-   nhtp_createMerchant(dto: CreateMerchantDto, meta: Metadata): Promise<{ data: Merchant }>;
+   createMerchant(dto: CreateMerchantDto, meta: Metadata): Promise<{ data: Merchant }>;
 
    merchantWithAuth(dto: FindByIdDto, meta: Metadata): Promise<{ data: AuthMerchant }>;
 

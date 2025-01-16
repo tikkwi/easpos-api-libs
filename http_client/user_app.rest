@@ -6,13 +6,21 @@ GET {{user-app}}/ms-test?msg=ar bwr
 
 // @name Create Merchant
 // @no-log
+
+< {%
+  request.variables.set('authorization', Window.btoa('easpos_mer:V5;>Ry(F^.B*$DNZ8,~#uj'))
+%}
+
 POST {{user-app}}/create-merchant
-Authorization: Basic easpos_usr V5;>Ry(F^.B*$DNZ8,~#uj
+Authorization: Basic {{authorization}}
 Content-Type: application/json
 
 {
   "name": "EasPos",
   "mail": "tinkokowin@easpos.co",
-  "phone": "09790000000",
-  "verified": true
+  "mobileNo": "+959790000000",
+  "category": {
+    "name": "SAAS",
+    "type": "Merchant"
+  }
 }

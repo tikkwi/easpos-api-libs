@@ -14,7 +14,7 @@ export default class Category extends BaseSchema {
    @AppProp({ type: String, enum: ECategory })
    type: ECategory;
 
-   @AppProp({ type: Boolean, default: false })
+   @AppProp({ type: Boolean, default: false, required: false })
    isTag: boolean;
 }
 

@@ -32,8 +32,8 @@ declare global {
    type AppSchema<M> = Omit<M, '_id'> & { id?: string };
 
    type RequestContext = {
-      connection: Connection;
-      session: ClientSession;
+      connection?: Connection;
+      session?: ClientSession;
       requestedApp: EApp;
       contextType: ContextType;
       logTrail: Array<RequestLog>;
@@ -102,6 +102,7 @@ declare global {
 declare module 'express' {
    interface Request {
       id: string;
+      ctx: RequestContext;
    }
 }
 

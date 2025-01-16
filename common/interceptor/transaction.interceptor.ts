@@ -12,7 +12,7 @@ export default class TransactionInterceptor implements NestInterceptor {
    ): Observable<any> | Promise<Observable<any>> {
       const { session }: RequestContext =
          context.getType() === 'http'
-            ? context.switchToHttp().getRequest<Request>().body.ctx
+            ? context.switchToHttp().getRequest<Request>().ctx
             : (context.switchToRpc() as any).args[2].request.ctx;
 
       return next.handle().pipe(

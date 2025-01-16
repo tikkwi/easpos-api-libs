@@ -2,8 +2,8 @@ import { Module, ValidationPipe } from '@nestjs/common';
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import AppBrokerModule from '../app_broker/app_broker.module';
 import AppRedisModule from '../app_redis/app_redis.module';
-import TransactionInterceptor from '../../interceptor/transaction.interceptor';
 import AppExceptionFilter from '../exception.filter';
+import TransactionInterceptor from '../../interceptor/transaction.interceptor';
 
 @Module({
    imports: [AppRedisModule, AppBrokerModule],

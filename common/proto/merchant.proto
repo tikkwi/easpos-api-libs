@@ -53,9 +53,8 @@ message CreateMerchantDto {
   string name = 1;
   string mail = 2;
   string mobileNo = 3;
-  optional string subscriptionType = 4;
-  optional string addressId = 5;
-  shared.Category category = 6;
+  optional string addressId = 4;
+  shared.Category category = 5;
 }
 
 message TmpTestData {
