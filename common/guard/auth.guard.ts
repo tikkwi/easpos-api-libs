@@ -89,15 +89,10 @@ export default class AuthGuard implements CanActivate {
          const call: ServerUnaryCall<any, any> = (context.switchToRpc() as any).args[2];
          call.request.ctx = await getGrpcContext(call.metadata);
          const authHeader = call.metadata.get(AUTHORIZATION)[0] as string;
+         const ctx = await getGrpcContext(call.metadata);
          const basicAuth = await this.broker.request<AuthCredential>({
-            action: async (meta) =>
-               this.credService.getAuthCredential(
-                  {
-                     ctx: await getGrpcContext(call.metadata),
-                     type: EAuthCredential.AdminRpc,
-                  },
-                  meta,
-               ),
+            action: (meta) =>
+               this.credService.getAuthCredential({ ctx, type: EAuthCredential.AdminRpc }, meta),
             app: EApp.Admin,
             cache: true,
             key: 'a_adm_auth_cred_adm_rpc',

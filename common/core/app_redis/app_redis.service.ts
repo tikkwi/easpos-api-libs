@@ -3,7 +3,6 @@ import { Redis } from 'ioredis';
 import { REDIS_CLIENT } from '@common/constant';
 import { decrypt, encrypt } from '@common/utils/encrypt';
 import { days, minutes } from '@nestjs/throttler';
-import { ModuleRef } from '@nestjs/core';
 
 /*
 NOTE: cache authorized status up to 1 day which mean employee may able to
@@ -11,10 +10,7 @@ authorized 1 day max even if app_subscription is expired..
 */
 @Injectable()
 export default class AppRedisService {
-   constructor(
-      @Inject(REDIS_CLIENT) private readonly db: Redis,
-      private readonly moduleRef: ModuleRef,
-   ) {}
+   constructor(@Inject(REDIS_CLIENT) private readonly db: Redis) {}
 
    async getKey<K extends keyof AppCache>(key: K, merchantId?: string) {
       if (!key.startsWith('a_') && !merchantId) throw new Error('Invalid Key');

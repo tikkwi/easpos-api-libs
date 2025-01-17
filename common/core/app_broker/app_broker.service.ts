@@ -5,13 +5,13 @@ import AppRedisService from '../app_redis/app_redis.service';
 import process from 'node:process';
 import { EApp } from '../../utils/enum';
 import { AUTHORIZATION, REQUESTED_APP } from '../../constant';
-import { map } from 'rxjs';
+import { lastValueFrom } from 'rxjs';
 
 @Injectable()
 export default class AppBrokerService {
    constructor(private readonly db: AppRedisService) {}
 
-   async request<T>({ action, app, cache = false, meta: mta, ...rest }: BrokerRequest) {
+   async request<T>({ action, app, cache = false, meta: mta, ...rest }: BrokerRequest): Promise<T> {
       const { key } = rest as any;
       const currentApp = process.env['APP'];
       const isCrossApp = !app || app !== currentApp;
@@ -31,16 +31,12 @@ export default class AppBrokerService {
          meta.add(REQUESTED_APP, currentApp);
          meta.add(AUTHORIZATION, `Basic ${base64(`${usr}:${pwd}`)}`);
          if (mta) Object.entries(mta).forEach(([key, value]: any) => meta.add(key, value));
-         const res = await action(meta);
-         return res.pipe(
-            map(({ data, code, message }) => {
-               if (code) throw new InternalServerErrorException(message);
-               return data as T;
-            }),
-         );
+         const { data, code, message } = (await lastValueFrom(action(meta))) as any;
+         if (code) throw new InternalServerErrorException(message);
+         return data as T;
       };
 
-      if (isCrossApp) return cache ? this.db.get(key, crossRequest) : crossRequest();
-      return action().pipe(map(({ data }) => data as T));
+      if (isCrossApp) return cache ? await this.db.get(key, crossRequest) : await crossRequest();
+      return action().then(({ data }) => data as T);
    }
 }
