@@ -21,11 +21,11 @@ export default class TransformRequestMiddleware implements NestMiddleware {
          ip: request.ip,
          userAgent: request.headers['user-agent'],
       };
-      if (isBasicAuthPath) {
-         const [connection, session] = await AppContext.getSession();
-         request.ctx.connection = connection;
-         request.ctx.session = session;
-      }
+      // if (isBasicAuthPath) {
+      const [connection, session] = await AppContext.getSession();
+      request.ctx.connection = connection;
+      request.ctx.session = session;
+      // }
       next();
    }
 }

@@ -15,9 +15,17 @@ export default class CategoryService extends BaseService<Category> {
       return await repository.findOne({ filter: { _id: id, type } });
    }
 
-   async getCategory({ ctx, id, type, ...dto }: CategoryDto) {
+   async getCategory({ ctx, _id, type, ...dto }: CategoryDto) {
       const repository = await this.getRepository(ctx.connection, ctx.session);
-      if (id) return await this.findById({ ctx, id, type });
+      if (_id) {
+         const { data: category } = await this.findById({
+            ctx,
+            id: _id,
+            type,
+            errorOnNotFound: false,
+         });
+         if (category) return { data: category };
+      }
       return await repository.create({ type, ...dto } as any);
    }
 }

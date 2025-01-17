@@ -1,5 +1,5 @@
 import { Type } from '@nestjs/common';
-import { OmitType, PartialType, PickType } from '@nestjs/swagger';
+import { IntersectionType, OmitType, PartialType, PickType } from '@nestjs/swagger';
 import {
    IsBoolean,
    IsDateString,
@@ -41,10 +41,11 @@ export class PaginationDto<T> {
    sort?: Record<keyof T, any>;
 }
 
-export function CoreDto<T>(
-   classRef: Type<T>,
-): Type<Omit<T, '_id' | 'createdAt' | 'updatedAt'> & BaseDto> {
-   class CoreDtoClass extends OmitType(classRef as any, ['_id', 'createdAt', 'updatedAt'] as any) {}
+export function CoreDto<T>(classRef: Type<T>): Type<Omit<T, 'createdAt' | 'updatedAt'> & BaseDto> {
+   class CoreDtoClass extends IntersectionType(
+      OmitType(classRef as any, ['createdAt', 'updatedAt'] as any),
+      PartialType(PickType(classRef as any, ['_id'] as any)),
+   ) {}
 
    return CoreDtoClass as any;
 }

@@ -36,7 +36,7 @@ export default class AuthGuard implements CanActivate {
       if (isHttp) {
          const allowedUsers = this.reflector.get<AllowedUser[]>(USERS, context.getHandler());
          const allowedApps = this.reflector.get(APPS, context.getHandler());
-         const reqCtx = request.body.ctx;
+         const reqCtx = request.ctx;
          if (!allowedUsers?.length || allowedUsers.includes(EAllowedUser.Any)) return true;
          if (reqCtx.user) {
             if (allowedApps?.length && !allowedApps.includes(reqCtx.user.app)) return false;

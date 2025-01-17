@@ -36,7 +36,7 @@ message Merchant {
   optional MFA mfa = 5;
   bool verified = 6;
   bool demoClaimed = 7;
-  shared.Category type = 8;
+  shared.CategoryDto type = 8;
   repeated LoggedInMerchantUser loggedInUsers = 9;
   string status = 10;
 }
@@ -50,11 +50,12 @@ message MerchantUserLoginDto {
 }
 
 message CreateMerchantDto {
-  string name = 1;
-  string mail = 2;
-  string mobileNo = 3;
-  optional string addressId = 4;
-  shared.Category category = 5;
+  optional string _id = 1;
+  string name = 2;
+  string mail = 3;
+  string mobileNo = 4;
+  optional string addressId = 5;
+  shared.CategoryDto category = 6;
 }
 
 message TmpTestData {

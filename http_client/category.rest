@@ -1,0 +1,11 @@
+//678a1891468e2ce53d44dd09
+// @name Create Merchant
+// @no-log
+
+POST {{admin-app}}/category/create
+Content-Type: application/json
+
+{
+  "name": "SAAS",
+  "type": "Merchant"
+}
