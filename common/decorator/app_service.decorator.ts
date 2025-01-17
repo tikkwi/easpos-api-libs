@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { omit } from 'lodash';
 
 export default function AppService() {
@@ -11,14 +11,6 @@ export default function AppService() {
          if (typeof oriMeth === 'function' && key !== 'constructor') {
             descriptor.value = async function (...args) {
                const context: RequestContext = args[0].ctx;
-               const ct = args[0].ct;
-               if (
-                  (key.startsWith('nc_') && ct) ||
-                  (ct &&
-                     ((key.startsWith('nht_') && ct === 'http') ||
-                        (key.startsWith('nrp_') && ct === 'rpc')))
-               )
-                  throw new ForbiddenException();
                const res = await oriMeth.apply(this, args);
                context.logTrail.push({
                   service: target.name,

@@ -14,7 +14,7 @@ export class CategoryDto extends PartialTypeIf(({ id }) => !!id, CoreDto(Categor
    id?: string;
 
    @IsEnum(ECategory)
-   type?: ECategory;
+   type: ECategory;
 
    @IsOptional()
    @IsBoolean()
