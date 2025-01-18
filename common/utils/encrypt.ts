@@ -1,29 +1,22 @@
-import { createCipheriv, randomBytes, scrypt } from 'crypto';
-import { promisify } from 'util';
+import { createCipheriv, createDecipheriv, createHash, randomBytes } from 'crypto';
 import process from 'node:process';
 
-const getKey = async (password: string) =>
-   (await promisify(scrypt)(password, 'salt', 32)) as Buffer;
+const getKey = (password: string): any => createHash('sha256').update(password).digest();
 
-export const encrypt = async (data: string, pwd?: string) => {
-   const iv = randomBytes(20);
-   const cipher = createCipheriv('aes-256-gcm', await getKey(pwd ?? process.env['ENC_PWD']), iv);
-   return Buffer.from(
-      JSON.stringify({
-         iv,
-         encrypted: Buffer.concat([cipher.update(data), cipher.final()]),
-      }),
-   ).toString('base64');
+export const encrypt = (data: string, pwd?: string) => {
+   const iv: any = randomBytes(16);
+   const cipher = createCipheriv('aes-256-cbc', getKey(pwd ?? process.env['ENC_PWD']), iv);
+   return `${iv.toString('hex')}:${cipher.update(data, 'utf-8', 'hex')}${cipher.final('hex')}`;
 };
 
-export const decrypt = async <T>(encrypted: string, pwd?: string) => {
-   const { iv, encrypted: data } = JSON.parse(Buffer.from(encrypted, 'base64').toString());
-   const decipher = createCipheriv(
-      'aes-256-gcm',
-      await getKey(pwd ?? process.env['ENC_PWD']),
-      Buffer.from(iv),
+export const decrypt = <T>(encrypted: string, pwd?: string) => {
+   const [iv, data] = encrypted.split(':');
+   const decipher = createDecipheriv(
+      'aes-256-cbc',
+      getKey(pwd ?? process.env['ENC_PWD']),
+      Buffer.from(iv, 'hex') as any,
    );
-   const res = Buffer.concat([decipher.update(Buffer.from(data)), decipher.final()]).toString();
+   const res = decipher.update(data, 'hex', 'utf-8') + decipher.final('utf-8');
    try {
       return JSON.parse(res) as T;
    } catch (e) {

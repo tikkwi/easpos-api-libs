@@ -54,7 +54,7 @@ export default function AppProp(
          example: pOpt.enum ? Object.keys(pOpt.enum)[0] : userName ? 'easUser11' : undefined,
          description: userName ? 'Unique username with contain letters & numbers only' : undefined,
          ...swagger,
-      })(target, key);
+      } as any)(target, key);
 
       if (
          pOpt.type.name === 'SchemaMixed' ||

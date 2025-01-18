@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { Transport } from '@nestjs/microservices';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import RedisStore from 'connect-redis';
+import { RedisStore } from 'connect-redis';
 import * as session from 'express-session';
 import helmet from 'helmet';
 import { RedisClientType } from 'redis';

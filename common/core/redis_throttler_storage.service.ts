@@ -77,6 +77,8 @@ export default class ThrottlerStorageRedis implements ThrottlerStorage, OnModule
 
       return {
          totalHits,
+         isBlocked: false,
+         timeToBlockExpire: 0,
          timeToExpire: Math.ceil(timeToExpire / 1000),
       };
    }

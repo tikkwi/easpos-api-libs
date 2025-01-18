@@ -1,3 +1,8 @@
+## Version Update
+
+- [ ] check if redis-throttler-storage working properly
+    - [ ] swagger working properly (`ApiProperty` in `AppProp`)
+
 ## GRPC
 
 - [ ] rpc request's `ip` meta must be set by reverse proxy(nginx)
