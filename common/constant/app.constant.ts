@@ -9,6 +9,7 @@ import { MailSchema } from '@shared/mail/mail.schema';
 import { PermissionSchema } from '@shared/permission/permission.schema';
 import { UnitSchema } from '@shared/unit/unit.schema';
 import { Schema } from 'mongoose';
+import { CategorySchema } from '@shared/category/category.schema';
 
 config({ path: `${process.cwd()}/.env` });
 
@@ -28,6 +29,7 @@ export const SHARED_SCHEMAS: Array<[string, Schema]> = [
    ['Address', AddressSchema],
    ['Audit', AuditSchema],
    ['Campaign', CampaignSchema],
+   ['Category', CategorySchema],
    ['Mail', MailSchema],
    ['Permission', PermissionSchema],
    ['Unit', UnitSchema],

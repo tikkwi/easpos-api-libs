@@ -15,7 +15,7 @@ export default function AppService() {
                context.logTrail.push({
                   service: target.name,
                   auxiliaryService: key,
-                  payload: omit(args[0], 'context'),
+                  payload: omit(args[0], 'ctx'),
                   response: res,
                });
                return res;

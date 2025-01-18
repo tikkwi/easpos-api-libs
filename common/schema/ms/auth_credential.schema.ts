@@ -24,7 +24,7 @@ export default class AuthCredential extends BaseSchema {
 
    @ValidateIf((o) => !!o.type.includes('rpc'))
    @AppProp(
-      { type: SchemaTypes.Mixed },
+      { type: SchemaTypes.Mixed, required: false },
       {
          validators: [{ func: IsRecord, args: [{ isValueArray: true, value: EType.String }] }],
       },
