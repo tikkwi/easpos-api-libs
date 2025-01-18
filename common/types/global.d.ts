@@ -43,6 +43,7 @@ declare global {
       user?: AuthUser;
       merchant?: AuthMerchant;
       request?: Request;
+      rollback?: () => Promise<any>;
    };
 
    type PaginationType<T> = Partial<{

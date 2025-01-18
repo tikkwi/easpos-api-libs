@@ -30,8 +30,8 @@ export class TmpBlock {
 
 //TODO: guest user for customer
 export default class User extends BaseSchema {
-   @AppProp({ type: String, unique: true }, { userName: true })
-   userName: string;
+   @AppProp({ type: String, unique: true, required: false, sparse: true }, { userName: true })
+   userName?: string;
 
    @AppProp({ type: String, enum: EStatus, default: EStatus.Active })
    status?: EStatus;
@@ -42,11 +42,11 @@ export default class User extends BaseSchema {
    @AppProp({ type: SchemaTypes.Mixed, required: false }, { type: MFA })
    mfa?: MFA;
 
-   @AppProp({ type: String })
-   firstName: string;
+   @AppProp({ type: String, required: false })
+   firstName?: string;
 
-   @AppProp({ type: String })
-   lastName: string;
+   @AppProp({ type: String, required: false })
+   lastName?: string;
 
    @AppProp({ type: String })
    @IsEmail()

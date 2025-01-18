@@ -146,6 +146,7 @@ export enum ECategory {
    SupplierStock = 'SupplierStock',
    Inspection = 'Inspection',
    MerchantSubscription = 'MerchantSubscription',
+   EmployeeRole = 'EmployeeRole',
    ProductTag = 'ProductTag',
    ProductVariantTag = 'ProductVariantTag',
    ProductUnitTag = 'ProductUnitTag',

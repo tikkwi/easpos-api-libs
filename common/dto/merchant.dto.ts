@@ -1,4 +1,4 @@
-import { IntersectionType, OmitType, PartialType, PickType } from '@nestjs/swagger';
+import { IntersectionType, OmitType, PickType } from '@nestjs/swagger';
 import { IsMongoId, IsNotEmpty, IsOptional, ValidateNested } from 'class-validator';
 import { BaseDto, FindByIdDto } from './core.dto';
 import Merchant, { LoggedInMerchantUser } from '../schema/ms/merchant.schema';
@@ -8,9 +8,12 @@ import { CategoryDto } from '@shared/category/category.dto';
 
 export class CreateMerchantDto extends IntersectionType(
    BaseDto,
-   PartialType(PickType(Merchant, ['_id'])),
    PickType(Merchant, ['name', 'mail', 'mobileNo']),
 ) {
+   @IsOptional()
+   @IsMongoId()
+   _id?: string;
+
    @IsNotEmpty()
    @ValidateNested()
    @Type(() => CategoryDto)

@@ -1,8 +1,8 @@
 //678a1891468e2ce53d44dd09
-// @name Create Merchant
+// @name Create Category
 // @no-log
 
-POST {{admin-app}}/category/create
+POST {{user-app}}/category/create
 Content-Type: application/json
 
 {

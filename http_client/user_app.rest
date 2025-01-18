@@ -18,7 +18,7 @@ Content-Type: application/json
 {
   "name": "EasPos",
   "mail": "tinkokowin@easpos.co",
-  "mobileNo": "+959790000000",
+  "mobileNo": "+959790000001",
   "category": {
     "name": "SAAS",
     "type": "Merchant"

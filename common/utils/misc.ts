@@ -7,6 +7,7 @@ import { compare } from 'bcryptjs';
 import { ADMIN_URL, REQUESTED_APP, USER_AGENT } from '@common/constant';
 import process from 'node:process';
 import AppContext from '../core/app_context.service';
+import { Connection, Schema } from 'mongoose';
 
 const getGrpcServiceProviders = (models: string[]): Provider[] => {
    return models.map((model) => {
@@ -73,3 +74,10 @@ export const authenticateBasicAuth = async ({ userName, password }: BasicAuth, c
 
 export const getMongoUri = (id?: string) =>
    `${process.env['MONGO_URI']}/${id ?? ''}?replicaSet=rs0&authSource=admin`;
+
+export const initializeCollections = async (conn: Connection, schemas: Array<[string, Schema]>) => {
+   for (const [name, schema] of schemas) {
+      const model = conn.model(name, schema);
+      await model.init();
+   }
+};

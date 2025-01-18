@@ -1,13 +1,14 @@
 import { Connection, createConnection } from 'mongoose';
 import { LRUCache } from 'lru-cache';
 import process from 'node:process';
+import { initializeCollections } from '../utils/misc';
+import { APP_SCHEMAS } from '@app/utils/app.constant';
 
 type GetContextType = {};
 
 export default class AppContext {
-   static #connection = createConnection(
-      `${process.env['MONGO_URI']}/easpos?replicaSet=rs0&authSource=admin`,
-   );
+   static #connection: Connection;
+
    static #connectionPool = new LRUCache({
       max: +process.env['MONGO_POOL_MAX_CONNECTIONS'],
       ttl: +process.env['MONGO_POOL_MAX_TTL'],
@@ -15,15 +16,12 @@ export default class AppContext {
       dispose: (connection: Connection) => connection.close(),
    });
 
-   static async getSession(id?: string): Promise<[Connection, ClientSession]> {
-      let conn: Connection;
-      if (!id) conn = AppContext.#connection;
-      else if (id && this.#connectionPool.has(id)) conn = this.#connectionPool.get(id);
-      else {
-         conn = createConnection(
-            `${process.env['MONGO_URI']}/${id ?? ''}?repl icaSet=rs0&authSource=admin`,
-         );
-         this.#connectionPool.set(id, conn);
+   static async getSession(id?: string, isNew?: boolean): Promise<[Connection, ClientSession]> {
+      let conn = id ? this.#connectionPool.get(id) : this.#connection;
+      if (!conn) {
+         conn = await this.createConnection(id, isNew);
+         if (id) this.#connectionPool.set(id, conn);
+         else this.#connection = conn;
       }
       const session = await conn.startSession();
       session.startTransaction();
@@ -33,5 +31,22 @@ export default class AppContext {
    static get<K extends keyof GetContextType>(key: K): GetContextType[K] {
       if (Object.hasOwn(this, `#${key}`)) throw new Error('Invalid Key');
       return this[`#${key}` as any];
+   }
+
+   static delete(id: string) {
+      this.#connectionPool.delete(id);
+   }
+
+   static async createConnection(id?: string, isNew = false) {
+      const conn = createConnection(
+         `${process.env['MONGO_URI']}/${id ?? 'easpos'}?replicaSet=rs0&authSource=admin`,
+      );
+      await new Promise((resolve) =>
+         conn.once('open', async () => {
+            if (isNew) await initializeCollections(conn, APP_SCHEMAS);
+            resolve(true);
+         }),
+      );
+      return conn;
    }
 }

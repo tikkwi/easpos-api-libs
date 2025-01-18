@@ -8,6 +8,7 @@ import helmet from 'helmet';
 import { RedisClientType } from 'redis';
 import { REDIS_CLIENT } from '@common/constant';
 import process from 'node:process';
+import AppContext from '../core/app_context.service';
 
 export default async function appBootstrap(
    module: any,
@@ -19,7 +20,6 @@ export default async function appBootstrap(
       .setTitle(process.env['APP'])
       .setVersion('1.0')
       .build();
-   // app.setGlobalPrefix(`${currentApp}_api`);
    const document = SwaggerModule.createDocument(app, documentConfig);
    SwaggerModule.setup('swagger', app, document);
    const redisClient = app.get<RedisClientType>(REDIS_CLIENT);
@@ -27,6 +27,7 @@ export default async function appBootstrap(
       client: redisClient,
       prefix: 'session-store:',
    });
+   await AppContext.createConnection();
    app.set('trust proxy', 1);
    // if (process.env.NODE_ENV === 'prod') app.set('trust proxy', 1);
    app.use(

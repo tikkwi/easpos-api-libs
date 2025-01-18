@@ -41,7 +41,9 @@ export class PaginationDto<T> {
    sort?: Record<keyof T, any>;
 }
 
-export function CoreDto<T>(classRef: Type<T>): Type<Omit<T, 'createdAt' | 'updatedAt'> & BaseDto> {
+export function CoreDto<T>(
+   classRef: Type<T>,
+): Type<Omit<T, '_id' | 'createdAt' | 'updatedAt'> & { _id?: string } & BaseDto> {
    class CoreDtoClass extends IntersectionType(
       OmitType(classRef as any, ['createdAt', 'updatedAt'] as any),
       PartialType(PickType(classRef as any, ['_id'] as any)),

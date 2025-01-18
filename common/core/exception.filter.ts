@@ -9,19 +9,21 @@ export default class AppExceptionFilter implements ExceptionFilter {
       // const logger = new Logger(firstUpperCase(this.config.get(APP)));
       // logger.error(err);
 
-      let session: ClientSession;
+      let ctx: RequestContext;
       if (host.getType() === 'http') {
-         const ctx = host.switchToHttp();
-         const response = ctx.getResponse<Response>();
-         const request = ctx.getRequest<Request>();
-         session = request.body.ctx?.session;
+         const context = host.switchToHttp();
+         const response = context.getResponse<Response>();
+         const request = context.getRequest<Request>();
+         ctx = request.ctx;
          responseError(request, response, err);
       } else {
          const call: ServerUnaryCall<any, any> = (host.switchToRpc() as any).args[2];
-         session = call.request.ctx.session;
+         ctx = call.request.ctx;
       }
-      await session?.abortTransaction();
-      await session?.endSession();
+      await ctx?.session?.abortTransaction();
+      await ctx?.session?.endSession();
+      if (ctx?.rollback) await ctx?.rollback();
+
       if (host.getType() === 'rpc')
          return {
             code: err.error === 'Forbidden resource' ? 403 : err.status ?? 500,

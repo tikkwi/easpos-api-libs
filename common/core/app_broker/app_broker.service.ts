@@ -25,7 +25,6 @@ export default class AppBrokerService {
             ? process.env['USER_RPC_PWD']
             : process.env['ADMIN_RPC_PWD']
          : '';
-
       const crossRequest = async () => {
          const meta = new Metadata();
          meta.add(REQUESTED_APP, currentApp);

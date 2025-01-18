@@ -93,6 +93,6 @@ export default function AppProp(
       }
 
       if (userName) Matches(regex.userName)(target, key);
-      if (validators) validators.forEach(({ func, args }) => func(...args)(target, key));
+      if (validators) validators.forEach(({ func, args }) => func(...(args ?? []))(target, key));
    };
 }
