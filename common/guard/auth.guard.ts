@@ -5,7 +5,7 @@ import {
    Injectable,
    UnauthorizedException,
 } from '@nestjs/common';
-import { ModuleRef, Reflector } from '@nestjs/core';
+import { Reflector } from '@nestjs/core';
 import { intersection } from 'lodash';
 import { Request } from 'express';
 import { APPS, AUTH_CREDENTIAL, AUTHORIZATION, MERCHANT, USERS } from '@common/constant';
@@ -21,7 +21,6 @@ import { authenticateBasicAuth, getGrpcContext } from '../utils/misc';
 @Injectable()
 export default class AuthGuard implements CanActivate {
    constructor(
-      private readonly moduleRef: ModuleRef,
       private readonly reflector: Reflector,
       private readonly broker: AppBrokerService,
       @Inject(getServiceToken(MERCHANT)) private readonly merchantService: MerchantServiceMethods,

@@ -1,18 +1,19 @@
 import { compareSync } from 'bcryptjs';
 import { BadRequestException, ForbiddenException } from '@nestjs/common';
-import { concat, omit, uniq } from 'lodash';
+import { omit, uniq } from 'lodash';
 import { Request, Response } from 'express';
 import { responseError } from '@common/utils/misc';
 import { EUser, EUserApp } from '@common/utils/enum';
-import { encrypt } from '@common/utils/encrypt';
 import { BaseUser } from './user.schema';
 import BaseService from '@common/core/base/base.service';
-import { CreateUserDto, LoginDto } from './user.dto';
+import { AuthenticateLoginMfaDto, CreateUserDto, LoginDto } from './user.dto';
 import AppBrokerService from '@common/core/app_broker/app_broker.service';
 import { MerchantServiceMethods } from '@common/dto/merchant.dto';
 import AddressService from '../address/address.service';
 import CategoryService from '../category/category.service';
 import process from 'node:process';
+import { $dayjs } from '@common/utils/datetime';
+import { encrypt } from '@common/utils/encrypt';
 
 export abstract class AUserService<T extends BaseUser = BaseUser> extends BaseService<T> {
    protected abstract readonly appBroker: AppBrokerService;
@@ -22,26 +23,24 @@ export abstract class AUserService<T extends BaseUser = BaseUser> extends BaseSe
 
    async logout(req: Request, res: Response) {
       req.session.destroy((err) => responseError(req, res, err));
+      return { message: 'Success' };
    }
 
-   async login(request: Request, { ctx, email, userName, password, app, merchantId }: LoginDto) {
-      if (request.session.user) throw new BadRequestException('Already Logged In');
+   async login(req: Request, { email, userName, password, app, merchantId }: LoginDto) {
+      if (req.session.user) throw new BadRequestException('Already Logged In');
+      const ctx = req.ctx;
       const repository = await this.getRepository(ctx.connection, ctx.session);
-      const { data: user }: any = await repository.findOne({
-         filter: {
-            email,
-            userName,
-         },
+      const { data: user } = await repository.findOne({
+         filter: { email, userName },
          errorOnNotFound: true,
-         options: { populate: ['role', 'tier'] },
       });
+      const userType = this.constructor.name.replace('Service', '');
       if (!user || !compareSync(password, user.password))
          throw new BadRequestException(`Incorrect ${email ? 'email' : 'userName'} or password`);
-      const authUser: AuthUser = { ...(omit(user, ['mfa', 'password']) as any), app };
       const appForbiddenMsg = `Not Allowed to use ${app}`;
-      if (user.type === EUser.Employee && !merchantId)
+      if (userType === EUser.Employee && !merchantId)
          throw new BadRequestException('Merchant Id is required');
-      switch (user.type) {
+      switch (userType) {
          case EUser.Admin:
             if (app !== EUserApp.SuperAdmin) throw new ForbiddenException(appForbiddenMsg);
             break;
@@ -56,13 +55,44 @@ export abstract class AUserService<T extends BaseUser = BaseUser> extends BaseSe
             if (app !== EUserApp.Customer) throw new ForbiddenException(appForbiddenMsg);
             break;
       }
+      const code = Math.random().toString().replace('0.', '').slice(0, 6);
+      //TODO: send mail/sms for the otp
+      await repository.findAndUpdate({
+         id: user.id,
+         update: { mfa: { code, expireAt: $dayjs().add(3, 'minutes') } },
+      });
+      return { message: 'OTP send..' };
+   }
 
-      if (user.type === EUser.Employee)
+   async authenticateLoginMfa(
+      req: Request,
+      { userId, code, app, merchantId }: AuthenticateLoginMfaDto,
+   ) {
+      const repository = await this.getRepository(req.ctx.connection, req.ctx.session);
+      const { data: user }: any = await repository.findOne({
+         id: userId,
+         errorOnNotFound: true,
+         options: {
+            populate: [
+               { path: 'role', populate: ['permissions'] },
+               { path: 'permissions' },
+               { path: 'tier' },
+            ],
+         },
+      });
+      let errorMsg: string | undefined;
+      const userType = this.constructor.name.replace('Service', '');
+      if (!user.mfa || $dayjs().isAfter($dayjs(user.mfa.expireAt))) errorMsg = 'Expired';
+      if (user.mfa.code !== code) errorMsg = 'Wrong MFA';
+      if (userType === EUser.Employee && !merchantId) errorMsg = 'Merchant Id is required';
+      if (errorMsg) throw new BadRequestException(errorMsg);
+      const authUser: AuthUser = { ...(omit(user, ['mfa', 'password']) as any), app };
+      if (userType === EUser.Employee)
          await this.appBroker.request<AuthMerchant>({
             action: (meta) =>
                this.merchantService.loginUser(
                   {
-                     ctx,
+                     ctx: req.ctx,
                      merchantId: merchantId,
                      userId: user.id,
                      name: `${user.firstName} ${user.lastName}`,
@@ -74,15 +104,14 @@ export abstract class AUserService<T extends BaseUser = BaseUser> extends BaseSe
             cache: true,
             key: 'merchant',
          });
-      if (user.role) {
-         authUser.isOwner = user.role.isOwner;
-         authUser.permissions = user.role.permissions;
-      }
-      if (user.tier)
-         authUser.permissions = uniq(
-            concat(...user.tier.benefits.map(({ permissions }) => permissions)),
-         );
-      request.session.user = await encrypt(JSON.stringify(authUser));
+      const permissions = [];
+      if (user.permissions) permissions.splice(0, 0, ...user.permissions.permissions);
+      if (user.role) permissions.splice(0, 0, ...user.role.permissions.permissions);
+      if (user.tier?.benefits)
+         user.tier.benefits.forEach(({ permissions: tP }) => tP && permissions.splice(0, 0, ...tP));
+      authUser.permissions = uniq(permissions);
+      req.session.user = encrypt(JSON.stringify(authUser));
+      return { message: 'Success' };
    }
 
    protected async getCreateUserDto({ ctx, addressId, tagsDto, ...dto }: CreateUserDto) {

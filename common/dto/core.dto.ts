@@ -11,7 +11,7 @@ import {
 } from 'class-validator';
 import { EAllowedUser, EUserApp } from '@common/utils/enum';
 import { PopulateOptions, ProjectionType } from 'mongoose';
-import { IsRecord } from '../validator';
+import { IsAppString, IsRecord } from '../validator';
 
 //types
 export type AllowedUser = keyof typeof EAllowedUser;
@@ -100,5 +100,10 @@ export class FindByIdsDto extends FindDto {
 
 export class FindByCodeDto extends FindDto {
    @IsString()
+   code: string;
+}
+
+export class AuthenticateMfaDto {
+   @IsAppString('number', { length: 6 })
    code: string;
 }

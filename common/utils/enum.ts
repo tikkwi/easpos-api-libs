@@ -154,6 +154,7 @@ export enum ECategory {
    CustomerTag = 'CustomerTag',
    PartnerTag = 'PartnerTag',
    MerchantSubscriptionTag = 'MerchantSubscriptionTag',
+   PermissionTag = 'PermissionTag',
 }
 
 export enum EExpenseScope {

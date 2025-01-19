@@ -4,8 +4,8 @@ import { Reflector } from '@nestjs/core';
 import { pull } from 'lodash';
 import { AllowedApp, AllowedUser } from '@common/dto/core.dto';
 import { APPS, SKIP_APPS, SKIP_USERS, USERS } from '@common/constant';
-import { Apps, Users } from './allowance.decorator';
 import * as process from 'node:process';
+import { Apps, Users } from './allowance.decorator';
 
 type TAllowedUser = {
    [key in EApp | 'default']?: AllowedUser[];

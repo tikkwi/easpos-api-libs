@@ -1,4 +1,4 @@
-import { OmitType } from '@nestjs/swagger';
+import { IntersectionType, OmitType, PickType } from '@nestjs/swagger';
 import {
    IsEmail,
    IsEnum,
@@ -11,7 +11,7 @@ import {
 } from 'class-validator';
 import { regex } from '@common/utils/regex';
 import { EUserApp } from '@common/utils/enum';
-import { BaseDto, CoreDto, FindDto } from '@common/dto/core.dto';
+import { AuthenticateMfaDto, CoreDto, FindDto } from '@common/dto/core.dto';
 import User from './user.schema';
 import { Type } from 'class-transformer';
 import { CategoryDto } from '../category/category.dto';
@@ -27,7 +27,7 @@ export class GetUserDto extends FindDto {
    mail?: string;
 }
 
-export class LoginDto extends BaseDto {
+export class LoginDto {
    @ValidateIf((o) => !!!o.userName)
    @IsEmail()
    email?: string;
@@ -45,6 +45,14 @@ export class LoginDto extends BaseDto {
    @IsOptional()
    @IsMongoId()
    merchantId?: string;
+}
+
+export class AuthenticateLoginMfaDto extends IntersectionType(
+   AuthenticateMfaDto,
+   PickType(LoginDto, ['app', 'merchantId']),
+) {
+   @IsMongoId()
+   userId: string;
 }
 
 export class CreateUserDto extends OmitType(CoreDto(User), [
