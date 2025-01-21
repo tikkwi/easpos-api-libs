@@ -1,0 +1,38 @@
+// @name Test
+// @no-log
+< {%
+  import {authorization} from './variable'
+  client.global.set('authorization', authorization)
+%}
+GET {{merchant-app}}/test?msg=arr_bwr
+Authorization: Basic {{authorization}}
+
+###
+// @name Ms Test
+// @no-log
+GET {{merchant-app}}/ms-test?msg=ar bwr
+
+###
+// @name Create Merchant
+// @no-log
+
+
+POST {{merchant-app}}/create-merchant
+Authorization: Basic {{authorization}}
+Content-Type: application/json
+
+{
+  "name": "EasPos",
+  "mail": "tinkokowin@easpos.co",
+  "mobileNo": "+959790000001",
+  "category": {
+    "name": "SAAS",
+    "type": "Merchant"
+  }
+}
+
+###
+// @name Login Employee
+// @no-log
+
+POST

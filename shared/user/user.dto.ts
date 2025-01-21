@@ -30,7 +30,7 @@ export class GetUserDto extends FindDto {
 export class LoginDto {
    @ValidateIf((o) => !!!o.userName)
    @IsEmail()
-   email?: string;
+   mail?: string;
 
    @ValidateIf((o) => !!!o.email)
    @Matches(regex.userName)

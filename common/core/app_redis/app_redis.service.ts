@@ -20,9 +20,9 @@ export default class AppRedisService {
    async set<K extends keyof AppCache>(key: K, value: AppCache[K], expire?: number) {
       await this.db.set(
          await this.getKey(key),
-         await encrypt(JSON.stringify({ data: value })),
+         encrypt(JSON.stringify({ data: value })),
          'PX',
-         expire ?? key.startsWith('t_') ? minutes(5) : days(key.startsWith('a_') ? 30 : 1),
+         (expire ?? key.startsWith('t_')) ? minutes(5) : days(key.startsWith('a_') ? 30 : 1),
       );
    }
 
@@ -38,7 +38,7 @@ export default class AppRedisService {
          ? await this.db.get(k).then((res) => decrypt(res))
          : { data: undefined };
 
-      if (getFnc) {
+      if (!isKeyExist && getFnc) {
          data = await getFnc();
          if (data) await this.set(key, data, expire);
       }

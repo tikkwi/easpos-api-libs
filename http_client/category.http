@@ -2,7 +2,7 @@
 // @name Create Category
 // @no-log
 
-POST {{user-app}}/category/create
+POST {{merchant-app}}/category/create
 Content-Type: application/json
 
 {

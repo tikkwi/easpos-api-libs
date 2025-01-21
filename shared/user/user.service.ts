@@ -26,17 +26,17 @@ export abstract class AUserService<T extends BaseUser = BaseUser> extends BaseSe
       return { message: 'Success' };
    }
 
-   async login(req: Request, { email, userName, password, app, merchantId }: LoginDto) {
+   async login(req: Request, { mail, userName, password, app, merchantId }: LoginDto) {
       if (req.session.user) throw new BadRequestException('Already Logged In');
       const ctx = req.ctx;
       const repository = await this.getRepository(ctx.connection, ctx.session);
       const { data: user } = await repository.findOne({
-         filter: { email, userName },
+         filter: { mail: mail, userName },
          errorOnNotFound: true,
       });
       const userType = this.constructor.name.replace('Service', '');
       if (!user || !compareSync(password, user.password))
-         throw new BadRequestException(`Incorrect ${email ? 'email' : 'userName'} or password`);
+         throw new BadRequestException(`Incorrect ${mail ? 'email' : 'userName'} or password`);
       const appForbiddenMsg = `Not Allowed to use ${app}`;
       if (userType === EUser.Employee && !merchantId)
          throw new BadRequestException('Merchant Id is required');

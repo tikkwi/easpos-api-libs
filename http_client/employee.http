@@ -1,0 +1,9 @@
+// @name Login Employee
+// @no-log
+POST {{merchant-app}}/employee/login
+Content-Type: application/json
+
+{
+  "mail": "tinkokowin@easpos.co",
+  "password": "1111234"
+}

@@ -1,7 +1,8 @@
+//NOTE: don't barrel export
+
 import { LRUCache } from 'lru-cache';
 import process from 'node:process';
 import { config } from 'dotenv';
-import { RequestMethod } from '@nestjs/common';
 import { AddressSchema } from '@shared/address/address.schema';
 import { AuditSchema } from '@shared/audit/audit.schema';
 import { CampaignSchema } from '@shared/campaign/campaign.schema';
@@ -22,8 +23,6 @@ export const CONNECTION_POOL = new LRUCache({
    updateAgeOnGet: true,
    dispose: (connection: Connection) => connection.close(),
 });
-export const ADMIN_BASIC_AUTH_PATHS = [];
-export const MERCHANT_BASIC_AUTH_PATHS = [{ path: '/create-merchant', method: RequestMethod.POST }];
 export const MANUAL_CONNECTION_ROUTES = ['/create-merchant'];
 export const SHARED_SCHEMAS: Array<[string, Schema]> = [
    ['Address', AddressSchema],

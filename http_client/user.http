@@ -2,7 +2,7 @@
 
 # @name Test
 # @no-log
-GET {{user-app}}/test
+GET {{merchant-app}}/test
 
 <%%>
 
