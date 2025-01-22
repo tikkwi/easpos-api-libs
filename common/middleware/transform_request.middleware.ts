@@ -3,8 +3,7 @@ import { Request } from 'express';
 import { decrypt } from '../utils/encrypt';
 import AppContext from '../core/app_context.service';
 import process from 'node:process';
-import { BASIC_AUTH_PATHS } from '@app/utils/app.constant';
-import { MANUAL_CONNECTION_ROUTES } from '../constant/app.constant';
+import { BASIC_AUTH_PATHS, MANUAL_CONNECTION_ROUTES } from '@app/utils/app.constant';
 
 @Injectable()
 export default class TransformRequestMiddleware implements NestMiddleware {

@@ -1,4 +1,10 @@
-import { ForbiddenException, HttpException, HttpStatus, Provider } from '@nestjs/common';
+import {
+   ForbiddenException,
+   HttpException,
+   HttpStatus,
+   InternalServerErrorException,
+   Provider,
+} from '@nestjs/common';
 import { ClientGrpc, ClientsModuleOptions, Transport } from '@nestjs/microservices';
 import { join } from 'path';
 import { getServiceToken } from './regex';
@@ -75,9 +81,16 @@ export const authenticateBasicAuth = async ({ userName, password }: BasicAuth, c
 export const getMongoUri = (id?: string) =>
    `${process.env['MONGO_URI']}/${id ?? ''}?replicaSet=rs0&authSource=admin`;
 
-export const initializeCollections = async (conn: Connection, schemas: Array<[string, Schema]>) => {
+export const initializeCollections = (conn: Connection, schemas: Array<[string, Schema]>) => {
    for (const [name, schema] of schemas) {
-      const model = conn.model(name, schema);
-      await model.init();
+      conn.model(name, schema);
    }
+};
+
+export const connectMerchantDb = async (ctx: RequestContext, id: string, isNew = false) => {
+   if (ctx.connection) throw new InternalServerErrorException('Connection already exists');
+   const [connection, session] = await AppContext.getSession(id, isNew);
+   ctx.connection = connection;
+   ctx.session = session;
+   ctx.merchantId = id;
 };

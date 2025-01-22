@@ -32,7 +32,7 @@ export class LoginDto {
    @IsEmail()
    mail?: string;
 
-   @ValidateIf((o) => !!!o.email)
+   @ValidateIf((o) => !!!o.mail)
    @Matches(regex.userName)
    userName?: string;
 

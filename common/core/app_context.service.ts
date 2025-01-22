@@ -20,11 +20,18 @@ export default class AppContext {
 
    static async getSession(id?: string, isNew?: boolean): Promise<[Connection, ClientSession]> {
       let conn = id ? this.#connectionPool.get(id) : this.#connection;
-      if (!conn) {
+      const connNotReady = conn && conn.readyState !== 1;
+      if (!conn || connNotReady) {
+         if (connNotReady)
+            Logger.log(`Connection(${id}) is not ready. Attempting to reconnect....`);
          conn = await this.createConnection(id, isNew);
          if (id) {
             this.#connectionPool.set(id, conn);
-            Logger.log(`New connection(${id}) added to the pool`);
+            Logger.log(
+               connNotReady
+                  ? `Connection (${id}) is reconnected and ready state now ${conn.readyState}`
+                  : `New connection(${id}) added to the pool`,
+            );
          } else this.#connection = conn;
       }
       const session = await conn.startSession();
@@ -47,7 +54,7 @@ export default class AppContext {
       );
       await new Promise((resolve) =>
          conn.once('open', async () => {
-            if (isNew) await initializeCollections(conn, APP_SCHEMAS);
+            if (isNew) initializeCollections(conn, APP_SCHEMAS);
             resolve(true);
          }),
       );

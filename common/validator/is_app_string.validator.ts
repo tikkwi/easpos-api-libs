@@ -16,11 +16,10 @@ class IsNumberStringConstraint implements ValidatorConstraintInterface {
    validate(value: any, { constraints }: ValidationArguments): boolean {
       const type: StringType = constraints[0];
       const option = constraints[1];
-
       return (
          typeof value === 'string' &&
          (type === 'number'
-            ? new RegExp(`^[0-9]{${option.length ?? 6}$`).test(value)
+            ? new RegExp(`^[0-9]{${option.length ?? 6}}$`).test(value)
             : option && option.arr.includes(value))
       );
    }

@@ -59,7 +59,7 @@ export default class Repository<T> {
 
       const updateOptions: [UpdateQuery<T>, QueryOptions<T>] = [
          { ...update, updatedAt: new Date() },
-         { lean: true, new: true, ...options, session: this.session },
+         { lean: true, returnDocument: 'after', ...options, session: this.session },
       ];
       const data = id
          ? await this.model.findByIdAndUpdate(id, ...updateOptions)

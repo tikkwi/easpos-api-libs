@@ -39,7 +39,6 @@ export default function AppProp(
       } = options ?? {};
 
       const pOpt = {
-         immutable: true,
          unique: userName,
          ...((propOptions as any) ?? {}),
          required: (propOptions as any)?.required ?? true,

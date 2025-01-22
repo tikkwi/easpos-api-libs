@@ -105,5 +105,6 @@ export class FindByCodeDto extends FindDto {
 
 export class AuthenticateMfaDto {
    @IsAppString('number', { length: 6 })
+   // @IsString()
    code: string;
 }

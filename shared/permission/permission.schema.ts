@@ -15,10 +15,10 @@ export default class Permission extends BaseSchema {
    @IsUrl()
    url: string;
 
-   @AppProp({ type: String, required: false, immutable: false })
+   @AppProp({ type: String, required: false })
    description?: string;
 
-   @AppProp({ type: String, required: false, immutable: false })
+   @AppProp({ type: String, required: false })
    remark?: string;
 }
 

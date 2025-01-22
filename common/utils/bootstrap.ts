@@ -37,7 +37,7 @@ export default async function appBootstrap(
          resave: false,
          saveUninitialized: false,
          cookie: {
-            secure: process.env.NODE_ENV === 'prod',
+            secure: process.env['ENV'] === 'prod',
             httpOnly: true,
             maxAge: 3600000,
          },

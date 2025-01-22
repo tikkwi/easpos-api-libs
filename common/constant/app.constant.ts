@@ -11,6 +11,7 @@ import { PermissionSchema } from '@shared/permission/permission.schema';
 import { UnitSchema } from '@shared/unit/unit.schema';
 import { Schema } from 'mongoose';
 import { CategorySchema } from '@shared/category/category.schema';
+import { PermissionTagSchema } from '@shared/permission_tag/permission_tag.schema';
 
 config({ path: `${process.cwd()}/.env` });
 
@@ -23,7 +24,6 @@ export const CONNECTION_POOL = new LRUCache({
    updateAgeOnGet: true,
    dispose: (connection: Connection) => connection.close(),
 });
-export const MANUAL_CONNECTION_ROUTES = ['/create-merchant'];
 export const SHARED_SCHEMAS: Array<[string, Schema]> = [
    ['Address', AddressSchema],
    ['Audit', AuditSchema],
@@ -31,5 +31,6 @@ export const SHARED_SCHEMAS: Array<[string, Schema]> = [
    ['Category', CategorySchema],
    ['Mail', MailSchema],
    ['Permission', PermissionSchema],
+   ['PermissionTag', PermissionTagSchema],
    ['Unit', UnitSchema],
 ];
