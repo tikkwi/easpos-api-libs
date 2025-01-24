@@ -1,8 +1,8 @@
-import APriceAdjustment from '../price_adjustment.schema';
-import AppProp from '../../decorator/app_prop.decorator';
+import APriceAdjustment from '@shared/price_adjustment/price_adjustment.schema';
+import AppProp from '../decorator/app_prop.decorator';
 import { Schema, SchemaFactory } from '@nestjs/mongoose';
-import { EPriceAdjustment } from '../../utils/enum';
-import { IsAppEnum } from '../../validator';
+import { EPriceAdjustment } from '../utils/enum';
+import { IsAppEnum } from '../validator';
 import { Max, Min, ValidateIf } from 'class-validator';
 import { SchemaTypes } from 'mongoose';
 

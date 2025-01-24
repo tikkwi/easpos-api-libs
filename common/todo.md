@@ -16,7 +16,24 @@
 
 ## Schedule Jobs
 
+- [ ] delete pending merchant's db after 1 month (but keep merchant to prevent misuses and give the chance to active
+  after some time)
 - [ ] delete pending product sale /sale after 15minute
 - [ ] check point balance every start of the month to downgrade tier
 - [ ] sub end and send mail (sub end/pre sub end) to the merchants
-- [ ] expire campaign and update adjustment as per this status
+- [ ] update app subscription status wrt expire date
+- [x] ~~update campaign/adjustment/promo_code status on expire date~~ (_no need scheduler, can do this on access_)
+    - [x] ~~campaign's expire affect all campaign/adjustment/promo_code and adjustment expire affect only
+      adjustment and promo_code~~
+
+## Just Allow Temporarily
+
+- `auth-credential/create`
+
+## Admin App
+
+- [ ] crud admin and authenticate admin routes
+
+## To Check
+
+- [ ] if Reflect is working properly in decorator(controller, service, etc)

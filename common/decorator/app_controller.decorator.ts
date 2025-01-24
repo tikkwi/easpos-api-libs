@@ -1,9 +1,9 @@
 import 'reflect-metadata';
 import { Controller } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { pull } from 'lodash';
+import { isEmpty, pull } from 'lodash';
 import { AllowedApp, AllowedUser } from '@common/dto/core.dto';
-import { APPS, SKIP_APPS, SKIP_USERS, USERS } from '@common/constant';
+import { APPS, SKIP, SKIP_APPS, SKIP_USERS, USERS } from '@common/constant';
 import * as process from 'node:process';
 import { Apps, Users } from './allowance.decorator';
 
@@ -28,8 +28,13 @@ export default function AppController(
                clsUsers.splice(0, 0, ...allowedUsers[process.env['APP']]);
          }
       }
+      const parent = Object.getPrototypeOf(target.prototype);
 
-      for (const key of Object.getOwnPropertyNames(target.prototype)) {
+      for (const key of [
+         ...(isEmpty(parent) ? [] : Object.getOwnPropertyNames(parent)),
+         ...Object.getOwnPropertyNames(target.prototype),
+      ]) {
+         if (reflector.get(SKIP, target.prototype[key])) continue;
          const descriptor = Object.getOwnPropertyDescriptor(target.prototype, key);
          const originalMethod = descriptor?.value;
 

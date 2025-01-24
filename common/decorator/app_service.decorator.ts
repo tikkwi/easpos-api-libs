@@ -1,11 +1,21 @@
+import 'reflect-metadata';
 import { Injectable } from '@nestjs/common';
-import { omit } from 'lodash';
+import { isEmpty, omit } from 'lodash';
+import { Reflector } from '@nestjs/core';
+import { SKIP } from '../constant';
 
 export default function AppService() {
    return function (target: any) {
       Injectable()(target);
+      const reflector = new Reflector();
+      const parent = Object.getPrototypeOf(target.prototype);
 
-      for (const key of Object.getOwnPropertyNames(target.prototype)) {
+      for (const key of [
+         ...(isEmpty(parent) ? [] : Object.getOwnPropertyNames(parent)),
+         ...Object.getOwnPropertyNames(target.prototype),
+      ]) {
+         if (reflector.get(SKIP, target.prototype[key])) continue;
+
          const descriptor = Object.getOwnPropertyDescriptor(target.prototype, key);
          const oriMeth = descriptor.value;
          if (typeof oriMeth === 'function' && key !== 'constructor') {

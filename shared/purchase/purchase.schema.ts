@@ -4,10 +4,10 @@ import { SchemaTypes } from 'mongoose';
 import Unit from '../unit/unit.schema';
 import Category from '../category/category.schema';
 import { Amount } from '@common/dto/entity.dto';
-import APriceAdjustment from '@common/schema/price_adjustment.schema';
+import APriceAdjustment from '../price_adjustment/price_adjustment.schema';
 
 export default abstract class Purchase extends BaseSchema {
-   abstract appliedAdjustments: Array<AppSchema<APriceAdjustment>>;
+   abstract appliedAdjustments: Array<APriceAdjustment>;
 
    @AppProp({ type: String })
    voucherId: string;
@@ -19,8 +19,8 @@ export default abstract class Purchase extends BaseSchema {
    paidPrice: Amount;
 
    @AppProp({ type: SchemaTypes.ObjectId, ref: 'Unit' })
-   currency: AppSchema<Unit>;
+   currency: Unit;
 
    @AppProp({ type: SchemaTypes.ObjectId, ref: 'Category' })
-   paymentMethod: AppSchema<Category>;
+   paymentMethod: Category;
 }

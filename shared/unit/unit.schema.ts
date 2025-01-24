@@ -33,7 +33,7 @@ export default class Unit extends BaseSchema {
 
    @ValidateIf((o) => !o.isCurrency)
    @AppProp({ type: SchemaTypes.ObjectId, ref: 'Category' })
-   category?: AppSchema<Category>;
+   category?: Category;
 
    @AppProp({ type: String, required: false })
    remark?: string;

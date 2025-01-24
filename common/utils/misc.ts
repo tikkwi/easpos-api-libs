@@ -94,3 +94,8 @@ export const connectMerchantDb = async (ctx: RequestContext, id: string, isNew =
    ctx.session = session;
    ctx.merchantId = id;
 };
+
+export const getSmallestGreaterThanKey = (obj: Record<number, number>, count: number) =>
+   Object.keys(obj)
+      .filter((k) => +k >= count)
+      .sort((a, b) => +a - +b)[0];

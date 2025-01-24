@@ -1,5 +1,4 @@
 import { Type } from 'class-transformer';
-import { Type as $Type } from '@nestjs/common';
 import {
    IsBoolean,
    IsDateString,
@@ -11,22 +10,13 @@ import {
    IsOptional,
    IsString,
    Matches,
+   ValidateIf,
    ValidateNested,
 } from 'class-validator';
 import { EMfa, EStatus, EUser, EUserApp } from '@common/utils/enum';
 import { regex } from '@common/utils/regex';
 import { TmpBlock } from '@shared/user/user.schema';
-import { IsAppString } from '../validator';
-import { OmitType } from '@nestjs/swagger';
-
-export function AppSchema<T>(classRef: $Type<T>): $Type<Omit<T, '_id'> & { id: string }> {
-   class AS extends OmitType(classRef as any, ['_id'] as any) {
-      @IsMongoId()
-      id: string;
-   }
-
-   return AS as any;
-}
+import { IsAppString, IsPeriod } from '../validator';
 
 export class MFA {
    @IsAppString('number')
@@ -103,31 +93,43 @@ export class UserRole {
    permissions: string[];
 }
 
-export class AppliedAllowance {}
-
 export class Payment {
-   @IsNumber()
-   price: number;
+   @IsBoolean()
+   isFree: boolean;
+
+   @ValidateIf((o) => !o.isFree)
+   @ValidateNested()
+   @Type(() => Amount)
+   price?: Amount;
 
    @IsOptional()
    @IsMongoId()
-   allowance?: string;
+   adjustmentId?: string;
+
+   @IsMongoId()
+   currencyId: string;
 
    @IsOptional()
    @IsMongoId()
-   paymentMethod?: string;
+   paymentMethodId?: string;
 
-   @IsNumber()
-   netPrice: number;
+   @IsOptional()
+   @IsMongoId()
+   paymentProviderId?: string;
+
+   @ValidateIf((o) => !o.isFree)
+   @ValidateNested()
+   @Type(() => Amount)
+   netPrice?: Amount;
 }
 
 //NOTE: may neglect year/month/day wrt context
 export class PeriodRange {
-   @IsDateString()
+   @IsPeriod(false)
    from: string;
 
    //TODO: to validate every period segment after from
-   @IsDateString()
+   @IsPeriod(false)
    to: string;
 }
 

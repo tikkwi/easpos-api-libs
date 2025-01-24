@@ -1,19 +1,19 @@
 import { Schema, SchemaFactory } from '@nestjs/mongoose';
-import AppProp from '../../decorator/app_prop.decorator';
+import AppProp from '../decorator/app_prop.decorator';
 import { SchemaTypes } from 'mongoose';
 import Category from '@shared/category/category.schema';
-import { Amount } from '../../dto/entity.dto';
-import { IsNumber, ValidateNested } from 'class-validator';
+import { Amount } from '../dto/entity.dto';
+import { IsNumber, IsOptional, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
-import { IsPeriod } from '../../validator';
+import { IsPeriod, IsRecord } from '../validator';
+import { EType } from '../utils/enum';
 
 export class ExtraUserPrice {
    @IsNumber()
    userBelow: number;
 
-   @ValidateNested()
-   @Type(() => Amount)
-   pricePerUser: Amount;
+   @IsNumber()
+   pricePerUser: number;
 }
 
 export class SubscriptionPrice {
@@ -24,13 +24,20 @@ export class SubscriptionPrice {
    @Type(() => Amount)
    price: Amount;
 
-   @ValidateNested()
-   @Type(() => ExtraUserPrice)
-   extraEmployeePrice: ExtraUserPrice;
+   @IsNumber()
+   defaultExtraEmployeePrice: number;
 
-   @ValidateNested()
-   @Type(() => ExtraUserPrice)
-   extraAdminPrice: ExtraUserPrice;
+   @IsNumber()
+   defaultExtraAdminPrice: number;
+
+   // NOTE: key -> user below, value -> price per user
+   @IsOptional()
+   @IsRecord({ value: EType.Number, key: EType.Number })
+   extraEmployeePrice?: Record<number, number>;
+
+   @IsOptional()
+   @IsRecord({ value: EType.Number, key: EType.Number })
+   extraAdminPrice?: Record<number, number>;
 }
 
 @Schema()
@@ -39,13 +46,10 @@ export default class AppSubscriptionType {
    isOffline: boolean;
 
    @AppProp({ type: SchemaTypes.ObjectId, ref: 'Category' })
-   type: AppSchema<Category>;
+   type: Category;
 
    @AppProp({ type: [{ type: SchemaTypes.ObjectId, ref: 'Category' }], default: [] })
-   tags?: Array<AppSchema<Category>>;
-
-   @AppProp({ type: SchemaTypes.ObjectId, ref: 'Category' })
-   category: AppSchema<Category>;
+   tags?: Array<Category>;
 
    // NOTE: may include this in the future if needed
    // @AppProp({ type: Boolean, default: false })

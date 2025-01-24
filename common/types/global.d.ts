@@ -10,6 +10,7 @@ declare global {
    type FilterQuery<T> = import('mongoose').FilterQuery<T>;
    type ProjectionType<T> = import('mongoose').ProjectionType<T>;
    type QueryOptions<T> = import('mongoose').QueryOptions<T>;
+   type UpdateOptions<T> = import('mongodb').UpdateOptions<T>;
    type UpdateQuery<T> = import('mongoose').UpdateQuery<T>;
    type ClientSession = import('mongoose').ClientSession;
 
@@ -18,18 +19,12 @@ declare global {
    type EStatus = import('@common/utils/enum').EStatus;
    type EUserApp = import('@common/utils/enum').EUserApp;
 
-   type Merchant = import('../schema/ms/merchant.schema').default;
-   type Subscription = import('../schema/ms/app_subscription.schema').default;
-   type AuthCredential = import('../schema/ms/auth_credential.schema').default;
+   type Merchant = import('../ms_schema/merchant.schema').default;
+   type AppSubscription = import('../ms_schema/app_subscription.schema').default;
+   type AuthCredential = import('../ms_schema/auth_credential.schema').default;
    type Allowance = import('@shared/allowance/allowance.schema').default;
-   type CustomerTier = import('@app/customer_tier/customer_tier.schema').default;
-
-   type WeekDay = (typeof import('@common/constant/app.constant').WEEK_DAY)[number];
-   type CalendarDate = (typeof import('@common/constant/app.constant').CALENDAR_DATE)[number];
 
    type CreateType<T> = Omit<T, '_id' | 'createdAt' | 'updatedAt'>;
-
-   type AppSchema<M> = Omit<M, '_id'> & { id?: string };
 
    type RequestContext = {
       connection?: Connection;
@@ -62,10 +57,21 @@ declare global {
       errorOnNotFound?: boolean;
    };
 
-   type UpdateType<T> = Partial<Pick<FindType<T>, 'filter' | 'options'>> & {
-      id?: string | ObjectId;
+   type BareUpdateType<T> = Partial<UpdateOptions<T>> & {
       update: UpdateQuery<T>;
    };
+
+   type UpdateType<T> =
+      | (BareUpdateType<T> & {
+           id: string | ObjectId;
+        })
+      | (BareUpdateType<T> & Pick<FindType<T>, 'filter'>);
+
+   type UpdateManyType<T> =
+      | (BareUpdateType<T> & {
+           ids: Array<string | ObjectId>;
+        })
+      | (BareUpdateType<T> & Pick<FindType<T>, 'filter'>);
 
    type AuthUser = {
       id: string;
@@ -83,7 +89,7 @@ declare global {
 
    type AuthMerchant = {
       merchant?: Merchant;
-      subscription?: AppSchema<Subscription>;
+      subscription?: AppSubscription;
       isSubActive: boolean;
    };
 
@@ -96,7 +102,7 @@ declare global {
       a_adm_auth_cred_swg?: AuthCredential;
       a_adm_auth_cred_adm_rpc?: AuthCredential;
       merchant?: AuthMerchant;
-      t_applicable_alw?: Array<AppSchema<Allowance>>;
+      t_applicable_alw?: Array<Allowance>;
    };
 }
 
@@ -110,6 +116,5 @@ declare module 'express' {
 declare module 'express-session' {
    interface SessionData {
       user?: string;
-      merchantConfig?: string;
    }
 }

@@ -2,10 +2,10 @@ import { Schema, SchemaFactory } from '@nestjs/mongoose';
 import { hashSync } from 'bcryptjs';
 import { ValidateIf } from 'class-validator';
 import { SchemaTypes } from 'mongoose';
-import { EAuthCredential, EType } from '../../utils/enum';
-import BaseSchema from '../../core/base/base.schema';
-import AppProp from '../../decorator/app_prop.decorator';
-import { IsRecord } from '../../validator';
+import { EAuthCredential, EType } from '../utils/enum';
+import BaseSchema from '../core/base/base.schema';
+import AppProp from '../decorator/app_prop.decorator';
+import { IsRecord } from '../validator';
 
 @Schema()
 export default class AuthCredential extends BaseSchema {

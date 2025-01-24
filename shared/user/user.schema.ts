@@ -69,10 +69,10 @@ export default class User extends BaseSchema {
    mobileVerified?: boolean;
 
    @AppProp({ type: SchemaTypes.ObjectId, ref: 'Address', required: false })
-   address?: AppSchema<Address>;
+   address?: Address;
 
    @AppProp({ type: [{ type: SchemaTypes.ObjectId, ref: 'Category' }], default: [] })
-   tags?: Array<AppSchema<Category>>;
+   tags?: Array<Category>;
 }
 
 const basePartialFields: Array<keyof User> = ['mail', 'mobileNo'];

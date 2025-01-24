@@ -134,6 +134,8 @@ export enum ECategory {
    Product = 'Product',
    Campaign = 'Campaign',
    PaymentMethod = 'PaymentMethod',
+   PaymentProvider = 'PaymentProvider',
+   AppSubscriptionType = 'AppSubscriptionType',
    Price = 'Price',
    Expense = 'Expense',
    Locality = 'Locality',
@@ -190,7 +192,9 @@ export enum EPriceAdjustment {
    Tier = 'Tier',
    Bundle = 'Bundle',
    Spend = 'Spend',
+   TotalSpend = 'TotalSpend',
    PaymentMethod = 'PaymentMethod',
+   PaymentProvider = 'PaymentProvider',
    Currency = 'Currency',
 }
 

@@ -1,4 +1,4 @@
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { PAGE_SIZE } from '@common/constant';
 
@@ -48,8 +48,8 @@ export default class Repository<T> {
       return { data };
    }
 
-   async findAndUpdate({ id, filter, options, update }: UpdateType<T>) {
-      if (!id && !filter) throw new BadRequestException('Require filter to update');
+   async findAndUpdate({ options, update, ...rest }: UpdateType<T>) {
+      const { id, filter } = rest as any;
 
       const prev = id
          ? await this.model.findById(id, null)
@@ -68,14 +68,16 @@ export default class Repository<T> {
       return { prev, data };
    }
 
-   async updateMany({ ids, update }: Omit<UpdateType<T>, 'id' | 'filter'> & { ids: string[] }) {
-      const prev = await this.model.find({ _id: { $in: ids } }, null);
+   async updateMany({ update, options, ...rest }: UpdateManyType<T>) {
+      const { ids, filter } = rest as any;
+
+      const prev = await this.model.find(filter ?? { _id: { $in: ids } }, null);
       if (!prev || !prev.length) throw new NotFoundException('Not Found');
 
       await this.model.updateMany(
-         { _id: { $in: ids } },
+         filter ?? { _id: { $in: ids } },
          { ...update, updatedAt: new Date() },
-         { session: this.session },
+         { session: this.session, ...options },
       );
 
       const data = await this.model.find({ _id: { $in: ids } }, null, {
