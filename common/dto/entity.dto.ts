@@ -17,6 +17,7 @@ import { EMfa, EStatus, EUser, EUserApp } from '@common/utils/enum';
 import { regex } from '@common/utils/regex';
 import { TmpBlock } from '@shared/user/user.schema';
 import { IsAppString, IsPeriod } from '../validator';
+import { OmitType } from '@nestjs/swagger';
 
 export class MFA {
    @IsAppString('number')
@@ -93,18 +94,9 @@ export class UserRole {
    permissions: string[];
 }
 
-export class Payment {
-   @IsBoolean()
-   isFree: boolean;
-
-   @ValidateIf((o) => !o.isFree)
-   @ValidateNested()
-   @Type(() => Amount)
-   price?: Amount;
-
-   @IsOptional()
-   @IsMongoId()
-   adjustmentId?: string;
+export class BasePayment {
+   @IsNumber()
+   price: number;
 
    @IsMongoId()
    currencyId: string;
@@ -116,6 +108,24 @@ export class Payment {
    @IsOptional()
    @IsMongoId()
    paymentProviderId?: string;
+}
+
+export class Payment extends OmitType(BasePayment, ['price']) {
+   @IsBoolean()
+   isFree: boolean;
+
+   @ValidateIf((o) => !o.isFree)
+   @ValidateNested()
+   @Type(() => Amount)
+   price?: Amount;
+
+   @IsOptional()
+   @IsMongoId()
+   markupId?: string;
+
+   @IsOptional()
+   @IsMongoId()
+   promoId?: string;
 
    @ValidateIf((o) => !o.isFree)
    @ValidateNested()

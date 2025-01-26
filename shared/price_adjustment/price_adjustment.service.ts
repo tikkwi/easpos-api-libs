@@ -6,7 +6,9 @@ import { BadRequestException } from '@nestjs/common';
 import { EStatus } from '@common/utils/enum';
 import { APromoCodeService } from '../promo_code/promo_code.service';
 
-export default abstract class APriceAdjustmentService extends BaseService<APriceAdjustment> {
+export default abstract class APriceAdjustmentService<
+   T extends APriceAdjustment,
+> extends BaseService<T> {
    protected abstract readonly promoCodeService: APromoCodeService;
 
    async expireAdjustment({ ctx, id }: FindByIdDto) {

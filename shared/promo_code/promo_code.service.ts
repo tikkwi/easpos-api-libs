@@ -1,12 +1,12 @@
 import BaseService from '@common/core/base/base.service';
-import PromoCode from './promo_code.schema';
+import APromoCode from './promo_code.schema';
 import { GetPromoCodeDto } from './promo_code.dto';
 import { FindByIdDto } from '@common/dto/core.dto';
 import { $dayjs } from '@common/utils/datetime';
 import { BadRequestException } from '@nestjs/common';
 import { EStatus } from '@common/utils/enum';
 
-export abstract class APromoCodeService extends BaseService<PromoCode> {
+export abstract class APromoCodeService<T extends APromoCode> extends BaseService<T> {
    async getPromoCode({ ctx: { connection, session }, code, lean, populate }: GetPromoCodeDto) {
       const repository = await this.getRepository(connection, session);
       return await repository.findOne({

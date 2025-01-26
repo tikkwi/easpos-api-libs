@@ -17,44 +17,53 @@ export const validatePeriodRange = ({ from, to }: PeriodRange) => {
 };
 
 const matchDateWithPeriod = (
-   date: Date,
    period: string,
    validator: (d: number, p: number, i: number) => boolean | undefined,
+   date?: Date,
 ) => {
+   const $date = date ?? new Date();
    if (!isPeriod(period)) throw new BadRequestException('Invalid period');
    const pT = period.split(':');
    for (let i = pT.length - 1; i > 0; i--) {
       const f = +pT[i];
       const dT =
          i === 0
-            ? date.getMinutes()
+            ? $date.getMinutes()
             : i === 1
-              ? date.getHours()
+              ? $date.getHours()
               : i === 2
-                ? date.getDate()
+                ? $date.getDate()
                 : i === 3
-                  ? date.getDay()
-                  : date.getMonth();
+                  ? $date.getDay()
+                  : $date.getMonth();
       const res = validator(dT, f, i);
       if (res !== undefined) return res;
    }
    return true;
 };
 
-export const isBefore = (date: Date, period: string) =>
-   matchDateWithPeriod(date, period, (d, p, i) => {
-      if (d > p || (i === 0 && d === p)) return false;
-      if (d < p) return true;
-   });
+export const isBefore = (period: string, date?: Date) =>
+   matchDateWithPeriod(
+      period,
+      (d, p, i) => {
+         if (d > p || (i === 0 && d === p)) return false;
+         if (d < p) return true;
+      },
+      date,
+   );
 
-export const isAfter = (date: Date, period: string) =>
-   matchDateWithPeriod(date, period, (d, p, i) => {
-      if (d < p || (i === 0 && d === p)) return false;
-      if (d > p) return true;
-   });
+export const isAfter = (period: string, date?: Date) =>
+   matchDateWithPeriod(
+      period,
+      (d, p, i) => {
+         if (d < p || (i === 0 && d === p)) return false;
+         if (d > p) return true;
+      },
+      date,
+   );
 
-export const isDateWithinPeriod = (date: Date, pr: PeriodRange) => {
+export const isDateWithinPeriod = (pr: PeriodRange, date?: Date) => {
    validatePeriodRange(pr);
-   if (isAfter(date, pr.from) && isBefore(date, pr.to)) return true;
+   if (isAfter(pr.from, date) && isBefore(pr.to, date)) return true;
    return false;
 };

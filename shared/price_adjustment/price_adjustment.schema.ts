@@ -6,6 +6,7 @@ import BaseSchema from '@common/core/base/base.schema';
 import AppProp from '@common/decorator/app_prop.decorator';
 import Category from '../category/category.schema';
 import Unit from '../unit/unit.schema';
+import { intersection } from 'lodash';
 
 //NOTE: for priority will be fetched from merchant config
 // can only have at most 1 markup, promote adjustment (took highest if multiple applicable)
@@ -44,6 +45,12 @@ export default abstract class APriceAdjustment extends BaseSchema {
 
    @AppProp({ type: Date, required: false })
    expireAt?: Date;
+
+   @ValidateIf(
+      (o) => !!intersection([EPriceAdjustment.Spend, EPriceAdjustment.TotalSpend], o.types).length,
+   )
+   @AppProp({ type: Boolean, default: false })
+   spendTriggerBelow?: boolean;
 
    @ValidateIf((o) => o.types.includes(EPriceAdjustment.Spend))
    @AppProp({ type: SchemaTypes.Mixed }, { type: Amount })
