@@ -10,6 +10,7 @@ export default function GrpcHandler() {
    return function (target: any) {
       Controller()(target);
       const reflector = new Reflector();
+      const parent = Object.getPrototypeOf(target.prototype);
 
       for (const key of [
          ...(isEmpty(parent) ? [] : Object.getOwnPropertyNames(parent)),

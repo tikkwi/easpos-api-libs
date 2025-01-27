@@ -6,10 +6,12 @@ import { REDIS_CLIENT } from '@common/constant';
 import ThrottlerStorageRedis from '../redis_throttler_storage.service';
 import CategoryModule from '@shared/category/category.module';
 import TransformRequestMiddleware from '../../middleware/transform_request.middleware';
+import { UnitModule } from '@shared/unit/unit.module';
 
 @Module({
    imports: [
       CategoryModule,
+      UnitModule,
       ThrottlerModule.forRootAsync({
          useFactory: async (client: Redis) => {
             return {

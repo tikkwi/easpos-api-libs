@@ -57,4 +57,4 @@ export default class AppPriceAdjustment extends APriceAdjustment {
    adjustment: Adjustment;
 }
 
-export const SubPriceAdjustmentSchema = SchemaFactory.createForClass(AppPriceAdjustment);
+export const AppPriceAdjustmentSchema = SchemaFactory.createForClass(AppPriceAdjustment);

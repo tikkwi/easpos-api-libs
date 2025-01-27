@@ -10,7 +10,7 @@ import APromoCode from '../promo_code/promo_code.schema';
 export default abstract class APriceAdjustmentService<
    T extends APriceAdjustment,
 > extends BaseService<T> {
-   protected abstract readonly promoCodeService: APromoCodeService<APromoCode>;
+   protected abstract promoCodeService: APromoCodeService<APromoCode>;
 
    async expireAdjustment({ ctx, id }: FindByIdDto) {
       const { data: adjustment } = await this.findById({ ctx, id, lean: false });
