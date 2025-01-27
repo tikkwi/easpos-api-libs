@@ -19,7 +19,7 @@ export class Adjustment {
 }
 
 @Schema()
-export class SubPriceAdjustment extends APriceAdjustment {
+export default class AppPriceAdjustment extends APriceAdjustment {
    @AppProp(
       { type: String, enum: EPriceAdjustment },
       {
@@ -33,7 +33,9 @@ export class SubPriceAdjustment extends APriceAdjustment {
                      pick: [
                         EPriceAdjustment.Time,
                         EPriceAdjustment.Spend,
+                        EPriceAdjustment.TotalSpend,
                         EPriceAdjustment.PaymentMethod,
+                        EPriceAdjustment.PaymentProvider,
                         EPriceAdjustment.Currency,
                      ],
                   },
@@ -45,7 +47,9 @@ export class SubPriceAdjustment extends APriceAdjustment {
    types: Array<
       | EPriceAdjustment.Time
       | EPriceAdjustment.Spend
+      | EPriceAdjustment.TotalSpend
       | EPriceAdjustment.PaymentMethod
+      | EPriceAdjustment.PaymentProvider
       | EPriceAdjustment.Currency
    >;
 
@@ -53,4 +57,4 @@ export class SubPriceAdjustment extends APriceAdjustment {
    adjustment: Adjustment;
 }
 
-export const SubPriceAdjustmentSchema = SchemaFactory.createForClass(SubPriceAdjustment);
+export const SubPriceAdjustmentSchema = SchemaFactory.createForClass(AppPriceAdjustment);

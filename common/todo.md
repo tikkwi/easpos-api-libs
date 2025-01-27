@@ -20,7 +20,7 @@
   after some time)
 - [ ] delete pending product sale /sale after 15minute
 - [ ] check point balance every start of the month to downgrade tier
-- [ ] sub end and send mail (sub end/pre sub end) to the merchants
+- [ ] sub end and send mail (sub end/pre sub end) to the merchants (**imp**)
 - [ ] update app subscription status wrt expire date
 - [x] ~~update campaign/adjustment/promo_code status on expire date~~ (_no need scheduler, can do this on access_)
     - [x] ~~campaign's expire affect all campaign/adjustment/promo_code and adjustment expire affect only

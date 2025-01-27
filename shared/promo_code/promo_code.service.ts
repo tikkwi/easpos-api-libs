@@ -6,7 +6,7 @@ import { $dayjs } from '@common/utils/datetime';
 import { BadRequestException } from '@nestjs/common';
 import { EStatus } from '@common/utils/enum';
 
-export abstract class APromoCodeService<T extends APromoCode> extends BaseService<T> {
+export default abstract class APromoCodeService<T extends APromoCode> extends BaseService<T> {
    async getPromoCode({ ctx: { connection, session }, code, lean, populate }: GetPromoCodeDto) {
       const repository = await this.getRepository(connection, session);
       return await repository.findOne({

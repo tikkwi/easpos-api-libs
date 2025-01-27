@@ -10,14 +10,12 @@ import {
    IsOptional,
    IsString,
    Matches,
-   ValidateIf,
    ValidateNested,
 } from 'class-validator';
 import { EMfa, EStatus, EUser, EUserApp } from '@common/utils/enum';
 import { regex } from '@common/utils/regex';
 import { TmpBlock } from '@shared/user/user.schema';
 import { IsAppString, IsPeriod } from '../validator';
-import { OmitType } from '@nestjs/swagger';
 
 export class MFA {
    @IsAppString('number')
@@ -108,29 +106,6 @@ export class BasePayment {
    @IsOptional()
    @IsMongoId()
    paymentProviderId?: string;
-}
-
-export class Payment extends OmitType(BasePayment, ['price']) {
-   @IsBoolean()
-   isFree: boolean;
-
-   @ValidateIf((o) => !o.isFree)
-   @ValidateNested()
-   @Type(() => Amount)
-   price?: Amount;
-
-   @IsOptional()
-   @IsMongoId()
-   markupId?: string;
-
-   @IsOptional()
-   @IsMongoId()
-   promoId?: string;
-
-   @ValidateIf((o) => !o.isFree)
-   @ValidateNested()
-   @Type(() => Amount)
-   netPrice?: Amount;
 }
 
 //NOTE: may neglect year/month/day wrt context

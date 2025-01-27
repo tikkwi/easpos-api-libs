@@ -2,11 +2,11 @@ import { Schema, SchemaFactory } from '@nestjs/mongoose';
 import AppProp from '../decorator/app_prop.decorator';
 import { SchemaTypes } from 'mongoose';
 import Category from '@shared/category/category.schema';
-import { Amount } from '../dto/entity.dto';
-import { IsNumber, IsOptional, ValidateNested } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional, ValidateNested } from 'class-validator';
+import { IsRecord } from '../validator';
+import { EPeriod, EType } from '../utils/enum';
 import { Type } from 'class-transformer';
-import { IsPeriod, IsRecord } from '../validator';
-import { EType } from '../utils/enum';
+import { Amount } from '../dto/entity.dto';
 
 export class ExtraUserPrice {
    @IsNumber()
@@ -17,18 +17,35 @@ export class ExtraUserPrice {
 }
 
 export class SubscriptionPrice {
-   @IsPeriod(false)
-   periodBelow: string;
-
    @ValidateNested()
    @Type(() => Amount)
-   price: Amount;
+   basePrice: Amount;
+
+   @IsNumber()
+   basePeriod: number;
+
+   @IsEnum(EPeriod)
+   periodType: EPeriod;
+
+   @IsNumber()
+   baseAdminCount: number;
+
+   @IsNumber()
+   baseEmployeeCount: number;
+
+   @IsNumber()
+   defaultExtraAdminPrice: number;
 
    @IsNumber()
    defaultExtraEmployeePrice: number;
 
    @IsNumber()
-   defaultExtraAdminPrice: number;
+   defaultExtraPeriodPrice: number;
+
+   // NOTE: key -> user below, value -> price per user
+   @IsOptional()
+   @IsRecord({ value: EType.String, key: EType.Number })
+   extraPeriodPrice?: Record<EPeriod, number>;
 
    // NOTE: key -> user below, value -> price per user
    @IsOptional()

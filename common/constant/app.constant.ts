@@ -5,7 +5,6 @@ import process from 'node:process';
 import { config } from 'dotenv';
 import { AddressSchema } from '@shared/address/address.schema';
 import { AuditSchema } from '@shared/audit/audit.schema';
-import { CampaignSchema } from '@shared/campaign/campaign.schema';
 import { MailSchema } from '@shared/mail/mail.schema';
 import { PermissionSchema } from '@shared/permission/permission.schema';
 import { UnitSchema } from '@shared/unit/unit.schema';
@@ -27,7 +26,6 @@ export const CONNECTION_POOL = new LRUCache({
 export const SHARED_SCHEMAS: Array<[string, Schema]> = [
    ['Address', AddressSchema],
    ['Audit', AuditSchema],
-   ['Campaign', CampaignSchema],
    ['Category', CategorySchema],
    ['Mail', MailSchema],
    ['Permission', PermissionSchema],

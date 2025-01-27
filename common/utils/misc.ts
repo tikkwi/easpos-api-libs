@@ -99,3 +99,11 @@ export const getSmallestGreaterThanKey = (obj: Record<number, number>, count: nu
    Object.keys(obj)
       .filter((k) => +k >= count)
       .sort((a, b) => +a - +b)[0];
+
+export const generateRandomString = (length: number) => {
+   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+   return Array.from(
+      { length },
+      () => characters[Math.floor(Math.random() * characters.length)],
+   ).join('');
+};

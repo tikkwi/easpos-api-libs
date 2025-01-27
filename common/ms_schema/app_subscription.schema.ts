@@ -2,11 +2,10 @@ import { Schema, SchemaFactory } from '@nestjs/mongoose';
 import AppProp from '../decorator/app_prop.decorator';
 import Purchase from '@shared/purchase/purchase.schema';
 import { SchemaTypes } from 'mongoose';
-import { SubPriceAdjustment } from './sub_price_adjustment.schema';
 import AppSubscriptionType from './app_subscription_type.schema';
 import { EStatus } from '../utils/enum';
 import { IsBoolean } from 'class-validator';
-import { Payment } from '../dto/entity.dto';
+import AppPriceAdjustment from './app_price_adjustment.schema';
 
 @Schema()
 export default class AppSubscription extends Purchase {
@@ -20,10 +19,13 @@ export default class AppSubscription extends Purchase {
    status: EStatus;
 
    @AppProp({ type: Number, required: false })
-   extraEmployeeCount: number;
+   extraEmployeeCount?: number;
 
    @AppProp({ type: Number, required: false })
-   extraAdminCount: number;
+   extraAdminCount?: number;
+
+   @AppProp({ type: Number, required: false })
+   extraPeriod?: number;
 
    @IsBoolean()
    sentExpiredMail: boolean;
@@ -31,11 +33,8 @@ export default class AppSubscription extends Purchase {
    @IsBoolean()
    sentPreExpiredMail: boolean;
 
-   @AppProp({ type: SchemaTypes.Mixed }, { type: Payment })
-   payment: Payment;
-
    @AppProp({ type: [{ type: SchemaTypes.ObjectId, ref: 'SubscriptionType' }], default: [] })
-   appliedAdjustments: Array<SubPriceAdjustment>;
+   appliedAdjustments: Array<AppPriceAdjustment>;
 
    @AppProp({ type: SchemaTypes.ObjectId, ref: 'SubscriptionType' })
    subscriptionType: AppSubscriptionType;

@@ -4,12 +4,13 @@ import { $dayjs } from '@common/utils/datetime';
 import APriceAdjustment from './price_adjustment.schema';
 import { BadRequestException } from '@nestjs/common';
 import { EStatus } from '@common/utils/enum';
-import { APromoCodeService } from '../promo_code/promo_code.service';
+import APromoCodeService from '../promo_code/promo_code.service';
+import APromoCode from '../promo_code/promo_code.schema';
 
 export default abstract class APriceAdjustmentService<
    T extends APriceAdjustment,
 > extends BaseService<T> {
-   protected abstract readonly promoCodeService: APromoCodeService;
+   protected abstract readonly promoCodeService: APromoCodeService<APromoCode>;
 
    async expireAdjustment({ ctx, id }: FindByIdDto) {
       const { data: adjustment } = await this.findById({ ctx, id, lean: false });

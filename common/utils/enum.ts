@@ -242,3 +242,10 @@ export enum EType {
    Url = 'Url',
    Id = 'Id',
 }
+
+export enum EPeriod {
+   Day = 'Day',
+   Week = 'Week',
+   Month = 'Month',
+   Year = 'Year',
+}
